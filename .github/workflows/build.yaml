@@ -2,14 +2,12 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - main
       - develop
       - feature/*
       - hotfix/*
       - release/*
       - config/*
-  pull_request:
-    types: [opened, synchronize, reopened]
 jobs:
   sonarcloud:
     name: SonarCloud
@@ -26,7 +24,7 @@ jobs:
 
   deploy:
     # needs: build (Se añadirá cuando esté la ejecución automática de pruebas)
-    # if: ${{github.ref == 'refs/heads/main'}}
+    if: ${{github.ref == 'refs/heads/main'}}
     name: Heroku
     runs-on: ubuntu-latest
     steps:
@@ -34,5 +32,5 @@ jobs:
       - uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "aparkapp-s1-test"
+          heroku_app_name: "aparkapp-s1"
           heroku_email: "ferherque@alum.us.es"
