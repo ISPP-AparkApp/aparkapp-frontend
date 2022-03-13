@@ -1,0 +1,16 @@
+.p-menubar-root-list {
+  width: 100%;
+}
+
+.p-menuitem.right-start {
+  margin-left: auto;
+}
+
+.p-menubar {
+  border-radius: 0px;
+}
+
+.logo-img {
+  border: 1px solid #dfe1e4;
+  border-radius: 50%;
+}

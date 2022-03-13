@@ -1,7 +1,14 @@
-import './css/App.css';
+import "./css/App.css";
+import Headerbar from "./components/Headerbar";
+import Router from "./router/Router";
 
 function App() {
-  return <p>Hello world</p>;
+  return (
+    <div className="App">
+      <Headerbar />
+      <Router />
+    </div>
+  );
 }
 
 export default App;
