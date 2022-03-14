@@ -3,10 +3,12 @@ import { Menubar } from 'primereact/menubar';
 import "../css/Headerbar.css";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateUsername } from '../store/session';
+import { useNavigate } from 'react-router-dom';
 
 const Headerbar = () => {
     const username = useSelector((state) => state.session.username)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const itemsUser = [
         {
@@ -40,11 +42,16 @@ const Headerbar = () => {
             className: "right-start",
             label: 'Iniciar sesión',
             icon: 'pi pi-sign-in',
-
+            command: () => {
+                navigate("/login")
+            }
         },
         {
             label: 'Registro',
             icon: 'pi pi-user-plus',
+            command: () => {
+                navigate("/signup")
+            }
         },
     ]
 

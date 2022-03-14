@@ -1,18 +1,17 @@
 import React from 'react';
 import { Button } from 'primereact/button';
-import "../../css/views/Login.css";
-import { useDispatch } from 'react-redux';
-import { updateUsername } from '../../store/session';
 import { InputText } from 'primereact/inputtext';
 import { Card } from 'primereact/card';
 import { Link } from "react-router-dom";
+import "../../css/views/SignUp.css";
 
-const Login = () => {
-    const dispatch = useDispatch()
+// TODO in sprint 2: We could use React Hook Form to check errors
+const SignUp = () => {
     return (
         <div className="flex flex-column align-items-center px-3 md:px-0">
             <Card className="w-full md:w-auto">
                 <div className="flex flex-column align-items-center">
+                    <span className="text-center mb-6 text-3xl personaldata">Datos personales</span>
                     <img alt="logo-full" src="logo-full.png" height="250"></img>
                     <div className="p-inputgroup mt-6 mb-3">
                         <span className="p-inputgroup-addon">
@@ -26,13 +25,12 @@ const Login = () => {
                         </span>
                         <InputText className="input_text" placeholder="Contraseña" />
                     </div>
-                    <Button className="p-button-raised p-button-lg mb-5" label="Iniciar sesión" onClick={() => dispatch(updateUsername("username"))} />
-                    <span className="text-center question_signup">¿No tienes una cuenta?
-                        <Link to="/signup" className="tosignup ml-2">Regístrate</Link>
-                    </span>
+                    <Link to="/vehicle">
+                        <Button className="p-button-raised p-button-lg" label="Siguiente" />
+                    </Link>
                 </div>
             </Card>
         </div>
     );
 }
-export default Login
+export default SignUp

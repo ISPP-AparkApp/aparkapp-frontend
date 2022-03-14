@@ -1,0 +1,40 @@
+.p-dropdown-label,
+.p-dropdown-trigger,
+.p-dropdown-label::placeholder {
+  color: #000000a1 !important;
+  background-color: #eaf7f1 !important;
+}
+
+.p-dropdown {
+  border-color: #37693b !important;
+  background: none !important;
+}
+
+/* Color de fondo del select */
+.p-dropdown-panel {
+  background-color: #eaf7f1 !important;
+}
+
+/* Cada elemento */
+.p-dropdown-item {
+  color: #000000a1 !important;
+}
+
+/* Elemento seleccionado */
+.p-dropdown-item.p-highlight {
+  background-color: #8ad390 !important;
+}
+
+/* Raton encima de un elemento */
+.p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+  background-color: #c9e7cc !important;
+}
+
+.vehiclewarning {
+  color: #000000d5;
+}
+
+.triangle-warning {
+  color: rgb(175, 25, 25);
+  
+}
