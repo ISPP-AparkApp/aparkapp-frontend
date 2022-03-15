@@ -1,0 +1,37 @@
+.publish_label{
+    color: #000000d5 ;
+}
+
+.p-card-title{
+    color: #003507d5;
+    text-align: center;
+}
+
+.p-highlight{
+    background-color : #379143d5 !important;
+}
+
+.p-selectbutton{
+    text-align: center;
+}
+
+.p-card-title{
+    border-bottom: 1px solid #003507d5;
+    border-top: 1px solid #003507d5;
+    height: fit-content;
+    padding: 10px;
+}
+
+.p-datepicker{
+    background-color: #eaf7f1 !important;
+    border-color: #37693b !important;
+    color: #003507d5 !important;
+}
+
+.pi-chevron-up ,.pi-chevron-down{
+    color: #003507d5 !important;
+}
+
+.p-inputtext {
+    color: #000000 !important;
+  }

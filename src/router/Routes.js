@@ -1,5 +1,6 @@
 import Home from "../components/views/Home";
 import Login from "../components/views/Login";
+import Publish from "../components/views/Publish";
 import { Navigate } from "react-router-dom";
 
 const routes = [
@@ -14,6 +15,12 @@ const routes = [
         element: <Home />,
         requireAuth: true,
         fallback: "/login",
+    },
+    {
+        path: "/publish",
+        element: <Publish />,
+        requireAuth: true,
+        fallback: "/login", 
     },
     {
         path: "*",
