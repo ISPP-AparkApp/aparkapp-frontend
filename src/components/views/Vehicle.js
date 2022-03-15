@@ -27,12 +27,8 @@ const Vehicle = () => {
 
     return (
         <div className="flex flex-column align-items-center px-3 md:px-0">
-            <Card className="w-full md:w-auto">
+            <Card title="Registro de vehículo" className="w-full md:w-auto">
                 <div className="flex flex-column align-items-center">
-                    <div className="flex align-items-end mb-6">
-                        <i className="pi pi-exclamation-triangle triangle-warning text-4xl mr-2"></i>
-                        <span className="vehiclewarning text-3xl">Debe registrar un vehículo</span>
-                    </div>
                     <img alt="logo-full" src="logo-full.png" height="250"></img>
                     <div className="p-inputgroup mt-6 mb-3">
                         <span className="p-inputgroup-addon">

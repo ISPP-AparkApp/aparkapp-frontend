@@ -9,9 +9,8 @@ import "../../css/views/SignUp.css";
 const SignUp = () => {
     return (
         <div className="flex flex-column align-items-center px-3 md:px-0">
-            <Card className="w-full md:w-auto">
+            <Card title="Datos personales" className="w-full md:w-auto">
                 <div className="flex flex-column align-items-center">
-                    <span className="text-center mb-6 text-3xl personaldata">Datos personales</span>
                     <img alt="logo-full" src="logo-full.png" height="250"></img>
                     <div className="p-inputgroup mt-6 mb-3">
                         <span className="p-inputgroup-addon">

@@ -29,12 +29,3 @@
 .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
   background-color: #c9e7cc !important;
 }
-
-.vehiclewarning {
-  color: #000000d5;
-}
-
-.triangle-warning {
-  color: rgb(175, 25, 25);
-  
-}
