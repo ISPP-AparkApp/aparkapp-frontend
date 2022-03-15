@@ -5,7 +5,8 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import { Toast } from 'primereact/toast';
-import { loadGoogleMaps, removeGoogleMaps } from './GoogleMaps';
+import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
+import "../../css/views/SearchPlace.css";
 
 const SearchPlace = () => {
 
@@ -15,11 +16,19 @@ const SearchPlace = () => {
   const [draggableMarker, setDraggableMarker] = useState(false);
   const [overlays, setOverlays] = useState(null);
   const [selectedPosition, setSelectedPosition] = useState(null);
+  const [location, setLocation] = useState(null);
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
 
+  function getCurrentLocation() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+    })
+  }
+
   useEffect(() => {
+    getCurrentLocation()
     loadGoogleMaps(() => {
       setGoogleMapsReady(true);
     });
@@ -93,7 +102,7 @@ const SearchPlace = () => {
   }
 
   const options = {
-    center: { lat: 36.890257, lng: 30.707417 },
+    center: location,
     zoom: 12
   };
 
@@ -108,10 +117,8 @@ const SearchPlace = () => {
 
       {
         googleMapsReady && (
-          <div className="card">
-            <GMap overlays={overlays} options={options} style={{ width: '100%', minHeight: '320px' }} onMapReady={onMapReady}
-              onMapClick={onMapClick} onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
-          </div>
+          <GMap overlays={overlays} options={options} className="map" onMapReady={onMapReady}
+            onMapClick={onMapClick} onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
         )
       }
 

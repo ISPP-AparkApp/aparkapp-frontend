@@ -1,12 +1,11 @@
-
-/* GoogleMaps.js */
+const API_KEY = "AIzaSyDxzAFXZ1lPHTupywEgx8g8-vyTgz3usnU"
 
 export const loadGoogleMaps = (callback) => {
     const existingScript = document.getElementById('googleMaps');
 
     if (!existingScript) {
         const script = document.createElement('script');
-        script.src = 'https://maps.google.com/maps/api/js?key=AIzaSyCz6N974eemgmpsClOYK4dKVST9CrxKt3k';
+        script.src = 'https://maps.google.com/maps/api/js?key=' + API_KEY;
         script.id = 'googleMaps';
         script.async = true;
         script.defer = true;
