@@ -10,8 +10,8 @@ import { login } from "../../api/api";
 
 const Login = () => {
     const dispatch = useDispatch()
-    const [username, setUsername] = useState()
-    const [password, setPassword] = useState()
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
 
     const doLogin = async () => {
         const isLogged = await login(username, password)

@@ -11,6 +11,10 @@ import { Link } from "react-router-dom";
 const Vehicle = () => {
     const dispatch = useDispatch()
     const [selectedType, setSelectedType] = useState(null);
+    const [brand, setBrand] = useState(null)
+    const [model, setModel] = useState(null)
+    const [license, setLicensePlate] = useState(null)
+    const [color, setColor] = useState(null)
 
     const types = [
         { name: "Segmento A", code: "A" },
@@ -34,25 +38,25 @@ const Vehicle = () => {
                         <span className="p-inputgroup-addon">
                             <i className="pi pi-bars icons_form"></i>
                         </span>
-                        <InputText className="input_text" placeholder="Marca" />
+                        <InputText className="input_text" placeholder="Marca" onChange={(e) => setBrand(e.target.value)} />
                     </div>
                     <div className="p-inputgroup mb-3">
                         <span className="p-inputgroup-addon">
                             <i className="pi pi-car icons_form"></i>
                         </span>
-                        <InputText className="input_text" placeholder="Modelo" />
+                        <InputText className="input_text" placeholder="Modelo" onChange={(e) => setModel(e.target.value)} />
                     </div>
                     <div className="p-inputgroup mb-3">
                         <span className="p-inputgroup-addon">
                             <i className="pi pi-tag icons_form"></i>
                         </span>
-                        <InputText className="input_text" placeholder="Matrícula" />
+                        <InputText className="input_text" placeholder="Matrícula" onChange={(e) => setLicensePlate(e.target.value)} />
                     </div>
                     <div className="p-inputgroup mb-3">
                         <span className="p-inputgroup-addon">
                             <i className="pi pi-palette icons_form"></i>
                         </span>
-                        <InputText className="input_text" placeholder="Color" />
+                        <InputText className="input_text" placeholder="Color" onChange={(e) => setColor(e.target.value)} />
                     </div>
                     <div className="p-inputgroup mb-5">
                         <span className="p-inputgroup-addon">
