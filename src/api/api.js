@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "../store";
 import { updateAuthToken, updateRefreshToken, updateAuthTimestamp, updateRefreshAuthTimestamp } from "../store/session";
 
-const authTokenValidTime = 900000 /* 15 min in ms */
+const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
 const backendUrl = 'http://127.0.0.1:8000/'
 
