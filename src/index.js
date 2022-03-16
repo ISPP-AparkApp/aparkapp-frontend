@@ -19,7 +19,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Suspense fallback="Loading">
         <App />
-      </Suspense>,
+      </Suspense>
     </BrowserRouter>
   </Provider>,
   document.getElementById("root")
