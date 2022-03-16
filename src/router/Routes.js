@@ -1,9 +1,16 @@
 import Home from "../components/views/Home";
 import Login from "../components/views/Login";
 import Publish from "../components/views/Publish";
+import AboutUs from "../components/views/AboutUs";
+import SignUp from "../components/views/SignUp";
+import Vehicle from "../components/views/Vehicle";
 import { Navigate } from "react-router-dom";
 
 const routes = [
+    {
+        path: "/about",
+        element: <AboutUs />,
+    },
     {
         path: "/login",
         element: <Login />,
@@ -11,10 +18,22 @@ const routes = [
         fallback: "/home",
     },
     {
+        path: "/signup",
+        element: <SignUp />,
+        requireAuth: false,
+        fallback: "/home",
+    },
+    {
+        path: "/vehicle",
+        element: <Vehicle />,
+        requireAuth: false,
+        fallback: "/home",
+    },
+    {
         path: "/home",
         element: <Home />,
         requireAuth: true,
-        fallback: "/login",
+        fallback: "/about",
     },
     {
         path: "/publish",

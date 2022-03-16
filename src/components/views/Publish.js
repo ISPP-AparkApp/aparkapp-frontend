@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Card } from 'primereact/card';
+import { publish } from '../../api/api';
 import "../../css/views/Publish.css";
 
 
@@ -32,9 +33,8 @@ const Publish = () => {
         return day + "/" + month + "/" + year +" "+ hour + ":" + minutes;
     }
 
-    const publish = (event) => {
-        event.preventDefault();
-        const object = {
+    const publishAnnouncement = () => {
+        const announcementData = {
             date: dateFormatter(date),
             waitTime: waitTime,
             price: price,
@@ -44,7 +44,7 @@ const Publish = () => {
             limited_movility: limitedMovility === "Sí" ? true : false,
             vehicle: vehicle,
         }
-        console.log(object);
+        publish(announcementData);
     }
 
     return(
@@ -78,7 +78,7 @@ const Publish = () => {
                     <span className='text-xl publish_label mb-2'>¿Se trata de una plaza de movilidad limitada?</span>
                     <SelectButton className='mb-5' value={limitedMovility} options={options} onChange={(e) => setLimitedMovility(e.value)} />
 
-                    <Button label="Publicar" className="p-button-raised p-button-lg" onClick={(event)=>publish(event)}/>
+                    <Button label="Publicar" className="p-button-raised p-button-lg" onClick={()=>publishAnnouncement()}/>
             </div>
             </Card>
         </div>

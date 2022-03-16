@@ -11,7 +11,7 @@
   background-color: #a4cca7 !important;
   border-color: #37693b !important;
 }
-.p-inputtext, .p-dropdown, .p-dropdown-items, .p-dropdown-item,
+.p-inputtext,
 .input_text::placeholder {
   color: black !important;
   background-color: #eaf7f1 !important;
@@ -39,8 +39,4 @@
 .tosignup {
   text-decoration: none;
   color: #174b1b;
-}
-
-.p-inputtext {
-  color: #000000 !important;
 }
