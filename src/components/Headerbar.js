@@ -30,6 +30,9 @@ const Headerbar = () => {
             className: "right-start",
             label: 'Perfil',
             icon: 'pi pi-user',
+            command: () => {
+                navigate("/profile")
+            }
         },
         {
             label: 'Cerrar sesión',

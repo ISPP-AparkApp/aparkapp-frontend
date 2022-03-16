@@ -1,5 +1,6 @@
 import Home from "../components/views/Home";
 import Login from "../components/views/Login";
+import Profile from "../components/views/Profile";
 import SearchPlace from "../components/views/SearchPlace";
 import Publish from "../components/views/Publish";
 import AboutUs from "../components/views/AboutUs";
@@ -51,6 +52,12 @@ const routes = [
     {
         path: "*",
         element: <Navigate to="/home" replace />,
+    },
+    {
+        path: "/profile",
+        element: <Profile />,
+        requireAuth: true,
+        fallback: "login"
     },
 ];
 
