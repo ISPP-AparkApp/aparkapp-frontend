@@ -15,7 +15,6 @@ const Home = () => {
                     <Button label="Buscar plaza" className="p-button-raised p-button-rounded p-button-lg" />
                 </Link>
             </div>
-            <Button label="Buscar plaza" className="p-button-raised p-button-rounded p-button-lg" />
         </div>
     );
 }
