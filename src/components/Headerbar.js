@@ -14,6 +14,9 @@ const Headerbar = () => {
         {
             label: 'Inicio',
             icon: 'pi pi-home',
+            command: () => {
+                navigate("/home")
+            }
         },
         {
             label: 'Actividad',

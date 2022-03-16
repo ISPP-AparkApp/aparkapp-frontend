@@ -1,6 +1,7 @@
 import Home from "../components/views/Home";
 import Login from "../components/views/Login";
 import Profile from "../components/views/Profile";
+import SearchPlace from "../components/views/SearchPlace";
 import Publish from "../components/views/Publish";
 import AboutUs from "../components/views/AboutUs";
 import SignUp from "../components/views/SignUp";
@@ -41,6 +42,12 @@ const routes = [
         element: <Publish />,
         requireAuth: true,
         fallback: "/login", 
+    },
+    {
+        path: "/search",
+        element: <SearchPlace />,
+        requireAuth: true,
+        fallback: "/login",
     },
     {
         path: "*",

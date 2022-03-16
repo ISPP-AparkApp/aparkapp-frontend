@@ -11,7 +11,9 @@ const Home = () => {
                 <Link to="/publish">
                     <Button label="Ceder plaza" className="p-button-raised p-button-rounded mr-2 p-button-lg" />
                 </Link>
-                <Button label="Buscar plaza" className="p-button-raised p-button-rounded p-button-lg" />
+                <Link to="/search">
+                    <Button label="Buscar plaza" className="p-button-raised p-button-rounded p-button-lg" />
+                </Link>
             </div>
         </div>
     );
