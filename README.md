@@ -1,3 +1,7 @@
+
+# aparkapp-frontend
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=ISPP-AparkApp_aparkapp-frontend)](https://sonarcloud.io/summary/new_code?id=ISPP-AparkApp_aparkapp-frontend)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

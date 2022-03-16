@@ -45,11 +45,16 @@ const Headerbar = () => {
             className: "right-start",
             label: 'Iniciar sesión',
             icon: 'pi pi-sign-in',
-
+            command: () => {
+                navigate("/login")
+            }
         },
         {
             label: 'Registro',
             icon: 'pi pi-user-plus',
+            command: () => {
+                navigate("/signup")
+            }
         },
     ]
 
