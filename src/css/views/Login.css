@@ -1,3 +1,46 @@
-.h-fit {
-  height: calc(100vh - 78px);
+.p-card {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.p-card-body {
+  padding: 4rem !important;
+}
+
+.p-inputgroup-addon {
+  background-color: #a4cca7 !important;
+  border-color: #37693b !important;
+}
+.p-inputtext, .p-dropdown, .p-dropdown-items, .p-dropdown-item,
+.input_text::placeholder {
+  color: black !important;
+  background-color: #eaf7f1 !important;
+  border-color: #37693b !important;
+}
+
+.icons_form,
+.input_text.p-filled {
+  color: black;
+}
+
+.p-button {
+  background-color: #a4cca7 !important;
+  border-color: #37693b !important;
+}
+
+.p-button-label {
+  color: #000000;
+}
+
+.question_signup {
+  color: #000000;
+}
+
+.tosignup {
+  text-decoration: none;
+  color: #174b1b;
+}
+
+.p-inputtext {
+  color: #000000 !important;
 }

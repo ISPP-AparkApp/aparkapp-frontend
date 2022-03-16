@@ -20,20 +20,29 @@ const Publish = () => {
     const [limitedMovility, setLimitedMovility] = useState("No");
 
     const options = ["Sí", "No"];
-    const parkTypes = ["Pública","Zona Azul", "Zona verde", "Zona naranja","MAR"];
+    const parkTypes = ["Zona libre","Zona Azul", "Zona verde", "Zona naranja","MAR"];
     const vehicleOptions = ["0032HPP","7587JUY"];
+
+    const dateFormatter = (date) => {
+        let day = date.getDate();
+        let month = date.getMonth() + 1;
+        let year = date.getFullYear();
+        let hour = date.getHours();
+        let minutes = date.getMinutes();
+        return day + "/" + month + "/" + year +" "+ hour + ":" + minutes;
+    }
 
     const publish = (event) => {
         event.preventDefault();
         const object = {
-            vehicle: vehicle,
-            date: date,
+            date: dateFormatter(date),
             waitTime: waitTime,
             price: price,
-            extension: extension,
+            allow_wait: extension === "Sí" ? true : false,
             location: location,
-            type: type,
-            limitedMovility: limitedMovility
+            zone: type,
+            limited_movility: limitedMovility === "Sí" ? true : false,
+            vehicle: vehicle,
         }
         console.log(object);
     }
