@@ -3,10 +3,12 @@ import { Menubar } from 'primereact/menubar';
 import "../css/Headerbar.css";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateUsername } from '../store/session';
+import { useNavigate } from 'react-router-dom';
 
 const Headerbar = () => {
     const username = useSelector((state) => state.session.username)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const itemsUser = [
         {
@@ -25,6 +27,9 @@ const Headerbar = () => {
             className: "right-start",
             label: 'Perfil',
             icon: 'pi pi-user',
+            command: () => {
+                navigate("/profile")
+            }
         },
         {
             label: 'Cerrar sesión',

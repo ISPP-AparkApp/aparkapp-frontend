@@ -1,5 +1,6 @@
 import Home from "../components/views/Home";
 import Login from "../components/views/Login";
+import Profile from "../components/views/Profile";
 import { Navigate } from "react-router-dom";
 
 const routes = [
@@ -18,6 +19,12 @@ const routes = [
     {
         path: "*",
         element: <Navigate to="/home" replace />,
+    },
+    {
+        path: "/profile",
+        element: <Profile />,
+        requireAuth: true,
+        fallback: "login"
     },
 ];
 
