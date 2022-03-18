@@ -7,6 +7,7 @@ import { Checkbox } from 'primereact/checkbox';
 import { Toast } from 'primereact/toast';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import "../../css/views/SearchPlace.css";
+import { getAnnouncements } from '../../api/api';
 
 const SearchPlace = () => {
 
@@ -14,9 +15,10 @@ const SearchPlace = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [markerTitle, setMarkerTitle] = useState('');
   const [draggableMarker, setDraggableMarker] = useState(false);
-  const [overlays, setOverlays] = useState(null);
+  const [overlays, setOverlays] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [location, setLocation] = useState(null);
+  const [announcements, setAnnouncements] = useState([]);
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
@@ -29,6 +31,7 @@ const SearchPlace = () => {
 
   useEffect(() => {
     getCurrentLocation()
+    getAnnouncements().then(data => setAnnouncements(data))
     loadGoogleMaps(() => {
       setGoogleMapsReady(true);
     });
@@ -80,21 +83,19 @@ const SearchPlace = () => {
     setMarkerTitle('');
   }
 
+  function extractLocation(location) {
+    let locationArr = location.split(',')
+    return {
+      lat: parseFloat(locationArr[0]),
+      lng: parseFloat(locationArr[1])
+    }
+  }
+
   const onMapReady = (event) => {
-    setOverlays(
-      [
-        new window.google.maps.Marker({ position: { lat: 36.879466, lng: 30.667648 }, title: "Konyaalti" }),
-        new window.google.maps.Marker({ position: { lat: 36.883707, lng: 30.689216 }, title: "Ataturk Park" }),
-        new window.google.maps.Marker({ position: { lat: 36.885233, lng: 30.702323 }, title: "Oldtown" }),
-        new window.google.maps.Polygon({
-          paths: [
-            { lat: 36.9177, lng: 30.7854 }, { lat: 36.8851, lng: 30.7802 }, { lat: 36.8829, lng: 30.8111 }, { lat: 36.9177, lng: 30.8159 }
-          ], strokeOpacity: 0.5, strokeWeight: 1, fillColor: '#1976D2', fillOpacity: 0.35
-        }),
-        new window.google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
-        new window.google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
-      ]
-    );
+    announcements.forEach((announcement) => {
+      overlays.push(new window.google.maps.Circle({ center: extractLocation(announcement.location), fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }))
+    })
+    setOverlays(overlays)
   }
 
   const onHide = (event) => {
