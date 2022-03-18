@@ -4,7 +4,7 @@ import { updateAuthToken, updateRefreshToken, updateAuthTimestamp, updateRefresh
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'https://aparkapp-backend-s1.herokuapp.com/'
+const backendUrl = 'http://127.0.0.1:8000/'
 
 async function checkAuthTokenIsValid() {
     const authTimestamp = await store.getState().session.authTimestamp
@@ -44,7 +44,7 @@ async function getAuthToken() {
 
 async function apiGet(endpoint, authRequired = true) {
     const headers = authRequired ? {
-        'Authorization': `Bearer ${getAuthToken}`
+        'Authorization': `Bearer ${await getAuthToken()}`
     } : {}
     return await axios.get(`${backendUrl}${endpoint}`, { headers })
 }
@@ -71,8 +71,12 @@ export async function login(username, password) {
 }
 
 export async function publish(announcementData) {
-    const response = await apiPost('api/publish/', announcementData, true)
-    if (response.status !== 200) return false
-    //TODO: handle response
-    return true
+    const response = await apiPost('api/announcements/', announcementData, true)
+    if (response.status === 201) return true
 }
+
+export async function getVehicles() {
+    const response = await apiGet('api/users/vehicles/', true)
+    if (response.status === 200) return response.data
+}
+

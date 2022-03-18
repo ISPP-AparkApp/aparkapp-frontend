@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState, useEffect, useRef} from 'react';
 import { Calendar } from 'primereact/calendar';
 import { InputNumber } from 'primereact/inputnumber';
 import { SelectButton } from 'primereact/selectbutton';
@@ -6,7 +6,8 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Card } from 'primereact/card';
-import { publish } from '../../api/api';
+import { publish, getVehicles} from '../../api/api';
+import { Messages } from 'primereact/messages';
 import "../../css/views/Publish.css";
 
 
@@ -19,40 +20,53 @@ const Publish = () => {
     const [location, setLocation] = useState();
     const [type, setType] = useState("Pública");
     const [limitedMovility, setLimitedMovility] = useState("No");
-
+    const [vehicles, setVehicles] = useState([]);
     const options = ["Sí", "No"];
     const parkTypes = ["Zona libre","Zona Azul", "Zona verde", "Zona naranja","MAR"];
-    const vehicleOptions = ["0032HPP","7587JUY"];
+    const msgs = useRef(null);
+
+
+    useEffect(()=>{
+        getVehicles().then(data => {
+            setVehicles(data)
+        })  
+    },[])
+
 
     const dateFormatter = (date) => {
         let day = date.getDate();
         let month = date.getMonth() + 1;
         let year = date.getFullYear();
-        let hour = date.getHours();
+        let hour = date.getHours(); 
         let minutes = date.getMinutes();
-        return day + "/" + month + "/" + year +" "+ hour + ":" + minutes;
+        return year + "-" + month + "-" + day +" "+ hour + ":" + minutes;
     }
 
-    const publishAnnouncement = () => {
+    const publishAnnouncement = async() => {
+        let vehicleId = vehicles.find(vehicle => vehicle.licensePlate === vehicle.licensePlate).id;
         const announcementData = {
             date: dateFormatter(date),
-            waitTime: waitTime,
+            wait_time: waitTime,
             price: price,
             allow_wait: extension === "Sí" ? true : false,
             location: location,
             zone: type,
             limited_movility: limitedMovility === "Sí" ? true : false,
-            vehicle: vehicle,
+            vehicle: vehicleId,
         }
-        publish(announcementData);
+        let res = await publish(announcementData);
+        if (res){
+            msgs.current.show({severity: 'success', summary: 'Anuncio publicado'});
+        }
     }
 
     return(
         <div className="flex flex-column align-items-center px-3 md:px-0">
+            <Messages ref={msgs} />
             <Card title="Publicar plaza" className="w-full md:w-auto">
                 <div className="flex flex-column ">
                     <span className='text-xl publish_label mb-2'>Selecciona tu vehículo</span>
-                    <Dropdown className='input_text mb-3' value={vehicle} options={vehicleOptions} onChange={(e)=> setVehicle(e.value)} />
+                    <Dropdown className='input_text mb-3' value={vehicle} options={vehicles.map(v=>v.license_plate)} onChange={(e)=> setVehicle(e.value)} />
 
                     <span className='text-xl publish_label mb-2'>¿Cuándo vas a dejar la plaza?</span>
                     <Calendar className='mb-3' id="time" value={date} onChange={(e) => setDate(e.value)} timeOnly hourFormat="12" />
