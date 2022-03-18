@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "../store";
+import { refreshAuthToken as refreshAuthTokenAction } from "../store/session";
 import { login as loginAction } from "../store/session";
 
 const authTokenValidTime = 300000 /* 5 min in ms */
@@ -26,7 +27,7 @@ async function refreshAuthToken() {
 
     const newAuthToken = await apiPost('api/refresh-token/', { "refresh": refreshToken }, false)
     const authToken = newAuthToken.data["access"]
-    store.dispatch(refreshAuthToken(authToken))
+    store.dispatch(refreshAuthTokenAction(authToken))
     return authToken
 }
 
@@ -36,7 +37,7 @@ async function getAuthToken() {
         throw new Error("No authToken provided")
     } else if (!await checkAuthTokenIsValid(authToken)) {
         authToken = await refreshAuthToken()
-        store.dispatch(refreshAuthToken(authToken))
+        store.dispatch(refreshAuthTokenAction(authToken))
     }
     return authToken
 }
