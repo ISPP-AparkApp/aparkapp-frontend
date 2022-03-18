@@ -1,7 +1,6 @@
 import axios from "axios";
 import store from "../store";
-import { refreshAuthToken as refreshAuthTokenAction } from "../store/session";
-import { login as loginAction } from "../store/session";
+import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from "../store/session";
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */

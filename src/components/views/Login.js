@@ -11,7 +11,7 @@ const Login = () => {
     const [password, setPassword] = useState("")
     const [formErrors, setFormErrors] = useState({})
 
-    const doLogin = async (username, password) => {
+    const doLogin = async () => {
         const isLogged = await login(username, password)
         if (!isLogged) {
             return "El usuario no existe";
@@ -31,7 +31,7 @@ const Login = () => {
 
         setFormErrors(errors)
         if (!Object.keys(errors).length) {
-            const formError = await doLogin(username, password);
+            const formError = await doLogin();
             if (formError) {
                 setFormErrors({ global: formError })
             }
