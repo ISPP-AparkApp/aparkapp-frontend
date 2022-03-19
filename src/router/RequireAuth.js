@@ -1,15 +1,13 @@
 
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { useSelector } from 'react-redux'
-
-const userIsLogged = (username) => {
-  return username;
-};
+import { isUserLogged } from "../store/session";
 
 const RequireAuth = ({ children, fallback, requireAuth }) => {
-  const username = useSelector((state) => state.session.username)
 
-  if ((requireAuth && !userIsLogged(username)) || (!requireAuth && userIsLogged(username))) {
+  const userIsLogged = useSelector(isUserLogged)
+
+  if ((requireAuth && !userIsLogged) || (!requireAuth && userIsLogged)) {
     return <Navigate to={fallback} replace />;
   }
 
