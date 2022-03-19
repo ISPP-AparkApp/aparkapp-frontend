@@ -5,9 +5,8 @@ describe("Headerbar", () => {
 
     it("the menubar only contains log in options", () => {
         cy.get("ul.p-menubar-root-list")
-            .children()
-            .should("contain", "Inicio")
-            .and("contain", "Registro")
+        cy.contains("Iniciar sesión")
+        cy.contains("Registro")
     })
 
     it("the menubar contains user options", () => {
