@@ -71,8 +71,13 @@ export async function login(username, password) {
 }
 
 export async function publish(announcementData) {
-    const response = await apiPost('api/announcements/', announcementData, true)
-    if (response.status === 201) return true
+    let response
+    try {
+        response = await apiPost('api/announcements/', announcementData, true)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
 }
 
 export async function getVehicles() {
