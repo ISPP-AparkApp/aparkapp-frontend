@@ -76,3 +76,10 @@ export async function publish(announcementData) {
     //TODO: handle response
     return true
 }
+
+export async function reserve(reserveData) {
+    const response = await apiPost('api/reserve/', reserveData, true) //Comprobar si la url en back es la correspondiente
+    if (response.status !== 200) return false
+    const { refresh: refreshToken, access: authToken } = response.data
+    return true
+}

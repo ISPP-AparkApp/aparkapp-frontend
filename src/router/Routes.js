@@ -6,6 +6,7 @@ import Publish from "../components/views/Publish";
 import AboutUs from "../components/views/AboutUs";
 import SignUp from "../components/views/SignUp";
 import Vehicle from "../components/views/Vehicle";
+import Reserve from "../components/views/Reserve";
 import { Navigate } from "react-router-dom";
 
 const routes = [
@@ -56,6 +57,12 @@ const routes = [
     {
         path: "/profile",
         element: <Profile />,
+        requireAuth: true,
+        fallback: "login"
+    },
+    {
+        path: "/reserve",
+        element: <Reserve />,
         requireAuth: true,
         fallback: "login"
     },
