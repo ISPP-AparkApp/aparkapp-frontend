@@ -34,7 +34,7 @@ async function getAuthToken() {
     let authToken = await store.getState().session.authToken
     if (!authToken) {
         throw new Error("No authToken provided")
-    } else if (!await checkAuthTokenIsValid(authToken)) {
+    } else if (!await checkAuthTokenIsValid()) {
         authToken = await refreshAuthToken()
         store.dispatch(refreshAuthTokenAction(authToken))
     }
@@ -70,9 +70,8 @@ export async function login(username, password) {
 }
 
 export async function publish(announcementData) {
-    let response
     try {
-        response = await apiPost('api/announcements/', announcementData, true)
+        await apiPost('api/announcements/', announcementData, true)
     } catch (error) {
         return error.response.data
     }

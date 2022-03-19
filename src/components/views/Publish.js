@@ -69,8 +69,9 @@ const Publish = () => {
         return year + "-" + month + "-" + day +" "+ hour + ":" + minutes;
     }
 
-    const publishAnnouncement = async() => {
-        let vehicleId = vehicles.find(vehicle => vehicle.licensePlate === vehicle.licensePlate).id;
+    const publishAnnouncement = async () => {
+        let vehicleSelected = await vehicles.find(v => v.license_plate === vehicle);
+        let vehicleId = vehicleSelected.id;
         const announcementData = {
             date: dateFormatter(date),
             wait_time: waitTime,
