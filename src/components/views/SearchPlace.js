@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import { Toast } from 'primereact/toast';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
+import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
 import { getAnnouncements } from '../../api/api';
 
@@ -92,9 +93,40 @@ const SearchPlace = () => {
   }
 
   const onMapReady = (event) => {
-    announcements.forEach((announcement) => {
-      overlays.push(new window.google.maps.Circle({ center: extractLocation(announcement.location), fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }))
+    var groupedAnnouncements = {}
+    announcements.forEach(announcement => {
+      groupedAnnouncements[announcement.id] = false
     })
+
+    var groups = []
+    announcements.forEach(a1 => {
+      if (!groupedAnnouncements[a1.id]) {
+        var group = [a1]
+        announcements.forEach(a2 => {
+          const distance = getKm(extractLocation(a1.location).lat, extractLocation(a1.location).lng, extractLocation(a2.location).lat, extractLocation(a2.location).lng)
+          if (distance < 1.5 && a1.id !== a2.id) {
+            group.push(a2)
+            groupedAnnouncements[a2.id] = true
+          }
+        })
+        groups.push(group)
+        groupedAnnouncements[a1.id] = true
+      }
+    })
+
+    groups.forEach(group => {
+      var groupLocation = { lat: 0, lng: 0 }
+      group.forEach(announcement => {
+        groupLocation.lat += extractLocation(announcement.location).lat
+        groupLocation.lng += extractLocation(announcement.location).lng
+      })
+
+      groupLocation.lat /= group.length
+      groupLocation.lng /= group.length
+
+      overlays.push(new window.google.maps.Circle({ center: groupLocation, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }))
+    })
+
     setOverlays(overlays)
   }
 
