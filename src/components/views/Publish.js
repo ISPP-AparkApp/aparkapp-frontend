@@ -21,8 +21,9 @@ const Publish = () => {
     const [type, setType] = useState();
     const [limitedMovility, setLimitedMovility] = useState("No");
     const [vehicles, setVehicles] = useState([]);
+
     const options = ["Sí", "No"];
-    const parkTypes = ["Zona libre","Zona Azul", "Zona verde", "Zona naranja","MAR"];
+    const parkTypes = ["Zona libre","Zona Azul", "Zona Verde", "Zona Roja", "Zona Naranja","Zona MAR"];
     const msgs = useRef(null);
     const [formErrors, setFormErrors] = useState({})
 
@@ -77,7 +78,8 @@ const Publish = () => {
             wait_time: waitTime,
             price: price,
             allow_wait: extension === "Sí" ? true : false,
-            location: location,
+            latitude: parseFloat(location.split(',')[0]),
+            longitude: parseFloat(location.split(',')[1]),
             zone: type,
             limited_movility: limitedMovility === "Sí" ? true : false,
             vehicle: vehicleId,
@@ -90,6 +92,7 @@ const Publish = () => {
             errors.global = res
             setFormErrors(errors)
         }
+        window.scrollTo(0, 0)
     }
 
     return(
@@ -103,10 +106,10 @@ const Publish = () => {
                     {getFieldError("vehicle")}
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Cuándo vas a dejar la plaza?</span>
-                    <Calendar className='mb-3' id="time" value={date} showTime onChange={(e) => setDate(e.value)} hourFormat="12" />
+                    <Calendar id="time" value={date} showTime onChange={(e) => setDate(e.value)} hourFormat="12" />
                     {getFieldError("date")}
 
-                    <span className='text-xl publish_label mb-2'>¿Cuánto tiempo estas dispuesto a esperar?</span>
+                    <span className='text-xl publish_label mb-2 mt-3'>¿Cuánto tiempo estas dispuesto a esperar?</span>
                     <InputNumber inputId="waitTime" value={waitTime} onValueChange={(e) => setWaitTime(e.value)} suffix=" minuto/s" showButtons min={0} max={30} />
                     {getFieldError("waitTime")}
 
