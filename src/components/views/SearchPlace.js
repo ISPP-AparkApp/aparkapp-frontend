@@ -20,6 +20,7 @@ const SearchPlace = () => {
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [location, setLocation] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
+  const [announcementsCircle, setAnnouncementsCircle] = useState({});
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
@@ -84,14 +85,6 @@ const SearchPlace = () => {
     setMarkerTitle('');
   }
 
-  function extractLocation(location) {
-    let locationArr = location.split(',')
-    return {
-      lat: parseFloat(locationArr[0]),
-      lng: parseFloat(locationArr[1])
-    }
-  }
-
   const onMapReady = (event) => {
     var groupedAnnouncements = {}
     announcements.forEach(announcement => {
@@ -103,8 +96,8 @@ const SearchPlace = () => {
       if (!groupedAnnouncements[a1.id]) {
         var group = [a1]
         announcements.forEach(a2 => {
-          const distance = getKm(extractLocation(a1.location).lat, extractLocation(a1.location).lng, extractLocation(a2.location).lat, extractLocation(a2.location).lng)
-          if (distance < 1.5 && a1.id !== a2.id) {
+          const distance = getKm(a1.latitude, a1.longitude, a2.latitude, a2.longitude)
+          if (distance < 0.5 && a1.id !== a2.id) {
             group.push(a2)
             groupedAnnouncements[a2.id] = true
           }
@@ -117,16 +110,18 @@ const SearchPlace = () => {
     groups.forEach(group => {
       var groupLocation = { lat: 0, lng: 0 }
       group.forEach(announcement => {
-        groupLocation.lat += extractLocation(announcement.location).lat
-        groupLocation.lng += extractLocation(announcement.location).lng
+        groupLocation.lat += announcement.latitude
+        groupLocation.lng += announcement.longitude
       })
 
       groupLocation.lat /= group.length
       groupLocation.lng /= group.length
 
-      overlays.push(new window.google.maps.Circle({ center: groupLocation, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }))
+      announcementsCircle[groupLocation.lat + "," + groupLocation.lng] = group
+      overlays.push(new window.google.maps.Circle({ center: groupLocation, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 500 }))
     })
 
+    setAnnouncementsCircle(announcementsCircle)
     setOverlays(overlays)
   }
 
