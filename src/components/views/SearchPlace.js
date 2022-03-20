@@ -139,6 +139,7 @@ const SearchPlace = () => {
         </div>
       </Dialog>
     </div>
+    
   );
 }
 

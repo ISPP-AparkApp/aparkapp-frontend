@@ -93,7 +93,7 @@ const Publish = () => {
                     <SelectButton className='mb-5' value={limitedMovility} options={options} onChange={(e) => setLimitedMovility(e.value)} />
 
                     <Button label="Publicar" className="p-button-raised p-button-lg" onClick={()=>publishAnnouncement()}/>
-            </div>
+                </div>
             </Card>
         </div>
     )

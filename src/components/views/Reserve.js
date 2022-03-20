@@ -6,15 +6,18 @@ import { reserve } from '../../api/api';
 import "../../css/views/Reserve.css";
 import reservesData from './sampleBookings.json';
 
-const Reserve = ({ licensePlate, datetime, phone, address, model, color, waitTime, price }) => {
+const Reserve = ({ licensePlate, datetime, phone, address, model, color, waitTime, price, props}) => {
 
     const reserveAnnouncement = () =>{
+        const date = new Date();
+        const n_extend = 0;
+        const id_announcement = "a";
         const reservetData = {
-            licensePlate, datetime, phone, address, model, color, waitTime, price
+            date,n_extend,id_announcement
         }
-        console.log(phone)
         reserve(reservetData);
     }
+    console.log(props.id)
     const [reserved, setReserved] = useState(false)
     return (
         <div className="flex flex-column align-items-center px-3 md:px-0">
@@ -31,7 +34,7 @@ const Reserve = ({ licensePlate, datetime, phone, address, model, color, waitTim
                     </ul>
                 </div>
                 {reserved === true ? (
-                <div className="grid w-full">
+                <div className="align-items-center w-full">
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" 
                             icon="pi pi-times"  onClick={(event) => setReserved(false)}/>
@@ -43,7 +46,7 @@ const Reserve = ({ licensePlate, datetime, phone, address, model, color, waitTim
                     </div>
                 </div>
                 ): (
-                <div className="grid w-full"> 
+                <div className="align-items-center w-full"> 
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" 
                             label="Reservar" onClick={(event) => setReserved(true) && reserveAnnouncement()} 
@@ -58,8 +61,8 @@ const Reserve = ({ licensePlate, datetime, phone, address, model, color, waitTim
 }
 const Reserves = () => {
     return (
-        <div className="grid w-full px-5 pt-5">
-            <div className="col-12 md:col-6 xl:col-4">
+        <div>
+            <div className="mt-6">
                 <Reserve {...reservesData}></Reserve>
             </div>
         </div>
