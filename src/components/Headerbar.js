@@ -2,13 +2,13 @@ import React from 'react';
 import { Menubar } from 'primereact/menubar';
 import "../css/Headerbar.css";
 import { useSelector, useDispatch } from 'react-redux'
-import { updateUsername } from '../store/session';
 import { useNavigate } from 'react-router-dom';
+import { isUserLogged, logout } from "../store/session";
 
 const Headerbar = () => {
-    const username = useSelector((state) => state.session.username)
-    const dispatch = useDispatch()
     const navigate = useNavigate()
+    const userIsLogged = useSelector(isUserLogged) 
+    const dispatch = useDispatch()
 
     const itemsUser = [
         {
@@ -37,8 +37,8 @@ const Headerbar = () => {
         {
             label: 'Cerrar sesión',
             icon: 'pi pi-fw pi-power-off',
-            command: (event) => {
-                dispatch(updateUsername(null))
+            command: () => {
+                dispatch(logout())
             }
         }
     ];
@@ -69,7 +69,7 @@ const Headerbar = () => {
     return (
         <div>
             <div className="card">
-                <Menubar model={(username) ? itemsUser : items} start={start} />
+                <Menubar model={(userIsLogged) ? itemsUser : items} start={start} />
             </div>
         </div>
     );
