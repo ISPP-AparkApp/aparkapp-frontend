@@ -6,7 +6,7 @@ import { reserve } from '../../api/api';
 import "../../css/views/Reserve.css";
 import reservesData from './sampleBookings.json';
 
-const Reserve = ({ licensePlate, datetime, phone, address, model, color, waitTime, price, props}) => {
+const Reserve = ({ licensePlate, datetime, phone, address, model, color, waitTime, price,id}) => {
 
     const reserveAnnouncement = () =>{
         const date = new Date();
@@ -17,7 +17,7 @@ const Reserve = ({ licensePlate, datetime, phone, address, model, color, waitTim
         }
         reserve(reservetData);
     }
-    console.log(props.id)
+    console.log(id)
     const [reserved, setReserved] = useState(false)
     return (
         <div className="flex flex-column align-items-center px-3 md:px-0">
@@ -51,7 +51,6 @@ const Reserve = ({ licensePlate, datetime, phone, address, model, color, waitTim
                         <Button className="p-button-raised p-button-lg w-full h-full" 
                             label="Reservar" onClick={(event) => setReserved(true) && reserveAnnouncement()} 
                             />
-                            
                     </div>
                 </div>
                 )}

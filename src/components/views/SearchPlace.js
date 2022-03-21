@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GMap } from 'primereact/gmap';
 import { Dialog } from 'primereact/dialog';
+import {Link} from "react-router-dom";
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
@@ -11,7 +12,7 @@ import "../../css/views/SearchPlace.css";
 import { getAnnouncements } from '../../api/api';
 
 const SearchPlace = () => {
-
+  
   const [googleMapsReady, setGoogleMapsReady] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [markerTitle, setMarkerTitle] = useState('');
@@ -33,10 +34,9 @@ const SearchPlace = () => {
 
   useEffect(() => {
     getCurrentLocation()
-    getAnnouncements().then(data => setAnnouncements(data))
-    loadGoogleMaps(() => {
+    getAnnouncements().then(data => setAnnouncements(data,loadGoogleMaps(() => {
       setGoogleMapsReady(true);
-    });
+    })))
 
     return () => {
       removeGoogleMaps();
@@ -84,13 +84,11 @@ const SearchPlace = () => {
     setDraggableMarker(false);
     setMarkerTitle('');
   }
-
   const onMapReady = (event) => {
     var groupedAnnouncements = {}
     announcements.forEach(announcement => {
       groupedAnnouncements[announcement.id] = false
     })
-
     var groups = []
     announcements.forEach(a1 => {
       if (!groupedAnnouncements[a1.id]) {
@@ -128,7 +126,6 @@ const SearchPlace = () => {
   const onHide = (event) => {
     setDialogVisible(false);
   }
-
   const options = {
     center: location,
     zoom: 12
@@ -138,7 +135,7 @@ const SearchPlace = () => {
     <Button label="Yes" icon="pi pi-check" onClick={addMarker} />
     <Button label="No" icon="pi pi-times" onClick={onHide} />
   </div>;
-
+  const idAnnouncement=1
   return (
     <div>
       <Toast ref={toast}></Toast>
@@ -165,6 +162,10 @@ const SearchPlace = () => {
           <div className="col-10"><Checkbox checked={draggableMarker} onChange={(event) => setDraggableMarker(event.checked)} /></div>
         </div>
       </Dialog>
+      <Link to={{pathname: '/reserve',state: { id: idAnnouncement }
+    }}>
+        <Button className="p-button-raised" label="Reservar" icon="pi pi-map-marker"/>
+      </Link>
     </div>
     
   );

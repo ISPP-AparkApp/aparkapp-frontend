@@ -86,7 +86,7 @@ export async function getAnnouncements() {
 }
 
 export async function reserve(reserveData) {
-    const response = await apiPost('api/reserve/', reserveData, true) //Comprobar si la url en back es la correspondiente
+    const response = await apiPost('api/reservations/', reserveData, true) 
     if (response.status !== 200) return false
     const { refresh: refreshToken, access: authToken } = response.data
     return true
