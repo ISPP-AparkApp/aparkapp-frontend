@@ -162,8 +162,7 @@ const SearchPlace = () => {
           <div className="col-10"><Checkbox checked={draggableMarker} onChange={(event) => setDraggableMarker(event.checked)} /></div>
         </div>
       </Dialog>
-      <Link to={{pathname: '/reserve',state: { id: idAnnouncement }
-    }}>
+      <Link to="/reserve">
         <Button className="p-button-raised" label="Reservar" icon="pi pi-map-marker"/>
       </Link>
     </div>
