@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GMap } from 'primereact/gmap';
 import { Dialog } from 'primereact/dialog';
+import { DataScroller } from 'primereact/datascroller';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
@@ -8,6 +9,7 @@ import { Toast } from 'primereact/toast';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
+import "../../../node_modules/primereact/datascroller/datascroller.min.css"
 import { getAnnouncements } from '../../api/api';
 
 const SearchPlace = () => {
@@ -21,6 +23,7 @@ const SearchPlace = () => {
   const [location, setLocation] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
+  const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
@@ -61,6 +64,10 @@ const SearchPlace = () => {
       toast.current.show({ severity: 'info', summary: 'Marker Selected', detail: title });
     }
     else {
+      let selected = event.overlay.center.toString()
+      //search in diccionary by key in announcementsCircle
+      console.log(selected)
+      console.log(announcementsCircle)
       toast.current.show({ severity: 'info', summary: 'Shape Selected', detail: '' });
     }
   }
@@ -87,6 +94,7 @@ const SearchPlace = () => {
 
   const onMapReady = (event) => {
     var groupedAnnouncements = {}
+    console.log(announcements)
     announcements.forEach(announcement => {
       groupedAnnouncements[announcement.id] = false
     })
@@ -138,17 +146,59 @@ const SearchPlace = () => {
     <Button label="Yes" icon="pi pi-check" onClick={addMarker} />
     <Button label="No" icon="pi pi-times" onClick={onHide} />
   </div>;
+  
 
+const itemTemplate = (data) => {
   return (
-    <div>
+      <div className="product-item">
+          <div className="product-detail">
+              <div className="product-name">{data.location}</div>
+              <div className="product-description">{data.date}</div>
+              <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>
+          </div>
+          <div className="product-action">
+              <Button icon="pi pi-shopping-cart" label={data.price}>€</Button>
+              <span>{data.limited_mobility}</span>
+          </div>
+      </div>
+  );
+}
+  
+/*const itemTemplate = (data) => {
+  return (
+      <div className="product-item">
+        <div className="product-item">
+          <div className="product-detail">
+              <div className="product-name">{data.location}</div>
+              <div className="product-description">{data.date}</div>
+              <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>
+          </div>
+          <div className="product-action">
+              <Button icon="pi pi-shopping-cart" label={data.price}></Button>
+          </div>
+          </div>
+      </div>
+  );
+}*/
+
+return (
+    <div className=''>
       <Toast ref={toast}></Toast>
 
+      <div className='block h-30rem'>
       {
         googleMapsReady && (
           <GMap overlays={overlays} options={options} className="map" onMapReady={onMapReady}
             onMapClick={onMapClick} onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
         )
       }
+      </div>
+
+      <div className="datascroller-demo block">
+            <div className="card">
+                <DataScroller value={announcements} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Scroll Down to Load More" />
+            </div>
+      </div>
 
       <Dialog header="New Location" visible={dialogVisible} width="300px" modal footer={footer} onHide={onHide}>
         <div className="grid p-fluid">
@@ -165,7 +215,10 @@ const SearchPlace = () => {
           <div className="col-10"><Checkbox checked={draggableMarker} onChange={(event) => setDraggableMarker(event.checked)} /></div>
         </div>
       </Dialog>
+
     </div>
+
+    
   );
 }
 
