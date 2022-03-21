@@ -32,3 +32,7 @@
     color: #003507d5 !important;
 }
 
+.messageError {
+    color: #ff0000;
+  }
+
