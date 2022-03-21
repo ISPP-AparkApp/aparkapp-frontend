@@ -13,7 +13,7 @@
 }
 .p-inputtext,
 .input_text::placeholder {
-  color: black !important;
+  color: #000000 !important;
   background-color: #eaf7f1 !important;
   border-color: #37693b !important;
 }
@@ -39,4 +39,8 @@
 .tosignup {
   text-decoration: none;
   color: #174b1b;
+}
+
+.messageError {
+  color: #ff0000;
 }
