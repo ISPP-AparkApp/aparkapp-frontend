@@ -4,7 +4,7 @@ import { updateAuthToken, updateRefreshToken, updateAuthTimestamp, updateRefresh
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'https://aparkapp-backend-s1.herokuapp.com/'
+const backendUrl = 'http://localhost:8000/'
 
 async function checkAuthTokenIsValid() {
     const authTimestamp = await store.getState().session.authTimestamp
@@ -44,9 +44,16 @@ async function getAuthToken() {
 
 async function apiGet(endpoint, authRequired = true) {
     const headers = authRequired ? {
-        'Authorization': `Bearer ${getAuthToken}`
+        'Authorization': `Bearer ${await getAuthToken()}`
     } : {}
     return await axios.get(`${backendUrl}${endpoint}`, { headers })
+}
+
+async function apiPut(endpoint, body, authRequired = true) {
+    const headers = authRequired ? {
+        'Authorization': `Bearer ${await getAuthToken()}`
+    } : {}
+    return await axios.put(`${backendUrl}${endpoint}`, body, { headers })
 }
 
 async function apiPost(endpoint, body, authRequired = true) {
@@ -75,4 +82,40 @@ export async function publish(announcementData) {
     if (response.status !== 200) return false
     //TODO: handle response
     return true
+}
+
+export async function getAnnouncements() {
+    const response = await apiGet('api/announcement/user/', true)
+    if (response.status === 200) return  response.data
+    return false
+}
+
+export async function getAnnouncement(a_id) {
+    const response = await apiGet('api/announcement/' + a_id + '/', true)
+    if (response.status === 200) return  response.data
+    return false
+}
+
+export async function updateAnnouncement(a_id, announcement_data) {
+    const response = await apiPut('api/announcement/' + a_id + "/", announcement_data, true)
+    if (response.status === 200) return true
+    return false
+}
+
+export async function getReservation(r_id) {
+    const response = await apiGet('api/reservation/' + r_id + "/", true)
+    if (response.status === 200) return  response.data
+    return false
+}
+
+export async function updateReservation(r_id, reservation_data) {
+    const response = await apiPut('api/reservation/' + r_id + "/", reservation_data, true)
+    if (response.status === 200) return true
+    return false
+}
+
+export async function getReservationUser(r_id) {
+    const response = await apiGet('api/reservation/anouncement/' + r_id + "/", true)
+    if (response.status === 200) return  response.data
+    return false
 }

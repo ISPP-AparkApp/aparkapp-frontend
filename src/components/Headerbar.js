@@ -25,6 +25,16 @@ const Headerbar = () => {
         {
             label: 'Notificaciones',
             icon: 'pi pi-bell',
+            command: () => {
+                navigate("/notifications")
+            }
+        },
+        {
+            label: 'Prueba Ruta',
+            icon: 'pi pi-bell',
+            command: () => {
+                navigate("/route")
+            }
         },
         {
             className: "right-start",
