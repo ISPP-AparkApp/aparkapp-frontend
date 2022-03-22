@@ -8,6 +8,7 @@ import SignUp from "../components/views/SignUp";
 import Vehicle from "../components/views/Vehicle";
 import MapRoute from "../components/views/MapRoute";
 import Notifications from "../components/views/Notifications";
+import Reserve from "../components/views/Reserve";
 import { Navigate } from "react-router-dom";
 
 const routes = [
@@ -70,6 +71,12 @@ const routes = [
     {
         path: "/profile",
         element: <Profile />,
+        requireAuth: true,
+        fallback: "login"
+    },
+    {
+        path: "/reserve/:id",
+        element: <Reserve />,
         requireAuth: true,
         fallback: "login"
     },
