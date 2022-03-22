@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Button } from 'primereact/button';
-import { useDispatch } from 'react-redux';
-import { updateUsername } from '../../store/session';
 import { InputText } from 'primereact/inputtext';
 import { Card } from 'primereact/card';
 import { Dropdown } from 'primereact/dropdown';
@@ -9,12 +7,11 @@ import "../../css/views/Vehicle.css";
 import { Link } from "react-router-dom";
 
 const Vehicle = () => {
-    const dispatch = useDispatch()
     const [selectedType, setSelectedType] = useState(null);
-    const [brand, setBrand] = useState(null)
-    const [model, setModel] = useState(null)
-    const [license, setLicensePlate] = useState(null)
-    const [color, setColor] = useState(null)
+    const [setBrand] = useState(null)
+    const [setModel] = useState(null)
+    const [setLicensePlate] = useState(null)
+    const [setColor] = useState(null)
 
     const types = [
         { name: "Segmento A", code: "A" },
@@ -71,7 +68,7 @@ const Vehicle = () => {
                             </Link>
                         </div>
                         <div className="col-12 md:col-6">
-                            <Button className="p-button-raised p-button-lg w-full h-full" label="Terminar" onClick={() => dispatch(updateUsername("username"))} />
+                            <Button className="p-button-raised p-button-lg w-full h-full" label="Terminar" />
                         </div>
                     </div>
                 </div>

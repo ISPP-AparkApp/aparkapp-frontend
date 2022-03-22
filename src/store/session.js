@@ -1,33 +1,38 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice } from '@reduxjs/toolkit'
 
 export const sessionSlice = createSlice({
     name: 'session',
     initialState: {
-        username: null,
         authToken: null,
         refreshToken: null,
         authTimestamp: null,
         refreshAuthTimestamp: null
     },
     reducers: {
-        updateUsername(state, action) {
-            state.username = action.payload
+        login(state, action) {
+            const { authToken, refreshToken } = action.payload
+            state.authToken = authToken
+            state.refreshToken = refreshToken
+            state.authTimestamp = Date.now()
+            state.refreshAuthTimestamp = Date.now()
+            localStorage.setItem("authToken", authToken)
         },
-        updateAuthToken(state, action) {
-            state.authToken = action.payload
-        },
-        updateRefreshToken(state, action) {
+        refreshAuthToken(state, action) {
             state.refreshToken = action.payload
+            state.authTimestamp = Date.now()
         },
-        updateAuthTimestamp(state, action) {
-            state.authTimestamp = action.payload
-        },
-        updateRefreshAuthTimestamp(state, action) {
-            state.refreshAuthTimestamp = action.payload
-        },
+        logout(state) {
+            Object.keys(state).forEach(x => delete state[x])
+            localStorage.removeItem("authToken")
+        }
     },
 })
 
-export const { updateUsername, updateAuthToken, updateRefreshToken, updateAuthTimestamp, updateRefreshAuthTimestamp } = sessionSlice.actions
+const getters = {
+    isUserLogged: createSelector((state) => state.session.authToken, (authToken) => Boolean(authToken))
+}
+
+export const { login, refreshAuthToken, logout } = sessionSlice.actions
+export const { isUserLogged } = getters
 
 export default sessionSlice.reducer
