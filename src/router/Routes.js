@@ -61,7 +61,7 @@ const routes = [
         fallback: "login"
     },
     {
-        path: "/reserve",
+        path: "/reserve/:id",
         element: <Reserve />,
         requireAuth: true,
         fallback: "login"

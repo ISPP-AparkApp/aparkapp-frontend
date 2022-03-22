@@ -1,8 +1,102 @@
-.map{
-    width: 70%;
-    height: 45%;
-    position: absolute;
-    top: 140px;
-    left: 15.5%;
-    border-radius: 30px;
+.map {
+  width: 70%;
+  height: 45%;
+  position: absolute;
+  top: 140px;
+  left: 15.5%;
+  border-radius: 30px;
+}
+
+.datascroller-demo .product-name {
+  color: black;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+}
+
+.datascroller-demo .product-description {
+  color: black;
+  margin: 0 0 1rem 0 !important;
+}
+
+.datascroller-demo .product-category-icon {
+  color: green;
+  vertical-align: middle !important;
+  margin-right: 0.5rem !important;
+}
+
+.datascroller-demo .product-category {
+  color: grey;
+  font-weight: 600 !important;
+  vertical-align: middle !important;
+}
+
+.datascroller-demo .product-item {
+  background-color: white;
+  display: flex !important;
+  align-items: center !important;
+  padding: 1rem !important;
+  width: 100% !important;
+}
+
+.datascroller-demo .product-item img {
+  width: 150px !important;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23) !important;
+  margin-right: 2rem !important;
+}
+
+.datascroller-demo .product-item .product-detail {
+  flex: 1 1 0 !important;
+}
+
+.datascroller-demo .product-item .p-rating {
+  margin: 0 0 0.5rem 0 !important;
+}
+
+.datascroller-demo .product-item .product-price {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5rem !important;
+  align-self: flex-end !important;
+}
+
+.datascroller-demo .product-item .product-action {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.datascroller-demo .product-item .p-button {
+  margin-bottom: 0.5rem !important;
+}
+
+@media screen and (max-width: 576px) {
+  .datascroller-demo .product-item {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .datascroller-demo .product-item img {
+    width: 75% !important;
+    margin: 2rem 0 !important;
+  }
+
+  .datascroller-demo .product-item .product-detail {
+    text-align: center !important;
+  }
+
+  .datascroller-demo .product-item .product-price {
+    align-self: center !important;
+  }
+
+  .datascroller-demo .product-item .product-action {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .datascroller-demo .product-item .product-action {
+    margin-top: 2rem !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
 }
