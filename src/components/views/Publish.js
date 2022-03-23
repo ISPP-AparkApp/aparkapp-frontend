@@ -136,8 +136,9 @@ const Publish = () => {
                     <SelectButton unselectable={false} value={limitedMovility} options={options} onChange={(e) => setLimitedMovility(e.value)} />
                     {getFieldError("limitedMovility")}
 
+        
                     <Button label="Publicar" className="p-button-raised p-button-lg mt-5" onClick={validate}/>
-            </div>
+                </div>
             </Card>
         </div>
     )
