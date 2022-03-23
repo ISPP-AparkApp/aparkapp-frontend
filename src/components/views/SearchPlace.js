@@ -32,7 +32,6 @@ const SearchPlace = () => {
   }
 
   useEffect(() => {
-    console.log(announcements)
     getCurrentLocation()
     getAnnouncements().then(data => setAnnouncements(data, loadGoogleMaps(() => {
       setGoogleMapsReady(true);
