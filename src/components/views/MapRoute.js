@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Card } from 'primereact/card';
-import { getReservation, getAnnouncement, updateAnnouncement } from '../../api/api';
+import { getReservation, getAnnouncement, updateStatusAnnouncement } from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const MapRoute = () => {
-    const [state, setState] = useState('Initial');      // Estado del proceso
-    const [reserve, setReserve] = useState(null);       // Reserva
-    const [announce, setAnnounce] = useState(null);     // Anuncio
-    const [wait, setWait] = useState(true);             // Acepta espera
-    const [time, setTime] = useState(false);            // Contador para recarga
-    const [show, setShow] = useState(true);             // No mostrar notificación más de una vez
+    const [state, setState] = useState('Initial');
+    const [reserve, setReserve] = useState(null);
+    const [announceId, setAnnounce] = useState(null);
+    const [wait, setWait] = useState(true);
+    const [time, setTime] = useState(false);
+    const [show, setShow] = useState(true)
 
-    const reservationId = 1; // Recibir de props
+    let urlSplit = window.location.href.split("/");
+    let tam = urlSplit.length;
 
     const getReserve = () => {
-        getReservation(reservationId).then(
+        getReservation(urlSplit[tam - 1]).then(
             val => (setReserve(val))
         );
     };
-    if (reserve == null)        //Solo se necesita para la carga inicial
+    if (reserve == null)        //Only for the initial
         getReserve();
 
     const getAnnounce = () => {
         getAnnouncement(reserve.announcement).then(
-            val => (setAnnounce(val),
+            val => (setAnnounce(val.id),
                 setState(val.status),
                 setWait(val.allow_wait),
                 notify()
@@ -42,29 +43,11 @@ const MapRoute = () => {
             else {
                 setTime(true);
             }
-        }, 3000);
+        }, 1500);
         return () => clearInterval(interval);
-    }, [announce, state, time, wait]);
-    console.log(time);
+    }, [announceId, state, time, wait]);
 
-    const updateAnnounce = () => {
-        const announcementData = {
-            date: announce.date,
-            waitTime: announce.waitTime,
-            price: announce.price,
-            allow_wait: announce.allow_wait,
-            location: announce.location,
-            longitude: announce.longitude,
-            latitude: announce.latitude,
-            zone: announce.zone,
-            limited_movility: announce.limited_movility,
-            status: 'Arrival',
-            observation: announce.observation,
-            rated: announce.rated,
-            vehicle: announce.vehicle
-        }
-        updateAnnouncement(announce.id, announcementData).then(getAnnounce());
-    }
+    const updateAnnounce = () => {updateStatusAnnouncement(announceId, {status: 'Arrival'}).then(getAnnounce());}
 
     const notify = () => {
         if (show && state == "Departure") {
@@ -85,10 +68,10 @@ const MapRoute = () => {
         {state == "Initial" ? (
             <div><div className="mb-3"><Button onClick={() => { updateAnnounce(); }} className="p-button-raised p-button-lg" label="¡He llegado!" /></div>
                 {wait ? (
-                    <div><Button className="p-button-raised p-button-lg mb-1" label="Llego tarde" /></div>) : (<div></div>)
+                    <div><Button className="p-button-raised p-button-lg mb-1" label="Llego tarde" /></div>) : (<br></br>)
                 }
             </div>
-        ) : (<div></div>)
+        ) : (<br></br>)
         }
     </div>
 
@@ -98,7 +81,7 @@ const MapRoute = () => {
                 pauseOnFocusLoss draggable />
 
             <Card footer={footer}>
-                <img alt="logo" src="route.png" height="300" className='mr-3 route-img' ></img>
+                <img alt="logo" src="ruta.png" height="300" className='mr-3 route-img' ></img>
                 <br></br>
                 <hr></hr>
             </Card>

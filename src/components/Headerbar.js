@@ -30,13 +30,6 @@ const Headerbar = () => {
             }
         },
         {
-            label: 'Prueba Ruta',
-            icon: 'pi pi-bell',
-            command: () => {
-                navigate("/route")
-            }
-        },
-        {
             className: "right-start",
             label: 'Perfil',
             icon: 'pi pi-user',

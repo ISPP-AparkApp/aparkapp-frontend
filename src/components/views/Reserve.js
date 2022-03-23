@@ -45,7 +45,7 @@ const Reserve = ({ }) => {
                                 icon="pi pi-times" onClick={(event) => setReserved(false)} />
                         </div>
                         <div className="col-12">
-                            <Link to="/home">
+                            <Link to={`/route/${urlSplit[tam - 1]}`}>
                                 <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
                             </Link>
                         </div>

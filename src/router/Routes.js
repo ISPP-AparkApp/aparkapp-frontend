@@ -59,7 +59,7 @@ const routes = [
         fallback: "/login",
     },
     {
-        path: "/route",
+        path: "/route/:id",
         element: <MapRoute />,
         requireAuth: true,
         fallback: "login"

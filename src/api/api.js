@@ -85,7 +85,7 @@ export async function publish(announcementData) {
     return true
 }
 
-export async function getAnnouncements() {
+export async function getUserAnnouncements() {
     const response = await apiGet('api/announcement/user/', true)
     if (response.status === 200) return  response.data
     return false
@@ -140,4 +140,10 @@ export async function reserve(reserveData) {
     if (response.status !== 200) return false
     const { refresh: refreshToken, access: authToken } = response.data
     return true
+}
+
+export async function updateStatusAnnouncement(a_id, announcement_data) {
+    const response = await apiPut('api/announcements/status/' + a_id + "/", announcement_data, true)
+    if (response.status === 200) return true
+    return false
 }

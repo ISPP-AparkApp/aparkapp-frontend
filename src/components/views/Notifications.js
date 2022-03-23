@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Card } from 'primereact/card';
 import { Avatar } from 'primereact/avatar';
-import { getAnnouncements, updateAnnouncement } from '../../api/api';
+import { getUserAnnouncements, updateStatusAnnouncement, getReservationUser } from '../../api/api';
 import "../../css/views/Notifications.css";
 
 const Notifications = () => {
     const [state, setState] = useState('Initial');
     const [user, setUser] = useState(null);
     const [time, setTime] = useState(false);
-    const [announce, setAnnounce] = useState(null);
+    const [announceId, setAnnounce] = useState(null);
 
     const getAnnounce = () => {
-        getAnnouncements().then(val => val.forEach(x => {
+        getUserAnnouncements().then(val => val.forEach(x => {
             if (x.status == "Arrival") {
                 setState(x.status);
-                setAnnounce(x);
-                //setUser(y.name) Consulta para obtener el user del anuncio
+                setAnnounce(x.id);
+                getReservationUser(x.id).then(u => setUser(u.username));
             }
             else {
                 setState("Initial");
@@ -26,7 +26,7 @@ const Notifications = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            if(time) {
+            if (time) {
                 setTime(false);
                 getAnnounce();
             }
@@ -35,26 +35,9 @@ const Notifications = () => {
             }
         }, 3000);
         return () => clearInterval(interval);
-    }, [announce, state,time]);
+    }, [announceId, state, time, user]);
 
-    const updateAnnounce = () => {
-        const announcementData = {
-            date: announce.date,
-            waitTime: announce.waitTime,
-            price: announce.price,
-            allow_wait: announce.allow_wait,
-            location: announce.location,
-            longitude: announce.longitude,
-            latitude: announce.latitude,
-            zone: announce.zone,
-            limited_movility: announce.limited_movility,
-            status: 'Departure',
-            observation: announce.observation,
-            rated: announce.rated,
-            vehicle: announce.vehicle
-        }
-        updateAnnouncement(announce.id, announcementData).then(getAnnounce());
-    }
+    const updateAnnounce = () => { updateStatusAnnouncement(announceId, { status: 'Departure' }).then(getAnnounce()); }
 
 
     const header =
