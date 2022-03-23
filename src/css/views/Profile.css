@@ -1,0 +1,49 @@
+.tab-panel {
+    color: #000000d5 ;
+    background-color: transparent !important ;
+}
+
+.p-tabview-panels {
+    background: transparent !important;
+}
+
+.p-tabview-selected.p-highlight {
+    background: #a7d8a9 !important;
+}
+
+.p-accordion-header.p-highlight {
+    background: #a7d8a9 !important;
+}
+
+.div-button {
+    text-align: center;
+}
+
+.p-tabview-nav-link {
+    background-color: transparent !important ;
+    color: #000000d5 !important;
+}
+
+.p-accordion-header-link {
+    background-color: transparent !important;
+    color: #000000d5 !important;
+}
+
+.p-accordion-content {
+    background: transparent !important;
+    color: #000000d5 !important;
+}
+
+.p-datepicker-header {
+    background-color: transparent !important;
+    color: #000000d5 !important;
+}
+
+.p-link {
+    color: #000000d5 !important;
+}
+
+.messageError {
+    color: #ff0000;
+    font-size: small;
+  }

@@ -11,8 +11,7 @@ import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
-import { getAnnouncements,reserve } from '../../api/api';
-
+import { getAnnouncements, reserve } from '../../api/api';
 
 const SearchPlace = () => {
 
@@ -29,6 +28,7 @@ const SearchPlace = () => {
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
+
 
   function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -66,10 +66,8 @@ const SearchPlace = () => {
     }
     else {
       let selected = event.overlay.center.toString()
-      //search in diccionary by key in announcementsCircle
-      console.log(selected)
-      console.log(announcementsCircle)
-      toast.current.show({ severity: 'info', summary: 'Shape Selected', detail: '' });
+      selected = selected.replace(/[()]/g, '').replace(/ /g, '');
+      setAnnouncementsSelecteds(announcementsCircle[selected])
     }
   }
 
@@ -94,7 +92,6 @@ const SearchPlace = () => {
   }
   const onMapReady = (event) => {
     var groupedAnnouncements = {}
-    console.log(announcements)
     announcements.forEach(announcement => {
       groupedAnnouncements[announcement.id] = false
     })
@@ -145,47 +142,40 @@ const SearchPlace = () => {
     <Button label="No" icon="pi pi-times" onClick={onHide} />
   </div>;
 
-  const reserveAnnouncement = async (id) =>{
+  const dateFormatter = (date) => {
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let hour = date.getHours();
+    let minutes = date.getMinutes();
+    return year + "/" + month + "/" + day + " - " + hour + ":" + minutes;
+  }
+  const reserveAnnouncement = async (id) => {
     const reservetData = {
-      announcement:id,
+      announcement: id,
     }
     await reserve(reservetData);
   }
 
   const itemTemplate = (data) => {
+
+
     return (
       <div className="product-item">
         <div className="product-detail">
-          <div className="product-name">{data.location}</div>
-          <div className="product-description">{data.date}</div>
-          <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>
+          <div className="product-name">{dateFormatter(new Date(data.date))}</div>
+
+          <div className="product-description">Tiempo de espera: {data.wait_time} min</div>
+          <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility) === 'true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
         </div>
         <div className="product-action">
           <Link to={`/reserve/${data.id}`}>
             <Button icon="pi pi-shopping-cart" label={data.price} onClick={() => reserveAnnouncement(data.id)}>€</Button>
           </Link>
-          <span>{data.limited_mobility}</span>
         </div>
       </div>
     );
   }
-
-  /*const itemTemplate = (data) => {
-    return (
-        <div className="product-item">
-          <div className="product-item">
-            <div className="product-detail">
-                <div className="product-name">{data.location}</div>
-                <div className="product-description">{data.date}</div>
-                <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>
-            </div>
-            <div className="product-action">
-                <Button icon="pi pi-shopping-cart" label={data.price}></Button>
-            </div>
-            </div>
-        </div>
-    );
-  }*/
 
   return (
     <div className=''>
@@ -200,9 +190,11 @@ const SearchPlace = () => {
         }
       </div>
 
-      <div className="datascroller-demo block">
-        <div className="card">
-          <DataScroller value={announcements} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Scroll Down to Load More" />
+      <div className='announcements-list'>
+        <div className="datascroller-demo block">
+          <div className='announcement-card'>
+            <DataScroller value={announcementsSelecteds} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Desliza hacia abajo para ver más" emptyMessage="Selecciona una zona para visualizar los anuncios" />
+          </div>
         </div>
       </div>
 
