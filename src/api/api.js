@@ -1,5 +1,4 @@
 import axios from "axios";
-import { ConnectedOverlayScrollHandler } from "primereact/utils";
 import store from "../store";
 import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from "../store/session";
 
@@ -61,13 +60,6 @@ async function apiPost(endpoint, body, authRequired = true) {
         'Authorization': `Bearer ${await getAuthToken()}`
     } : {}
     return await axios.post(`${backendUrl}${endpoint}`, body, { headers })
-}
-
-async function apiPut(endpoint, body, authRequired = true) {
-    const headers = authRequired ? {
-        'Authorization': `Bearer ${await getAuthToken()}`
-    } : {}
-    return await axios.put(`${backendUrl}${endpoint}`, body, { headers })
 }
 
 async function apiDelete(endpoint, authRequired = true) {
@@ -194,5 +186,10 @@ export async function updateStatusAnnouncement(a_id, announcement_data) {
 
 export async function getVehicleId(id) {
     const response = await apiGet('api/vehicles/'+id+'/', true) 
+    if (response.status === 200) return response.data
+}
+
+export async function getAnnouncementId(id) {
+    const response = await apiGet('api/announcement/'+id+'/', true) 
     if (response.status === 200) return response.data
 }
