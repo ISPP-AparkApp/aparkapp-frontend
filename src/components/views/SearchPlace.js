@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GMap } from 'primereact/gmap';
 import { Dialog } from 'primereact/dialog';
+import { DataScroller } from 'primereact/datascroller';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
@@ -21,9 +22,12 @@ const SearchPlace = () => {
   const [location, setLocation] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
+  const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
+  const [date, setDate] = useState([]);
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
+  
 
   function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -60,7 +64,9 @@ const SearchPlace = () => {
       toast.current.show({ severity: 'info', summary: 'Marker Selected', detail: title });
     }
     else {
-      toast.current.show({ severity: 'info', summary: 'Shape Selected', detail: '' });
+      let selected = event.overlay.center.toString()
+      selected = selected.replace(/[()]/g, '').replace(/ /g, '');
+      setAnnouncementsSelecteds(announcementsCircle[selected])
     }
   }
 
@@ -138,16 +144,54 @@ const SearchPlace = () => {
     <Button label="No" icon="pi pi-times" onClick={onHide} />
   </div>;
 
+  const dateFormatter = (date) => {
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let hour = date.getHours(); 
+    let minutes = date.getMinutes();
+    return day + "/" + month + "/" + day +" - "+ hour + ":" + minutes;
+  }
+
+
+const itemTemplate = (data) => {
+  
+  
   return (
-    <div>
+      <div className="product-item">
+          <div className="product-detail">
+              <div className="product-name">{dateFormatter(new Date (data.date))}</div>
+              
+              <div className="product-description">Tiempo de espera: {data.wait_time} min</div> 
+              <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility)=='true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
+          </div>
+          <div className="product-action">
+              <Button icon="pi pi-shopping-cart" label={data.price}>€</Button>
+          </div>
+      </div>
+  );
+}
+
+return (
+    <div className=''>
       <Toast ref={toast}></Toast>
 
+      <div className='block h-30rem'>
       {
         googleMapsReady && (
           <GMap overlays={overlays} options={options} className="map" onMapReady={onMapReady}
             onMapClick={onMapClick} onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
         )
       }
+      </div>
+
+      <div className='announcements-list'>
+        <div className="datascroller-demo block">
+              <div className='announcement-card'>
+                  <DataScroller value={announcementsSelecteds} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Desliza hacia abajo para ver más" emptyMessage="Selecciona una zona para visualizar los anuncios"/>
+              </div>
+        </div>
+      </div>
 
       <Dialog header="New Location" visible={dialogVisible} width="300px" modal footer={footer} onHide={onHide}>
         <div className="grid p-fluid">
@@ -164,7 +208,10 @@ const SearchPlace = () => {
           <div className="col-10"><Checkbox checked={draggableMarker} onChange={(event) => setDraggableMarker(event.checked)} /></div>
         </div>
       </Dialog>
+
     </div>
+
+    
   );
 }
 
