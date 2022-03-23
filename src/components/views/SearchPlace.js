@@ -67,11 +67,6 @@ const SearchPlace = () => {
       let selected = event.overlay.center.toString()
       selected = selected.replace(/[()]/g, '').replace(/ /g, '');
       setAnnouncementsSelecteds(announcementsCircle[selected])
-      console.log(announcementsCircle[selected])
-      //search in diccionary by key in announcementsCircle
-      console.log(selected)
-      console.log(announcementsCircle)
-      toast.current.show({ severity: 'info', summary: 'Shape Selected', detail: '' });
     }
   }
 
@@ -97,7 +92,6 @@ const SearchPlace = () => {
 
   const onMapReady = (event) => {
     var groupedAnnouncements = {}
-    console.log(announcements)
     announcements.forEach(announcement => {
       groupedAnnouncements[announcement.id] = false
     })
@@ -150,27 +144,14 @@ const SearchPlace = () => {
     <Button label="No" icon="pi pi-times" onClick={onHide} />
   </div>;
 
-  const parser = (data) => {
-
-    let dateTime = data.date.toString;
-    console.log(dateTime)
-    let date = dateTime.split('T')[0].split('-');
-    let newDate = date[2]+"/"+date[1]+"/"+date[0];
-
-    setDate(newDate);
-  }
-
   const dateFormatter = (date) => {
-    
-    let d = String(date).split('T')[0]
-    let day = d.split('-')[2]
-    let month = d.split('-')[1]
-    let year = d.split('-')[0]
-    let t = String(date).split('T')[1]
-    let hour = t.split(':')[0]
-    let min = t.split(':')[1]
-    return day + "/" + month + "/" + year + " - " + hour + ":" + min;
-}
+    let day = date.getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let hour = date.getHours(); 
+    let minutes = date.getMinutes();
+    return day + "/" + month + "/" + day +" - "+ hour + ":" + minutes;
+  }
 
 
 const itemTemplate = (data) => {
@@ -179,7 +160,7 @@ const itemTemplate = (data) => {
   return (
       <div className="product-item">
           <div className="product-detail">
-              <div className="product-name">{dateFormatter(data.date)}</div>
+              <div className="product-name">{dateFormatter(new Date (data.date))}</div>
               
               <div className="product-description">Tiempo de espera: {data.wait_time} min</div> 
               <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility)=='true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
@@ -190,23 +171,6 @@ const itemTemplate = (data) => {
       </div>
   );
 }
-  
-/*const itemTemplate = (data) => {
-  return (
-      <div className="product-item">
-        <div className="product-item">
-          <div className="product-detail">
-              <div className="product-name">{data.location}</div>
-              <div className="product-description">{data.date}</div>
-              <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>
-          </div>
-          <div className="product-action">
-              <Button icon="pi pi-shopping-cart" label={data.price}></Button>
-          </div>
-          </div>
-      </div>
-  );
-}*/
 
 return (
     <div className=''>
@@ -224,7 +188,7 @@ return (
       <div className='announcements-list'>
         <div className="datascroller-demo block">
               <div className='announcement-card'>
-                  <DataScroller value={announcementsSelecteds} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Desliza hacia abajo para ver más" />
+                  <DataScroller value={announcementsSelecteds} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Desliza hacia abajo para ver más" emptyMessage="Selecciona una zona para visualizar los anuncios"/>
               </div>
         </div>
       </div>
