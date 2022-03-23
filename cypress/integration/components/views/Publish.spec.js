@@ -8,19 +8,20 @@ describe("Publish", () => {
     });
 
     it("publish successfully", () => {
-        cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').first().click() 
+        cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').first().click()
         cy.get('div.p-dropdown').first().click()
         cy.get('li.p-dropdown-item').first().click()
         cy.get('button').contains("Ubicación actual").click()
         cy.get('div.p-dropdown').last().click()
         cy.get('li.p-dropdown-item').first().click()
+        // eslint-disable-next-line testing-library/await-async-utils
         cy.wait(5000)
         cy.get('button').last().click()
         cy.contains("Anuncio publicado")
     });
 
     it("publish unsuccessfully", () => {
-        cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').first().click() 
+        cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').first().click()
         cy.get('div.p-dropdown').first().click()
         cy.get('li.p-dropdown-item').first().click()
         cy.get('div.p-dropdown').last().click()

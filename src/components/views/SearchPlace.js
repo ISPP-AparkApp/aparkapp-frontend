@@ -6,7 +6,9 @@ import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import { Toast } from 'primereact/toast';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
+import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
+import { getAnnouncements } from '../../api/api';
 
 const SearchPlace = () => {
 
@@ -14,9 +16,11 @@ const SearchPlace = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [markerTitle, setMarkerTitle] = useState('');
   const [draggableMarker, setDraggableMarker] = useState(false);
-  const [overlays, setOverlays] = useState(null);
+  const [overlays, setOverlays] = useState([]);
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [location, setLocation] = useState(null);
+  const [announcements, setAnnouncements] = useState([]);
+  const [announcementsCircle, setAnnouncementsCircle] = useState({});
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
@@ -29,9 +33,9 @@ const SearchPlace = () => {
 
   useEffect(() => {
     getCurrentLocation()
-    loadGoogleMaps(() => {
+    getAnnouncements().then(data => setAnnouncements(data, loadGoogleMaps(() => {
       setGoogleMapsReady(true);
-    });
+    })));
 
     return () => {
       removeGoogleMaps();
@@ -81,20 +85,43 @@ const SearchPlace = () => {
   }
 
   const onMapReady = (event) => {
-    setOverlays(
-      [
-        new window.google.maps.Marker({ position: { lat: 36.879466, lng: 30.667648 }, title: "Konyaalti" }),
-        new window.google.maps.Marker({ position: { lat: 36.883707, lng: 30.689216 }, title: "Ataturk Park" }),
-        new window.google.maps.Marker({ position: { lat: 36.885233, lng: 30.702323 }, title: "Oldtown" }),
-        new window.google.maps.Polygon({
-          paths: [
-            { lat: 36.9177, lng: 30.7854 }, { lat: 36.8851, lng: 30.7802 }, { lat: 36.8829, lng: 30.8111 }, { lat: 36.9177, lng: 30.8159 }
-          ], strokeOpacity: 0.5, strokeWeight: 1, fillColor: '#1976D2', fillOpacity: 0.35
-        }),
-        new window.google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
-        new window.google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
-      ]
-    );
+    var groupedAnnouncements = {}
+    announcements.forEach(announcement => {
+      groupedAnnouncements[announcement.id] = false
+    })
+
+    var groups = []
+    announcements.forEach(a1 => {
+      if (!groupedAnnouncements[a1.id]) {
+        var group = [a1]
+        announcements.forEach(a2 => {
+          const distance = getKm(a1.latitude, a1.longitude, a2.latitude, a2.longitude)
+          if (distance < 0.5 && a1.id !== a2.id) {
+            group.push(a2)
+            groupedAnnouncements[a2.id] = true
+          }
+        })
+        groups.push(group)
+        groupedAnnouncements[a1.id] = true
+      }
+    })
+
+    groups.forEach(group => {
+      var groupLocation = { lat: 0, lng: 0 }
+      group.forEach(announcement => {
+        groupLocation.lat += announcement.latitude
+        groupLocation.lng += announcement.longitude
+      })
+
+      groupLocation.lat /= group.length
+      groupLocation.lng /= group.length
+
+      announcementsCircle[groupLocation.lat + "," + groupLocation.lng] = group
+      overlays.push(new window.google.maps.Circle({ center: groupLocation, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 500 }))
+    })
+
+    setAnnouncementsCircle(announcementsCircle)
+    setOverlays(overlays)
   }
 
   const onHide = (event) => {

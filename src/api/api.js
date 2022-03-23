@@ -83,3 +83,8 @@ export async function getVehicles() {
     if (response.status === 200) return response.data
 }
 
+export async function getAnnouncements() {
+    const response = await apiGet('api/announcements/', true)
+    if (response.status === 200) return response.data
+}
+
