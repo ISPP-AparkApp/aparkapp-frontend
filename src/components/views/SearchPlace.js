@@ -9,7 +9,6 @@ import { Toast } from 'primereact/toast';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
-import "../../../node_modules/primereact/datascroller/datascroller.min.css"
 import { getAnnouncements } from '../../api/api';
 
 const SearchPlace = () => {
@@ -24,9 +23,11 @@ const SearchPlace = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
   const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
+  const [date, setDate] = useState([]);
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
+  
 
   function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -64,6 +65,9 @@ const SearchPlace = () => {
     }
     else {
       let selected = event.overlay.center.toString()
+      selected = selected.replace(/[()]/g, '').replace(/ /g, '');
+      setAnnouncementsSelecteds(announcementsCircle[selected])
+      console.log(announcementsCircle[selected])
       //search in diccionary by key in announcementsCircle
       console.log(selected)
       console.log(announcementsCircle)
@@ -145,19 +149,43 @@ const SearchPlace = () => {
     <Button label="Yes" icon="pi pi-check" onClick={addMarker} />
     <Button label="No" icon="pi pi-times" onClick={onHide} />
   </div>;
-  
+
+  const parser = (data) => {
+
+    let dateTime = data.date.toString;
+    console.log(dateTime)
+    let date = dateTime.split('T')[0].split('-');
+    let newDate = date[2]+"/"+date[1]+"/"+date[0];
+
+    setDate(newDate);
+  }
+
+  const dateFormatter = (date) => {
+    
+    let d = String(date).split('T')[0]
+    let day = d.split('-')[2]
+    let month = d.split('-')[1]
+    let year = d.split('-')[0]
+    let t = String(date).split('T')[1]
+    let hour = t.split(':')[0]
+    let min = t.split(':')[1]
+    return day + "/" + month + "/" + year + " - " + hour + ":" + min;
+}
+
 
 const itemTemplate = (data) => {
+  
+  
   return (
       <div className="product-item">
           <div className="product-detail">
-              <div className="product-name">{data.location}</div>
-              <div className="product-description">{data.date}</div>
-              <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>
+              <div className="product-name">{dateFormatter(data.date)}</div>
+              
+              <div className="product-description">Tiempo de espera: {data.wait_time} min</div> 
+              <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility)=='true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
           </div>
           <div className="product-action">
               <Button icon="pi pi-shopping-cart" label={data.price}>€</Button>
-              <span>{data.limited_mobility}</span>
           </div>
       </div>
   );
@@ -193,10 +221,12 @@ return (
       }
       </div>
 
-      <div className="datascroller-demo block">
-            <div className="card">
-                <DataScroller value={announcements} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Scroll Down to Load More" />
-            </div>
+      <div className='announcements-list'>
+        <div className="datascroller-demo block">
+              <div className='announcement-card'>
+                  <DataScroller value={announcementsSelecteds} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Desliza hacia abajo para ver más" />
+              </div>
+        </div>
       </div>
 
       <Dialog header="New Location" visible={dialogVisible} width="300px" modal footer={footer} onHide={onHide}>
