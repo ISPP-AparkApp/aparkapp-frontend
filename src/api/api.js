@@ -4,7 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'http://127.0.0.1:8000/'
+const backendUrl = 'https://aparkapp-backend-s1.herokuapp.com/'
 
 async function checkAuthTokenIsValid() {
     const authTimestamp = await store.getState().session.authTimestamp
@@ -60,6 +60,20 @@ async function apiPost(endpoint, body, authRequired = true) {
         'Authorization': `Bearer ${await getAuthToken()}`
     } : {}
     return await axios.post(`${backendUrl}${endpoint}`, body, { headers })
+}
+
+async function apiPut(endpoint, body, authRequired = true) {
+    const headers = authRequired ? {
+        'Authorization': `Bearer ${await getAuthToken()}`
+    } : {}
+    return await axios.put(`${backendUrl}${endpoint}`, body, { headers })
+}
+
+async function apiDelete(endpoint, authRequired = true) {
+    const headers = authRequired ? {
+        'Authorization': `Bearer ${await getAuthToken()}`
+    } : {}
+    return await axios.delete(`${backendUrl}${endpoint}`, { headers })
 }
 
 // The idea is to export the functions used in the views
@@ -123,6 +137,41 @@ export async function getReservationUser(r_id) {
 export async function getVehicles() {
     const response = await apiGet('api/users/vehicles/', true)
     if (response.status === 200) return response.data
+}
+
+
+export async function getUser() {
+    const response = await apiGet('api/users/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function getProfile() {
+    const response = await apiGet('api/profiles/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function deleteVehicle(v_id) {
+    const response = await apiDelete('api/vehicles/' + v_id + "/", true)
+    if (response.status === 204) return true
+    return false
+}
+
+export async function updateVehicle(v_id, vehicle_data) {
+    const response = await apiPut('api/vehicles/' + v_id + "/", vehicle_data, true)
+    if (response.status === 204) return true
+    return false
+}
+
+export async function updateUser(user_data) {
+    const response = await apiPut('api/users/', user_data, true)
+    if (response.status === 200) return true
+    return false
+}
+
+export async function updateProfile(profile_data) {
+    const response = await apiPut('api/profiles/', profile_data, true)
+    if (response.status === 200) return true
+    return false
 }
 
 export async function getAnnouncements() {
