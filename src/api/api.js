@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ConnectedOverlayScrollHandler } from "primereact/utils";
 import store from "../store";
 import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from "../store/session";
 
@@ -96,6 +97,9 @@ export async function getAnnouncementId(id) {
 export async function reserve(reserveData) {
     const response = await apiPost('api/reservations/', reserveData, true) 
     if (response.status !== 200) return false
-    const { refresh: refreshToken, access: authToken } = response.data
     return true
+}
+export async function getVehicleId(id) {
+    const response = await apiGet('api/vehicles/'+id+'/', true) 
+    if (response.status === 200) return response.data
 }

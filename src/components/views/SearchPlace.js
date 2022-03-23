@@ -149,7 +149,7 @@ const SearchPlace = () => {
     const reservetData = {
       announcement:id,
     }
-    let res = await reserve(reservetData);
+    await reserve(reservetData);
   }
 
   const itemTemplate = (data) => {
