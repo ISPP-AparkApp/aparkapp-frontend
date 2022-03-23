@@ -23,7 +23,6 @@ const SearchPlace = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
   const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
-  const [date, setDate] = useState([]);
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
@@ -150,7 +149,7 @@ const SearchPlace = () => {
     let year = date.getFullYear();
     let hour = date.getHours(); 
     let minutes = date.getMinutes();
-    return day + "/" + month + "/" + day +" - "+ hour + ":" + minutes;
+    return year + "/" + month + "/" + day +" - "+ hour + ":" + minutes;
   }
 
 
@@ -163,7 +162,7 @@ const itemTemplate = (data) => {
               <div className="product-name">{dateFormatter(new Date (data.date))}</div>
               
               <div className="product-description">Tiempo de espera: {data.wait_time} min</div> 
-              <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility)=='true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
+              <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility)==='true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
           </div>
           <div className="product-action">
               <Button icon="pi pi-shopping-cart" label={data.price}>€</Button>
