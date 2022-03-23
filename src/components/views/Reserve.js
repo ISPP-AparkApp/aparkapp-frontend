@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { reserve } from '../../api/api';
 import "../../css/views/Reserve.css";
-import { getAnnouncementId } from '../../api/api';
+import { getAnnouncement } from '../../api/api';
 
 const Reserve = ({ }) => {
 
@@ -14,9 +14,9 @@ const Reserve = ({ }) => {
     var urlSplit = window.location.href.split("/");
     var tam = urlSplit.length
     useEffect(() => {
-        getAnnouncementId(urlSplit[tam - 1]).then(data => setAd(data))
+        getAnnouncement(urlSplit[tam - 1]).then(data => setAd(data))
     }, [])
-    console.log(ad.date)
+
     const reserveAnnouncement = () => {
         const reservetData = {
             announcement: ad,

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Card } from 'primereact/card';
-import { getReservation, getAnnouncement, updateStatusAnnouncement } from '../../api/api';
+import { getAnnouncement, updateStatusAnnouncement } from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const MapRoute = () => {
     const [state, setState] = useState('Initial');
-    const [reserve, setReserve] = useState(null);
     const [announceId, setAnnounce] = useState(null);
     const [wait, setWait] = useState(true);
     const [time, setTime] = useState(false);
@@ -16,20 +15,11 @@ const MapRoute = () => {
     let urlSplit = window.location.href.split("/");
     let tam = urlSplit.length;
 
-    const getReserve = () => {
-        getReservation(urlSplit[tam - 1]).then(
-            val => (setReserve(val))
-        );
-    };
-    if (reserve == null)        //Only for the initial
-        getReserve();
-
     const getAnnounce = () => {
-        getAnnouncement(reserve.announcement).then(
+        getAnnouncement(urlSplit[tam - 1]).then(
             val => (setAnnounce(val.id),
                 setState(val.status),
-                setWait(val.allow_wait),
-                notify()
+                setWait(val.allow_wait)
             )
         );
     };
@@ -39,6 +29,7 @@ const MapRoute = () => {
             if (time) {
                 setTime(false);
                 getAnnounce();
+                notify();
             }
             else {
                 setTime(true);
@@ -81,7 +72,7 @@ const MapRoute = () => {
                 pauseOnFocusLoss draggable />
 
             <Card footer={footer}>
-                <img alt="logo" src="ruta.png" height="300" className='mr-3 route-img' ></img>
+                <img alt="Mapa con ruta" src="route.png" height="300" className='mr-3 route-img' ></img>
                 <br></br>
                 <hr></hr>
             </Card>

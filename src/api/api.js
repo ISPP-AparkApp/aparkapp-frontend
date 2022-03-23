@@ -130,11 +130,6 @@ export async function getAnnouncements() {
     if (response.status === 200) return response.data
 }
 
-export async function getAnnouncementId(id) {
-    const response = await apiGet('api/announcement/'+id+"/", true)
-    if (response.status === 200) return response.data
-}
-
 export async function reserve(reserveData) {
     const response = await apiPost('api/reservations/', reserveData, true) 
     if (response.status !== 200) return false
