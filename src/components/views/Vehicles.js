@@ -1,45 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Accordion, AccordionTab } from "primereact/accordion";
+import { Messages } from 'primereact/messages';
 import { Dropdown } from "primereact/dropdown";
+import { getVehicles, deleteVehicle, updateVehicle } from "../../api/api";
 
 const Vehicles = () => {
   const [isEditing, setEditing] = useState(0);
+  const [updated, setUpdated] = useState(0);
+  const [formErrors, setFormErrors] = useState({})
 
   const types = [
-    { name: "Segmento A", code: "A" },
-    { name: "Segmento B", code: "B" },
-    { name: "Segmento C", code: "C" },
-    { name: "Segmento D", code: "D" },
-    { name: "Segmento E", code: "E" },
-    { name: "Segmento F", code: "F" },
+    { name: "Segmento A", value: "Segmento A" },
+    { name: "Segmento B", value: "Segmento B" },
+    { name: "Segmento C", value: "Segmento C" },
+    { name: "Segmento D", value: "Segmento D" },
+    { name: "Segmento E", value: "Segmento E" },
+    { name: "Segmento F", value: "Segmento F" },
   ];
 
-  const vehiclesUser = [ // Aquí en lugar de estos valores, es necesario hacer la llamada API
-    {
-      id: 1,
-      brand: "Fiat",
-      model: "500",
-      license_plate: "1423AMX",
-      color: "blanco",
-      type: { name: "Segmento E", code: "E" },
-    },
-    {
-      id: 2,
-      brand: "Seat",
-      model: "León",
-      license_plate: "9281LSO",
-      color: "negro",
-      type: { name: "Segmento A", code: "A" },
-    },
-  ]
+  const [vehicles, setVehicles] = useState([]);
 
-  const [vehicles, setVehicles] = useState(vehiclesUser);
+  useEffect(() => {
+    if (!isEditing && !updated) {
+      getVehicles().then((data) => setVehicles(data));
+      setUpdated(1);
+    }
+  }, [updated, isEditing]);
 
-  function setDefaultValues() {
-    setVehicles(vehiclesUser)
+  const message = useRef(null);
+
+  const addMessage = () => {
+    message.current.show([
+        { severity: 'error', summary: 'No es posible eliminar su único vehículo' },
+    ]);
+}
+
+const validate = async (list_position) => {
+  const errors = {}
+  const v = vehicles[list_position]
+
+  var regexLicensePlate = /^[A-Za-z]{0,2}[0-9]{4}[A-Za-z]{2,3}$/
+  if (!regexLicensePlate.test(v.license_plate)) {
+    errors.license_plate = 'La matrícula introducida no es válida';
   }
+
+  if (v.brand.length < 3 || v.brand.length > 30) {
+    errors.brand = 'La marca del vehículo debe tener entre 3 y 30 caracteres';
+  }
+
+  if (v.model.length < 2 || v.model.length > 50) {
+    errors.model = 'El modelo del vehículo debe tener entre 1 y 50 caracteres';
+  }
+
+  if (v.color.length < 3 || v.color.length > 30) {
+    errors.color = 'El color del vehículo debe tener entre 3 y 30 caracteres';
+  }
+
+  setFormErrors(errors)
+  if (!Object.keys(errors).length) {
+    updateVehicle(v.id, v).then(() => setEditing(0)).then(() => setUpdated(0))
+  }
+}
+
+const getFieldError = (fieldName) => {
+  return formErrors[fieldName] && <p className="messageError">{formErrors[fieldName]}</p>
+}
 
   const items = vehicles.map((v, i) => (
     <AccordionTab
@@ -49,8 +76,8 @@ const Vehicles = () => {
       collapsed
     >
       {isEditing === v.id ? (
-        <div>
-          <h5>Matrícula</h5>
+        <div className="form">
+          <p className="text-xl publish_label mb-2 mt-1">Matrícula</p>
           <InputText
             value={v.license_plate}
             onChange={(e) => {
@@ -63,7 +90,8 @@ const Vehicles = () => {
               setVehicles(vehiclesList);
             }}
           />
-          <h5>Marca</h5>
+          {getFieldError("license_plate")}
+          <p className="text-xl publish_label mb-2 mt-1">Marca</p>
           <InputText
             value={v.brand}
             onChange={(e) => {
@@ -76,7 +104,8 @@ const Vehicles = () => {
               setVehicles(vehiclesList);
             }}
           />
-          <h5>Modelo</h5>
+          {getFieldError("brand")}
+          <p className="text-xl publish_label mb-2 mt-1">Modelo</p>
           <InputText
             value={v.model}
             onChange={(e) => {
@@ -89,7 +118,8 @@ const Vehicles = () => {
               setVehicles(vehiclesList);
             }}
           />
-          <h5>Color</h5>
+          {getFieldError("model")}
+          <p className="text-xl publish_label mb-2 mt-1">Color</p>
           <InputText
             value={v.color}
             onChange={(e) => {
@@ -102,7 +132,8 @@ const Vehicles = () => {
               setVehicles(vehiclesList);
             }}
           />
-          <h5>Segmento</h5>
+          {getFieldError("color")}
+          <p className="text-xl publish_label mb-2 mt-1">Segmento</p>
           <Dropdown
             options={types}
             optionLabel="name"
@@ -116,50 +147,63 @@ const Vehicles = () => {
               vehiclesList[i] = vehicle;
               setVehicles(vehiclesList);
             }}
-          /><br/>
-          <Button
-            icon="pi pi-times"
-            className="p-button-rounded p-button-danger  mr-2 mt-4"
-            onClick={() => {
-              setEditing(0);
-              setDefaultValues();
-            }}
           />
-          <Button
-            icon="pi pi-check"
-            className="p-button-rounded"
-            onClick={() => {
-              setEditing(0);
-            }}
-          />
+          <br />
+          <div className="div-button">
+            <Button
+              icon="pi pi-times"
+              className="p-button-rounded p-button-danger  mr-2 mt-4"
+              onClick={() => {
+                setUpdated(0);
+                setEditing(0);
+                setFormErrors({});
+              }}
+            />
+            <Button
+              icon="pi pi-check"
+              className="p-button-rounded"
+              onClick={() => {
+                validate(i);
+              }}
+            />
+          </div>
         </div>
       ) : (
         <div>
-          <h5>Matrícula</h5>
-          <p>{v.license_plate}</p>
-          <h5>Marca</h5>
-          <p>{v.brand}</p>
-          <h5>Modelo</h5>
-          <p>{v.model}</p>
-          <h5>Color</h5>
-          <p>{v.color}</p>
-          <h5>Segmento</h5>
-          <p>{v.type.name}</p>
-          <Button
-            icon="pi pi-trash"
-            className="p-button-rounded p-button-danger mr-2 mt-4"
-          />
-          <Button
-            icon="pi pi-pencil"
-            className="p-button-rounded p-button-warning"
-            onClick={() => setEditing(v.id)}
-          />
+          <b className="text-l">Matrícula</b>
+          <p className="text-xl">{v.license_plate}</p>
+          <b className="text-l">Marca</b>
+          <p className="text-xl">{v.brand}</p>
+          <b className="text-l">Modelo</b>
+          <p className="text-xl">{v.model}</p>
+          <b className="text-l">Color</b>
+          <p className="text-xl">{v.color}</p>
+          <b className="text-l">Segmento</b>
+          <p className="text-xl">{v.type}</p>
+          <div className="div-button">
+            <Button
+              icon="pi pi-trash"
+              className="p-button-rounded p-button-danger mr-2 mt-4"
+              onClick={() => {
+                if (vehicles.length === 1) {
+                  addMessage();
+                } else {
+                deleteVehicle(v.id).then(() => setUpdated(0));
+                }
+              }}
+            />
+            <Button
+              icon="pi pi-pencil"
+              className="p-button-rounded p-button-warning"
+              onClick={() => setEditing(v.id)}
+            />
+          </div>
         </div>
       )}
     </AccordionTab>
   ));
 
-  return <Accordion activeIndex={0}>{items}</Accordion>;
+  return <Fragment><Messages ref={message} /><Accordion activeIndex={0}>{items}</Accordion></Fragment>;
 };
 
 export default Vehicles;
