@@ -45,7 +45,23 @@ Cypress.Commands.add("createReservation", () => {
 });
 
 Cypress.Commands.add("departure", () => {
-    cy.createAnnouncement();
+    // Login
+    cy.initialOpen();
+    cy.get('a.p-menuitem-link').first().click();
+    cy.get('input[placeholder="Nombre de usuario"]').type("admin");
+    cy.get('input[placeholder="Contraseña"]').type("admin");
+    cy.get('button').click();
+    // Create announcement with another vehicle
+    cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').first().click();
+    cy.get('div.p-dropdown').first().click();
+    cy.get('li.p-dropdown-item').last().click();
+    cy.get('button').contains("Ubicación actual").click();
+    cy.get('div.p-dropdown').last().click();
+    cy.get('li.p-dropdown-item').first().click();
+    cy.wait(3000);
+    cy.get('button').last().click();
+    cy.wait(5000);
+    cy.visit("localhost:3000");    
     cy.createReservation();
     // Departure
     cy.wait(7000);

@@ -28,16 +28,16 @@ describe("Notifications", () => {
         cy.get('button');
     });
 
-    it("departure notify", () => {
-        cy.departure();
-        cy.visit("localhost:3000");                                                                 // Logout
-        cy.get('a.p-menuitem-link').first().click();
-        cy.get('input[placeholder="Nombre de usuario"]').type("user");                              // Login
-        cy.get('input[placeholder="Contraseña"]').type("admin");
-        cy.get('button').click();
-        cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').last().click();      // Search 
-        cy.get('button:last').click();                                                              // Reserve
-        cy.wait(10000);
-        cy.get("div[role=alert]");
-    });
+//    it("departure notify", () => {
+//        cy.departure();
+//        cy.visit("localhost:3000");                                                                 // Logout
+//        cy.get('a.p-menuitem-link').first().click();
+//        cy.get('input[placeholder="Nombre de usuario"]').type("user");                              // Login
+//        cy.get('input[placeholder="Contraseña"]').type("admin");
+//        cy.get('button').click();
+//        cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').last().click();      // Search 
+//        cy.get('button:last').click();                                                              // Reserve
+//        cy.wait(10000);
+//        cy.get("div[role=alert]");
+//    });
 })
