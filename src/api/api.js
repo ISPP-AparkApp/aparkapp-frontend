@@ -49,6 +49,13 @@ async function apiGet(endpoint, authRequired = true) {
     return await axios.get(`${backendUrl}${endpoint}`, { headers })
 }
 
+async function apiPut(endpoint, body, authRequired = true) {
+    const headers = authRequired ? {
+        'Authorization': `Bearer ${await getAuthToken()}`
+    } : {}
+    return await axios.put(`${backendUrl}${endpoint}`, body, { headers })
+}
+
 async function apiPost(endpoint, body, authRequired = true) {
     const headers = authRequired ? {
         'Authorization': `Bearer ${await getAuthToken()}`
@@ -93,6 +100,41 @@ export async function publish(announcementData) {
     return true
 }
 
+export async function getUserAnnouncements() {
+    const response = await apiGet('api/announcement/user/', true)
+    if (response.status === 200) return  response.data
+    return false
+}
+
+export async function getAnnouncement(a_id) {
+    const response = await apiGet('api/announcement/' + a_id + '/', true)
+    if (response.status === 200) return  response.data
+    return false
+}
+
+export async function updateAnnouncement(a_id, announcement_data) {
+    const response = await apiPut('api/announcement/' + a_id + "/", announcement_data, true)
+    if (response.status === 200) return true
+    return false
+}
+
+export async function getReservation(r_id) {
+    const response = await apiGet('api/reservation/' + r_id + "/", true)
+    if (response.status === 200) return  response.data
+    return false
+}
+
+export async function updateReservation(r_id, reservation_data) {
+    const response = await apiPut('api/reservation/' + r_id + "/", reservation_data, true)
+    if (response.status === 200) return true
+    return false
+}
+
+export async function getReservationUser(r_id) {
+    const response = await apiGet('api/reservation/anouncement/' + r_id + "/", true)
+    if (response.status === 200) return  response.data
+    return false
+}
 export async function getVehicles() {
     const response = await apiGet('api/users/vehicles/', true)
     if (response.status === 200) return response.data
@@ -138,16 +180,18 @@ export async function getAnnouncements() {
     if (response.status === 200) return response.data
 }
 
-export async function getAnnouncementId(id) {
-    const response = await apiGet('api/announcement/'+id+"/", true)
-    if (response.status === 200) return response.data
-}
-
 export async function reserve(reserveData) {
     const response = await apiPost('api/reservations/', reserveData, true) 
     if (response.status !== 200) return false
     return true
 }
+
+export async function updateStatusAnnouncement(a_id, announcement_data) {
+    const response = await apiPut('api/announcements/status/' + a_id + "/", announcement_data, true)
+    if (response.status === 200) return true
+    return false
+}
+
 export async function getVehicleId(id) {
     const response = await apiGet('api/vehicles/'+id+'/', true) 
     if (response.status === 200) return response.data

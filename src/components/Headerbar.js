@@ -25,6 +25,9 @@ const Headerbar = () => {
         {
             label: 'Notificaciones',
             icon: 'pi pi-bell',
+            command: () => {
+                navigate("/notifications")
+            }
         },
         {
             className: "right-start",
