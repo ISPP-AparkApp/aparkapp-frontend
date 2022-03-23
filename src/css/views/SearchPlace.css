@@ -6,24 +6,6 @@
   left: 15.5%;
   border-radius: 30px;
 }
-/*
-.p-datascroller-content {
-  width: 70% !important;
-  left: 250px;
-}
-.datascroller-demo .block {
-  width: 70% !important;
-  left: 250px;
-  position: absolute;
-  border-radius: 30px !important;
-}
-
-.p-datascroller .p-component .p-datascroller-inline {
-  margin-left: 30% !important;
-  width: 70% !important;
-  left: 250px;
-  position: absolute;
-}*/
 
 .p-datascroller .p-datascroller-header {
   border-top-left-radius: 30px;
