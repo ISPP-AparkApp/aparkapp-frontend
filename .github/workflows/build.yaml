@@ -9,8 +9,8 @@ on:
       - release/*
       - config/*
 jobs:
-  sonarcloud:
-    name: SonarCloud
+  tests:
+    name: Tests analysis
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -21,6 +21,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
+      - name: Codacy Coverage Reporter React
+        uses: codacy/codacy-coverage-reporter-action@v1.1.0
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: coverage/clover.xml
 
   deploy:
     # needs: build (Se añadirá cuando esté la ejecución automática de pruebas)
