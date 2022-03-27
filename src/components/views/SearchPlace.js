@@ -12,6 +12,7 @@ import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
 import { getAnnouncements, reserve } from '../../api/api';
+import { dateFormatter } from '../../utils/dateFormatter';
 
 const SearchPlace = () => {
 
@@ -142,14 +143,6 @@ const SearchPlace = () => {
     <Button label="No" icon="pi pi-times" onClick={onHide} />
   </div>;
 
-  const dateFormatter = (date) => {
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    let hour = date.getHours();
-    let minutes = date.getMinutes();
-    return year + "/" + month + "/" + day + " - " + hour + ":" + minutes;
-  }
   const reserveAnnouncement = async (id) => {
     const reservetData = {
       announcement: id,

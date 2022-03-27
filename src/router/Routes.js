@@ -8,6 +8,7 @@ import SignUp from "../components/views/SignUp";
 import Vehicle from "../components/views/Vehicle";
 import MapRoute from "../components/views/MapRoute";
 import Notifications from "../components/views/Notifications";
+import Activity from "../components/views/Activity";
 import Reserve from "../components/views/Reserve";
 import { Navigate } from "react-router-dom";
 
@@ -50,7 +51,7 @@ const routes = [
         path: "/publish",
         element: <Publish />,
         requireAuth: true,
-        fallback: "/login", 
+        fallback: "/login",
     },
     {
         path: "/search",
@@ -65,8 +66,10 @@ const routes = [
         fallback: "login"
     },
     {
-        path: "*",
-        element: <Navigate to="/home" replace />,
+        path: "/activity",
+        element: <Activity />,
+        requireAuth: true,
+        fallback: "/login",
     },
     {
         path: "/profile",
@@ -79,6 +82,10 @@ const routes = [
         element: <Reserve />,
         requireAuth: true,
         fallback: "login"
+    },
+    {
+        path: "*",
+        element: <Navigate to="/home" replace />,
     },
 ];
 
