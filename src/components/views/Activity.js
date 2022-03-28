@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import "../../css/views/Activity.css";
@@ -12,6 +12,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
+import { Messages } from 'primereact/messages';
 
 
 // TODO unify card components when back functionality is completed
@@ -97,7 +98,7 @@ const Activity = () => {
     const [bookings, setBookings] = useState([]);
     const [announcements, setAnnouncements] = useState([]);
     const [dialogVisible, setDialogVisible] = useState(false);
-    const [selectedAnnouncement, setSelectedAnnouncement] = useState();
+    const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
     const [vehicles, setVehicles] = useState([]);
 
     const [vehicle, setVehicle] = useState('');
@@ -105,9 +106,11 @@ const Activity = () => {
     const [waitTime, setWaitTime] = useState(0);
     const [price, setPrice] = useState(0.);
     const [extension, setExtension] = useState('No');
-    const [location, setLocation] = useState();
-    const [type, setType] = useState();
+    const [location, setLocation] = useState("");
+    const [type, setType] = useState("");
     const [limitedMovility, setLimitedMovility] = useState("No");
+    const [formErrors, setFormErrors] = useState({})
+    const msgs = useRef(null);
 
     useEffect(() => {
         getBookings().then(data => {
@@ -123,7 +126,7 @@ const Activity = () => {
     }, [])
 
     useEffect(async() => {
-        if (selectedAnnouncement !== undefined) {
+        if (selectedAnnouncement !== null) {
             let vehicleSelected = await vehicles.find(v => v.id === selectedAnnouncement.vehicle)
             setVehicle(vehicleSelected.license_plate)
             setDate(dateFormatter(new Date(selectedAnnouncement.date)));
@@ -139,10 +142,31 @@ const Activity = () => {
 
 
     const onHide = (event) => {
-        setSelectedAnnouncement(undefined)
+        setSelectedAnnouncement(null)
         setDialogVisible(false);
       }
 
+    const getFieldError = (fieldName) => {
+        return formErrors[fieldName] && <span className="messageError">{formErrors[fieldName]}</span>
+    }
+    
+    const validate = () => {
+        const errors = {}
+        if(!vehicle) errors.vehicle = "Vehículo requerido"
+        if(!date) errors.date = "Fecha requerida"
+        if(new Date(date) < new Date()) errors.date = "Fecha no puede ser anterior a la actual"
+        if(!waitTime && waitTime !== 0) errors.waitTime = "Tiempo de espera requerido"
+        if(!price) errors.price = "Precio requerido"
+        if(!location) errors.location = "Ubicación requerida"
+        if(!type) errors.type = "Tipo de aparcamiento requerido"
+        if(!limitedMovility) errors.limitedMovility = "Movilidad limitada requerida"
+        setFormErrors(errors)
+
+        if (!Object.keys(errors).length) {
+            processForm();
+        }
+
+    }
     const processForm = async(event) => {
         let vehicleSelected = await vehicles.find(v => v.license_plate === vehicle);
         let vehicleId = vehicleSelected.id;
@@ -158,18 +182,36 @@ const Activity = () => {
             limited_movility: limitedMovility === "Sí" ? true : false,
             vehicle: vehicleId,
         }
-        editAnnouncement(announcementData)
+        let res = await editAnnouncement(announcementData)
+        if (res === true) {
+            msgs.current.show({severity: 'success', summary: 'Anuncio modificado'});
+        } else {
+            const errors = {}
+            errors.global = res
+            setFormErrors(errors)
+        }
+        var divElement = document.getElementById("pr_id_2_content");
+        divElement.scroll({
+            top: divElement.scrollTo(0,0),
+            behavior: 'smooth' 
+        });
         
+        getBookings().then(data => {
+            setBookings(data)
+        })
+        getMyAnnnouncements().then(data => {
+            setAnnouncements(data)
+        })
     }
 
     const footer = 
     <div>
-        <Button label="Guardar" icon="pi pi-check" onClick={processForm} />
+        <Button label="Guardar" icon="pi pi-check" onClick={validate} />
         <Button label="Cancelar" icon="pi pi-times" onClick={onHide} />
     </div>;
     
     const parkTypes = ["Zona libre","Zona Azul", "Zona Verde", "Zona Roja", "Zona Naranja","Zona MAR"];
-
+    
     return (
         <div>
             <div className="grid w-full px-5 pt-5">
@@ -180,7 +222,7 @@ const Activity = () => {
                 ))}
                 {announcements.map(announcementProps => (
                     <div className="col-12 md:col-6 xl:col-4">
-                        <AnnouncementCard
+                        <AnnouncementCard 
                             setSelectedAnnouncement = {setSelectedAnnouncement}  
                             setDialogVisible={setDialogVisible} announcement={announcementProps}>
                         </AnnouncementCard>
@@ -190,32 +232,42 @@ const Activity = () => {
 
             <Dialog header="Editar anuncio" visible={dialogVisible} width="300px" modal footer={footer} onHide={onHide} className="activity-dialog" draggable={false}>
                 <div className="flex flex-column ">
+                        <Messages ref={msgs} />
                         <span className='text-xl publish_label mb-2 mt-3'>Selecciona tu vehículo</span>
                         <Dropdown className='input_text' value={vehicle} options={vehicles.map(v=>v.license_plate)} onChange={(e)=> setVehicle(e.value)}/>
+                        {getFieldError("vehicle")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Cuándo vas a dejar la plaza?</span>
                         <Calendar id="time" placeholder={date} onChange={(e) => setDate(dateFormatter(e.value))} showTime hourFormat="12" />
+                        {getFieldError("date")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Cuánto tiempo estas dispuesto a esperar?</span>
                         <InputNumber inputId="waitTime" value={waitTime} onValueChange={(e) => setWaitTime(e.value)} suffix=" minuto/s" showButtons min={0} max={30} />
+                        {getFieldError("waitTime")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Qué precio quieres establecer?</span>
                         <InputNumber inputId="currency-germany" value={price} onValueChange={(e) => setPrice(e.value)} mode="currency" currency="EUR" locale="de-DE"  min={0.5} max={10}/>
+                        {getFieldError("price")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Aceptarías esperar más por más dinero?</span>
                         <SelectButton unselectable={false} className='mb-3' value={extension} onChange={(e) => setExtension(e.value)} options={["Sí","No"]} />
+                        {getFieldError("extension")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Dónde se encuentra la plaza?</span>
                         <InputText className="input_text" value={location} disabled /><Button label="Ubicación actual" className="p-button-link" onClick={()=> 
                                 navigator.geolocation.getCurrentPosition(function(position) {
                                     setLocation(position.coords.latitude + "," + position.coords.longitude);
                             })}/>
-                        
+                        {getFieldError("location")}
+
                         <span className='text-xl publish_label mb-2 mt-3'>¿De qué tipo de plaza se trata?</span>
                         <Dropdown  value={type} onChange={(e)=> setType(e.value)} options={parkTypes} />
+                        {getFieldError("type")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Se trata de una plaza de movilidad limitada?</span>
                         <SelectButton unselectable={false} value={limitedMovility} onChange={(e) => setLimitedMovility(e.value)} options={["Sí","No"]} />
+                        {getFieldError("limitedMovility")}
+
                     </div>
             </Dialog>
         </div>

@@ -4,7 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'http://127.0.0.1:8000/'
+const backendUrl = 'http://localhost:8000/'
 
 async function checkAuthTokenIsValid() {
     const authTimestamp = await store.getState().session.authTimestamp
@@ -205,7 +205,10 @@ export async function getMyAnnnouncements() {
 }
 
 export async function editAnnouncement(announcement) {
-    const response = await apiPut('api/announcement/' + announcement.id + "/", announcement, true)
-    if (response.status === 200) return true
-    return false
+    try {
+        await apiPut('api/announcement/' + announcement.id + "/", announcement, true)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
 }  
