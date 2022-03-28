@@ -7,7 +7,7 @@ import { isUserLogged, logout } from "../store/session";
 
 const Headerbar = () => {
     const navigate = useNavigate()
-    const userIsLogged = useSelector(isUserLogged) 
+    const userIsLogged = useSelector(isUserLogged)
     const dispatch = useDispatch()
 
     const itemsUser = [
@@ -21,6 +21,9 @@ const Headerbar = () => {
         {
             label: 'Actividad',
             icon: 'pi pi-caret-right',
+            command: () => {
+                navigate("/activity")
+            }
         },
         {
             label: 'Notificaciones',

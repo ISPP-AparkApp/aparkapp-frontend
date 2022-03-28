@@ -9,7 +9,7 @@ import { Card } from 'primereact/card';
 import { publish, getVehicles} from '../../api/api';
 import { Messages } from 'primereact/messages';
 import "../../css/views/Publish.css";
-
+import { dateFormatter } from '../../utils/dateFormatter';
 
 const Publish = () => {
     const [vehicle, setVehicle] = useState('');
@@ -59,15 +59,6 @@ const Publish = () => {
             publishAnnouncement();
         }
 
-    }
-
-    const dateFormatter = (date) => {
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-        let hour = date.getHours(); 
-        let minutes = date.getMinutes();
-        return year + "-" + month + "-" + day +" "+ hour + ":" + minutes;
     }
 
     const publishAnnouncement = async () => {
