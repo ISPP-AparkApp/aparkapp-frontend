@@ -4,7 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'https://aparkapp-backend-s1.herokuapp.com/'
+const backendUrl = 'http://127.0.0.1:8000/'
 
 async function checkAuthTokenIsValid() {
     const authTimestamp = await store.getState().session.authTimestamp
@@ -192,4 +192,8 @@ export async function getVehicleId(id) {
 export async function getAnnouncementId(id) {
     const response = await apiGet('api/announcement/'+id+'/', true) 
     if (response.status === 200) return response.data
+}
+
+export async function register(registerFields) {
+    // TODO
 }
