@@ -203,3 +203,9 @@ export async function getMyAnnnouncements() {
     const response = await apiGet('api/myAnnouncements/', true)
     if (response.status === 200) return response.data
 }
+
+export async function editAnnouncement(announcement) {
+    const response = await apiPut('api/announcement/' + announcement.id + "/", announcement, true)
+    if (response.status === 200) return true
+    return false
+}  

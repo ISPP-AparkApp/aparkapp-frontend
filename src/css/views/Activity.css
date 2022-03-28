@@ -3,3 +3,16 @@
   color: black !important;
   box-shadow: 2px 2px 5px #000000 !important;
 }
+
+.p-dialog-header, .p-dialog-content, .p-dialog-footer {
+  color:black !important;
+  background-color: #eaf7f1 !important;
+}
+
+.p-inputtext::placeholder {
+  color: #000000 !important;
+}
+
+.p-dialog-footer{
+  padding: 10px !important;
+}
