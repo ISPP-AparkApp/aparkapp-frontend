@@ -4,6 +4,7 @@ import { Card } from 'primereact/card';
 import { getAnnouncement, updateStatusAnnouncement } from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import route from "../../images/route.png";
 
 const MapRoute = () => {
     const [state, setState] = useState('Initial');
@@ -17,10 +18,11 @@ const MapRoute = () => {
 
     const getAnnounce = () => {
         getAnnouncement(urlSplit[tam - 1]).then(
-            val => (setAnnounce(val.id),
-                setState(val.status),
+            val => {
+                setAnnounce(val.id)
+                setState(val.status)
                 setWait(val.allow_wait)
-            )
+            }
         );
     };
 
@@ -36,12 +38,13 @@ const MapRoute = () => {
             }
         }, 1500);
         return () => clearInterval(interval);
+        // eslint-disable-next-line
     }, [announceId, state, time, wait]);
 
-    const updateAnnounce = () => {updateStatusAnnouncement(announceId, {status: 'Arrival'}).then(getAnnounce());}
+    const updateAnnounce = () => { updateStatusAnnouncement(announceId, { status: 'Arrival' }).then(getAnnounce()); }
 
     const notify = () => {
-        if (show && state == "Departure") {
+        if (show && state === "Departure") {
             toast.success('Perfecto, salgo', {
                 position: "top-center",
                 autoClose: false,
@@ -56,7 +59,7 @@ const MapRoute = () => {
     }
 
     const footer = <div className="flex flex-column justify-content-center align-items-center h-fit text-center overflow-hidden">
-        {state == "Initial" ? (
+        {state === "Initial" ? (
             <div><div className="mb-3"><Button onClick={() => { updateAnnounce(); }} className="p-button-raised p-button-lg" label="¡He llegado!" /></div>
                 {wait ? (
                     <div><Button className="p-button-raised p-button-lg mb-1" label="Llego tarde" /></div>) : (<br></br>)
@@ -72,7 +75,7 @@ const MapRoute = () => {
                 pauseOnFocusLoss draggable />
 
             <Card footer={footer}>
-                <img alt="Mapa con ruta" src="route.png" height="300" className='mr-3 route-img' ></img>
+                <img alt="Mapa con ruta" src={route} height="300" className='mr-3 route-img' ></img>
                 <br></br>
                 <hr></hr>
             </Card>
