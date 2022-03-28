@@ -22,7 +22,7 @@ const Publish = () => {
     const [waitTime, setWaitTime] = useState(0);
     const [price, setPrice] = useState(0.);
     const [extension, setExtension] = useState('No');
-    const [location, setLocation] = useState();
+    const [location, setLocation] = useState("");
     const [type, setType] = useState();
     const [limitedMovility, setLimitedMovility] = useState("No");
     const [vehicles, setVehicles] = useState([]);
@@ -125,6 +125,11 @@ const Publish = () => {
         setDialogVisible(false);
     }
 
+    const cancell = (event) => {
+        setLocation('');
+        setDialogVisible(false);
+    }
+
     const confirm = (event) => {
         setDialogVisible(false);
         setLocation(markerLocation);
@@ -133,7 +138,7 @@ const Publish = () => {
     const footer = 
         <div>
             <Button label="Confirmar" icon="pi pi-check" onClick={confirm}  />
-            <Button label="Salir" icon="pi pi-times" onClick={onHide} />
+            <Button label="Cancelar" icon="pi pi-times" onClick={cancell} />
         </div>;
 
     const map_options = {
