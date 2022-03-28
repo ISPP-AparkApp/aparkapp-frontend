@@ -36,3 +36,29 @@
     color: #ff0000;
   }
 
+.map-button{
+    border: none !important;
+    height: 100%;
+}
+
+.grid {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+}
+
+.grid > div {
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+}
+
+.p-dialog-content{
+    overflow: hidden !important;
+}
+
+.p-dialog{
+    width: 80% !important;
+}
+
+.p-dialog-header-icon{
+    color: white !important;
+}
