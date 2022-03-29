@@ -60,7 +60,7 @@ const UserRegister = (props) => {
     return (
         <Card title="Datos personales" className={"w-full md:w-auto"}>
             <div className="flex flex-column">
-                <img alt="logo-full" src="logo-full.png" height="250" width="250"></img>
+                <img alt="logo-full" src="logo-full.png" height="250" width="250" className='m-auto'></img>
                 <div className="p-inputgroup mt-6">
                     <span className="p-inputgroup-addon">
                         <i className="pi pi-user icons_form"></i>
@@ -107,7 +107,7 @@ const UserRegister = (props) => {
                     <span className="p-inputgroup-addon">
                         <i className="pi pi-calendar icons_form"></i>
                     </span>
-                    <Calendar placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} />
+                    <Calendar className="p-birthdate-calendar" placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} />
                 </div>
                 {getFieldError("birthdate")}
 
