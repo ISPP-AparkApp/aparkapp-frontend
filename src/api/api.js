@@ -6,6 +6,7 @@ const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
 const backendUrl = 'http://127.0.0.1:8000/'
 
+
 async function checkAuthTokenIsValid() {
     const authTimestamp = await store.getState().session.authTimestamp
     return authTimestamp + authTokenValidTime > Date.now()
@@ -182,11 +183,6 @@ export async function updateStatusAnnouncement(a_id, announcement_data) {
     const response = await apiPut('api/announcements/status/' + a_id + "/", announcement_data, true)
     if (response.status === 200) return true
     return false
-}
-
-export async function getVehicleId(id) {
-    const response = await apiGet('api/vehicles/' + id + '/', true)
-    if (response.status === 200) return response.data
 }
 
 export async function getAnnouncementId(id) {
