@@ -13,7 +13,7 @@ const Notifications = () => {
 
     const getAnnounce = () => {
         getUserAnnouncements().then(val => val.forEach(x => {
-            if (x.status == "Arrival") {
+            if (x.status === "Arrival") {
                 setState(x.status);
                 setAnnounce(x.id);
                 getReservationUser(x.id).then(u => setUser(u.username));
@@ -47,7 +47,7 @@ const Notifications = () => {
         <span><Button onClick={() => { updateAnnounce(); }} className="p-button-raised p-button-lg w-full h-full" label="Perfecto, salgo" /></span>;
     return (
         <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
-            {state == 'Arrival' ? (
+            {state === 'Arrival' ? (
                 <Card title={header} style={{ color: "black" }} footer={footer}>
                     <p className="mb-0 text-xl"><Avatar style={{ color: "white" }} icon="pi pi-user" />   ¡He llegado!</p>
                     <br></br>

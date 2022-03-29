@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GMap } from 'primereact/gmap';
 import { Dialog } from 'primereact/dialog';
-import { Link } from "react-router-dom";
-import { DataScroller } from 'primereact/datascroller';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
@@ -13,9 +11,9 @@ import "../../css/views/SearchPlace.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
 import { getAnnouncements, reserve } from '../../api/api';
 import { dateFormatter } from '../../utils/dateFormatter';
+import ListAds from './ListAds';
 
 const SearchPlace = () => {
-
   const [googleMapsReady, setGoogleMapsReady] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [markerTitle, setMarkerTitle] = useState('');
@@ -29,7 +27,6 @@ const SearchPlace = () => {
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
-
 
   function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -143,33 +140,6 @@ const SearchPlace = () => {
     <Button label="No" icon="pi pi-times" onClick={onHide} />
   </div>;
 
-  const reserveAnnouncement = async (id) => {
-    const reservetData = {
-      announcement: id,
-    }
-    await reserve(reservetData);
-  }
-
-  const itemTemplate = (data) => {
-
-
-    return (
-      <div className="product-item">
-        <div className="product-detail">
-          <div className="product-name">{dateFormatter(new Date(data.date))}</div>
-
-          <div className="product-description">Tiempo de espera: {data.wait_time} min</div>
-          <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility) === 'true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
-        </div>
-        <div className="product-action">
-          <Link to={`/reserve/${data.id}`}>
-            <Button icon="pi pi-shopping-cart" label={data.price} onClick={() => reserveAnnouncement(data.id)}>€</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className=''>
       <Toast ref={toast}></Toast>
@@ -183,13 +153,7 @@ const SearchPlace = () => {
         }
       </div>
 
-      <div className='announcements-list'>
-        <div className="datascroller-demo block">
-          <div className='announcement-card'>
-            <DataScroller value={announcementsSelecteds} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Desliza hacia abajo para ver más" emptyMessage="Selecciona una zona para visualizar los anuncios" />
-          </div>
-        </div>
-      </div>
+      <ListAds announcements={announcementsSelecteds}></ListAds>
 
       <Dialog header="New Location" visible={dialogVisible} width="300px" modal footer={footer} onHide={onHide}>
         <div className="grid p-fluid">

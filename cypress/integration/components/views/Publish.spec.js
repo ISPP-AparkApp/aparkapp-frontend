@@ -15,6 +15,10 @@ describe("Publish", () => {
         cy.get('div.p-dropdown').last().click()
         cy.get('li.p-dropdown-item').first().click()
         // eslint-disable-next-line testing-library/await-async-utils
+        cy.get('input.p-inputtext.p-component.p-filled').first().click()
+        cy.get('span.pi.pi-chevron-up').first().click()
+        cy.get('img.mr-3.logo-img').first().click()
+
         cy.wait(5000)
         cy.get('button').last().click()
         cy.contains("Anuncio publicado")
@@ -29,4 +33,10 @@ describe("Publish", () => {
         cy.get('button').last().click()
         cy.contains("Ubicación requerida")
     })
-})
+
+    it("map appears succesfuly", () => {
+        cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').first().click()
+        cy.get('button.map-button').click()
+        cy.contains("Localiza tu plaza");
+    })
+    })
