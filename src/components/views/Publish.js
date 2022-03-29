@@ -11,10 +11,8 @@ import { Messages } from 'primereact/messages';
 import { Dialog } from 'primereact/dialog';
 import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
-
-
 import "../../css/views/Publish.css";
-
+import { dateFormatter } from '../../utils/dateFormatter';
 
 const Publish = () => {
     const [vehicle, setVehicle] = useState('');
@@ -85,15 +83,6 @@ const Publish = () => {
             publishAnnouncement();
         }
 
-    }
-
-    const dateFormatter = (date) => {
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-        let hour = date.getHours(); 
-        let minutes = date.getMinutes();
-        return year + "-" + month + "-" + day +" "+ hour + ":" + minutes;
     }
 
     const publishAnnouncement = async () => {
