@@ -4,10 +4,11 @@ import "../css/Headerbar.css";
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { isUserLogged, logout } from "../store/session";
+import logo from "../images/logo.png";
 
 const Headerbar = () => {
     const navigate = useNavigate()
-    const userIsLogged = useSelector(isUserLogged) 
+    const userIsLogged = useSelector(isUserLogged)
     const dispatch = useDispatch()
 
     const itemsUser = [
@@ -66,7 +67,7 @@ const Headerbar = () => {
 
     const start =
         <div className='flex align-items-center'>
-            <img alt="logo" src="logo.png" height="60" className='mr-3 logo-img' ></img>
+            <img alt="logo" src={logo} height="60" className='mr-3 logo-img' ></img>
         </div>
 
     return (
