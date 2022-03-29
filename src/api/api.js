@@ -74,7 +74,7 @@ export async function login(username, password) {
     let response
     try {
         response = await apiPost('api/login/', { "username": username, "password": password }, false)
-    } catch(e) {
+    } catch (e) {
         return false
     }
     const { refresh: refreshToken, access: authToken } = response.data
@@ -94,13 +94,13 @@ export async function publish(announcementData) {
 
 export async function getUserAnnouncements() {
     const response = await apiGet('api/announcement/user/', true)
-    if (response.status === 200) return  response.data
+    if (response.status === 200) return response.data
     return false
 }
 
 export async function getAnnouncement(a_id) {
     const response = await apiGet('api/announcement/' + a_id + '/', true)
-    if (response.status === 200) return  response.data
+    if (response.status === 200) return response.data
     return false
 }
 
@@ -112,7 +112,7 @@ export async function updateAnnouncement(a_id, announcement_data) {
 
 export async function getReservation(r_id) {
     const response = await apiGet('api/reservation/' + r_id + "/", true)
-    if (response.status === 200) return  response.data
+    if (response.status === 200) return response.data
     return false
 }
 
@@ -124,7 +124,7 @@ export async function updateReservation(r_id, reservation_data) {
 
 export async function getReservationUser(r_id) {
     const response = await apiGet('api/reservation/anouncement/' + r_id + "/", true)
-    if (response.status === 200) return  response.data
+    if (response.status === 200) return response.data
     return false
 }
 export async function getVehicles() {
@@ -173,7 +173,7 @@ export async function getAnnouncements() {
 }
 
 export async function reserve(reserveData) {
-    const response = await apiPost('api/reservations/', reserveData, true) 
+    const response = await apiPost('api/reservations/', reserveData, true)
     if (response.status !== 200) return false
     return true
 }
@@ -185,15 +185,21 @@ export async function updateStatusAnnouncement(a_id, announcement_data) {
 }
 
 export async function getVehicleId(id) {
-    const response = await apiGet('api/vehicles/'+id+'/', true) 
+    const response = await apiGet('api/vehicles/' + id + '/', true)
     if (response.status === 200) return response.data
 }
 
 export async function getAnnouncementId(id) {
-    const response = await apiGet('api/announcement/'+id+'/', true) 
+    const response = await apiGet('api/announcement/' + id + '/', true)
     if (response.status === 200) return response.data
 }
 
 export async function register(registerFields) {
-    // TODO
+    //TODO parse errors
+    try {
+        await apiPost('api/register/', registerFields, false)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
 }

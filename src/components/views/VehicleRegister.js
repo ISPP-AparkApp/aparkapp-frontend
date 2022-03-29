@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Card } from 'primereact/card';
@@ -6,6 +6,8 @@ import { Dropdown } from 'primereact/dropdown';
 import "../../css/views/Vehicle.css";
 import { register } from "../../api/api";
 import { dateFormatter } from '../../utils/dataFormatter';
+import { login } from "../../api/api";
+import { Messages } from 'primereact/messages';
 
 const VehicleRegister = (props) => {
     const [brand, setBrand] = useState("");
@@ -14,22 +16,24 @@ const VehicleRegister = (props) => {
     const [color, setColor] = useState("");
     const [selectedType, setSelectedType] = useState(null);
     const [formErrors, setFormErrors] = useState({});
+    const msgs = useRef(null);
 
     const types = [
-        { name: "Segmento A", code: "A" },
-        { name: "Segmento B", code: "B" },
-        { name: "Segmento C", code: "C" },
-        { name: "Segmento D", code: "D" },
-        { name: "Segmento E", code: "E" },
-        { name: "Segmento F", code: "F" },
+        { name: "Segmento A" },
+        { name: "Segmento B" },
+        { name: "Segmento C" },
+        { name: "Segmento D" },
+        { name: "Segmento E" },
+        { name: "Segmento F" },
     ]
 
     const doRegister = async () => {
         const registerFields = {
             username: props.user.username,
             password: props.user.password,
-            firstName: props.user.firstName,
-            lastName: props.user.lastName,
+            email: props.user.email,
+            first_name: props.user.firstName,
+            last_name: props.user.lastName,
             profile: {
                 phone: props.user.phone,
                 birthdate: dateFormatter(props.user.birthdate).split(" ")[0]
@@ -37,12 +41,20 @@ const VehicleRegister = (props) => {
             vehicle: {
                 brand: brand,
                 model: model,
-                licensePlate: licensePlate,
+                license_plate: licensePlate,
                 color: color,
-                segment: selectedType
+                type: selectedType.name
             }
         }
-        //await register(registerFields)
+        let response = await register(registerFields)
+        if (response === true) {
+            msgs.current.show({ severity: 'success', summary: 'Usuario registrado' });
+        } else {
+            const errors = {}
+            errors.global = response['error']
+            setFormErrors(errors)
+        }
+        window.scrollTo(0, 0)
     }
 
     const validate = async () => {
@@ -54,13 +66,22 @@ const VehicleRegister = (props) => {
         if (!color) errors.color = 'El color es requerido';
         if (!selectedType) errors.selectedType = 'El segmento es requerido';
 
+        var regexLicensePlate = /^[A-Za-z]{0,2}[0-9]{4}[A-Za-z]{2,3}$/
+        if (!regexLicensePlate.test(licensePlate)) errors.licensePlate = 'La matrícula introducida no es válida';
+
+        if (brand.length < 3 || brand.length > 30) errors.brand = 'La marca del vehículo debe tener entre 3 y 30 caracteres';
+        if (model.length < 2 || model.length > 50) errors.model = 'El modelo del vehículo debe tener entre 1 y 50 caracteres';
+        if (color.length < 3 || color.length > 30) errors.color = 'El color del vehículo debe tener entre 3 y 30 caracteres';
+
         setFormErrors(errors)
 
         if (!Object.keys(errors).length) {
             const formError = await doRegister();
             if (formError) {
                 setFormErrors({ global: formError })
-            } 
+            } else {
+                await login(props.user.username, props.user.password)
+            }
         }
     }
 
@@ -70,9 +91,10 @@ const VehicleRegister = (props) => {
 
     return (
         <div className="flex flex-column align-items-center px-3 md:px-0">
+            <Messages ref={msgs} />
             <Card title="Registro de vehículo" className="w-full md:w-auto">
                 <div className="flex flex-column">
-                    <img alt="logo-full" src="logo-full.png" height="250"></img>
+                    <img alt="logo-full" src="logo-full.png" height="250" width="250" className='m-auto'></img>
                     {getFieldError("global")}
                     <div className="p-inputgroup mt-6">
                         <span className="p-inputgroup-addon">

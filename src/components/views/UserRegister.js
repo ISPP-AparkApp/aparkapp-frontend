@@ -12,6 +12,7 @@ const UserRegister = (props) => {
     const [lastName, setLastName] = useState("");
     const [phone, setPhone] = useState("");
     const [birthdate, setBirthdate] = useState("");
+    const [email, setEmail] = useState("");
     const [formErrors, setFormErrors] = useState({});
 
     const validate = async () => {
@@ -19,6 +20,7 @@ const UserRegister = (props) => {
 
         if (!username) errors.username = 'El nombre de usuario es requerido';
         if (!password) errors.password = 'La contraseña es requerida';
+        if (!email) errors.email = 'El email es requerido';
         if (!firstName) errors.onlyName = 'El nombre es requerido';
         if (!lastName) errors.lastName = 'El apellido es requerido';
         if (!phone) errors.phone = 'El teléfono es requerido';
@@ -26,10 +28,15 @@ const UserRegister = (props) => {
 
         if (firstName.length < 3 || firstName.length > 30) errors.firstName = 'El nombre debe tener una longitud entre 3 y 30 caracteres';
         if (lastName.length < 3 || lastName.length > 50) errors.lastName = 'Los apellidos deben tener una longitud entre 3 y 50 caracteres';
-          
+
+        var mail_format = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+        if (!mail_format.test(email)) {
+            errors.email = 'El email introducido no es válido'
+        }
+
         var regexPhone = /^\+?(6\d{2}|7[1-9]\d{1}|9\d{2})\d{6}$/
         if (!regexPhone.test(phone)) errors.phone = 'El número de teléfono introducido no es válido';
-        
+
         setFormErrors(errors)
 
         if (!Object.keys(errors).length) {
@@ -37,6 +44,7 @@ const UserRegister = (props) => {
             props.setUser({
                 "username": username,
                 "password": password,
+                "email": email,
                 "firstName": firstName,
                 "lastName": lastName,
                 "phone": phone,
@@ -52,7 +60,7 @@ const UserRegister = (props) => {
     return (
         <Card title="Datos personales" className={"w-full md:w-auto"}>
             <div className="flex flex-column">
-                <img alt="logo-full" src="logo-full.png" height="250"></img>
+                <img alt="logo-full" src="logo-full.png" height="250" width="250"></img>
                 <div className="p-inputgroup mt-6">
                     <span className="p-inputgroup-addon">
                         <i className="pi pi-user icons_form"></i>
@@ -67,6 +75,13 @@ const UserRegister = (props) => {
                     <InputText type="password" className="input_text" placeholder="Contraseña" onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 {getFieldError("password")}
+                <div className="p-inputgroup mt-3">
+                    <span className="p-inputgroup-addon">
+                        <i className="pi pi-at icons_form"></i>
+                    </span>
+                    <InputText className="input_text" placeholder="Correo electrónico" onChange={(e) => setEmail(e.target.value)} />
+                </div>
+                {getFieldError("email")}
                 <div className="p-inputgroup mt-3">
                     <span className="p-inputgroup-addon">
                         <i className="pi pi-user icons_form"></i>
