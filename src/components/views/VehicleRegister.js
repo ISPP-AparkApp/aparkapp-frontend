@@ -38,21 +38,26 @@ const VehicleRegister = (props) => {
                 phone: props.user.phone,
                 birthdate: dateFormatter(props.user.birthdate).split(" ")[0]
             },
-            vehicle: {
-                brand: brand,
-                model: model,
-                license_plate: licensePlate,
-                color: color,
-                type: selectedType.name
-            }
+            vehicles: [
+                {
+                    brand: brand,
+                    model: model,
+                    license_plate: licensePlate,
+                    color: color,
+                    type: selectedType.name
+                },
+            ]
         }
         let response = await register(registerFields)
         if (response === true) {
             msgs.current.show({ severity: 'success', summary: 'Usuario registrado' });
         } else {
-            const errors = {}
-            errors.global = response['error']
-            setFormErrors(errors)
+            let formError = ""
+            for (const [key, value] of Object.entries(response['error'])) {
+                formError += value
+            }
+            formError = formError.split('.').map(str => <p>{str}</p>);
+            return formError
         }
         window.scrollTo(0, 0)
     }
@@ -96,7 +101,7 @@ const VehicleRegister = (props) => {
                 <div className="flex flex-column">
                     <img alt="logo-full" src="logo-full.png" height="250" width="250" className='m-auto'></img>
                     {getFieldError("global")}
-                    <div className="p-inputgroup mt-6">
+                    <div className="p-inputgroup mt-3">
                         <span className="p-inputgroup-addon">
                             <i className="pi pi-bars icons_form"></i>
                         </span>

@@ -195,7 +195,6 @@ export async function getAnnouncementId(id) {
 }
 
 export async function register(registerFields) {
-    //TODO parse errors
     try {
         await apiPost('api/register/', registerFields, false)
     } catch (error) {
