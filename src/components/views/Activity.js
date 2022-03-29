@@ -15,7 +15,6 @@ import { Dropdown } from 'primereact/dropdown';
 import { Messages } from 'primereact/messages';
 
 
-// TODO unify card components when back functionality is completed
 const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement }) => {
 
     let activityStatus;
@@ -36,12 +35,12 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         <Card key={uuidv4()} className="activityCard" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
-                    <li><strong>Matrícula:</strong> { }</li>
+                    <li><strong>Matrícula:</strong> {announcement.vehicle.license_plate}</li>
                     <li><strong>Fecha y hora: </strong>{dateFormatter(new Date(announcement.date))}</li>
                     <li><strong>Dirección: </strong> {announcement.location}</li>
-                    <li><strong>Marca: </strong> { }</li>
-                    <li><strong>Modelo: </strong> { }</li>
-                    <li><strong>Color: </strong> { }</li>
+                    <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
+                    <li><strong>Modelo: </strong> {announcement.vehicle.model}</li>
+                    <li><strong>Color: </strong> {announcement.vehicle.color}</li>
                     <li><strong>Tiempo de espera:</strong> {announcement.wait_time}</li>
                     <li><strong>Precio:</strong> {announcement.price}</li>
                 </ul>
@@ -129,8 +128,7 @@ const Activity = () => {
 
     useEffect(async () => {
         if (selectedAnnouncement !== null) {
-            let vehicleSelected = await vehicles.find(v => v.id === selectedAnnouncement.vehicle)
-            setVehicle(vehicleSelected.license_plate)
+            setVehicle(selectedAnnouncement.vehicle.license_plate)
             setDate(dateFormatter(new Date(selectedAnnouncement.date)));
             setWaitTime(selectedAnnouncement.wait_time);
             setPrice(selectedAnnouncement.price);
