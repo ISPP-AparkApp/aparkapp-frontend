@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import "../../css/views/Reserve.css";
 import { getAnnouncementId } from '../../api/api';
+import { dateFormatter } from '../../utils/dateFormatter';
 
 const Reserve = () => {
     const [reserved, setReserved] = useState(true)
@@ -26,7 +27,7 @@ const Reserve = () => {
             <Card title={`Matrícula: `} className="activityCard">
                 <div className="flex flex-column  pb-5">
                     <ul className="mt-0">
-                        <li><strong>Fecha y hora: </strong>{ad == null ? ("") : (ad.date)}</li>
+                        <li><strong>Fecha y hora: </strong>{ad == null ? ("") : (dateFormatter(new Date(ad.date)))}</li>
                         <li><strong>Dirección: </strong>{ad == null ? ("") : (ad.location)}</li>
                         <li><strong>Modelo: </strong>{vehicle == null ? ("") : (vehicle.brand)}</li>
                         <li><strong>Color: </strong>{vehicle == null ? ("") : (vehicle.color)}</li>
