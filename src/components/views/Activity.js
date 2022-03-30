@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import "../../css/views/Activity.css";
-import { cancelAnnouncement, getBookings } from '../../api/api';
+import { cancelReservation, cancelAnnouncement, getBookings } from '../../api/api';
 import { getMyAnnnouncements } from '../../api/api';
 import { v4 as uuidv4 } from 'uuid';
 import { dateFormatter } from '../../utils/dateFormatter';
@@ -54,9 +54,24 @@ const AnnouncementCard = ({id, location, date, wait_time, cancelled }) => {
     )
 }
 
-const BookingCard = ({ announcement }) => {
+
+const cancelReserve = async (id, setAnnouncements, setBookings) => {
+    const data = {
+        cancelled: true,
+    }
+    cancelReservation(id, data);
+    
+    getBookings().then(data => {
+        setBookings(data)
+    })
+    getMyAnnnouncements().then(data => {
+        setAnnouncements(data)
+    })
+}
+
+const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements }) => {
     let activityStatus;
-    if (announcement.cancelled){
+    if (announcement.cancelled===true || cancelled===true){
         activityStatus = "Cancelado";  
     }else if(Date.parse(announcement.date) > Date.now()) {
         activityStatus = "En curso"
@@ -78,10 +93,10 @@ const BookingCard = ({ announcement }) => {
                     <li><strong>Precio: </strong> {announcement.price}</li>
                 </ul>
             </div>
-            {announcement.cancelled ? "" :
+            {(announcement.cancelled || cancelled) ? "" :
                 <div className="grid w-full">
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" />
+                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings)} />
                     </div>
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
@@ -110,7 +125,7 @@ const Activity = () => {
         <div className="grid w-full px-5 pt-5">
             {bookings.map(bookingProps => (
                 <div className="col-12 md:col-6 xl:col-4">
-                    <BookingCard {...bookingProps}></BookingCard>
+                    <BookingCard cancelled = {bookingProps.cancelled} setAnnouncements={setAnnouncements} setBookings={setBookings} id = {bookingProps.id} {...bookingProps}></BookingCard>
                 </div>
             ))}
             {announcements.map(announcementProps => (
