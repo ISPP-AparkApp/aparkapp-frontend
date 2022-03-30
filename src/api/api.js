@@ -190,6 +190,25 @@ export async function getAnnouncementId(id) {
     if (response.status === 200) return response.data
 }
 
+export async function getBookings() {
+    const response = await apiGet('api/reservations/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function getMyAnnnouncements() {
+    const response = await apiGet('api/myAnnouncements/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function editAnnouncement(announcement) {
+    try {
+        await apiPut('api/announcement/' + announcement.id + "/", announcement, true)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
+}
+    
 export async function register(registerFields) {
     try {
         await apiPost('api/register/', registerFields, false)
@@ -197,4 +216,4 @@ export async function register(registerFields) {
         return error.response.data
     }
     return true
-}
+}  

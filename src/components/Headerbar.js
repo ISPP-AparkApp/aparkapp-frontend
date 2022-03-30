@@ -22,6 +22,9 @@ const Headerbar = () => {
         {
             label: 'Actividad',
             icon: 'pi pi-caret-right',
+            command: () => {
+                navigate("/activity")
+            }
         },
         {
             label: 'Notificaciones',
