@@ -3,7 +3,7 @@ import { Card } from 'primereact/card';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import "../../css/views/Reserve.css";
-import { getAnnouncementId } from '../../api/api';
+import { getAnnouncement } from '../../api/api';
 import { dateFormatter } from '../../utils/dateFormatter';
 
 const Reserve = () => {
@@ -15,7 +15,7 @@ const Reserve = () => {
     var tam = urlSplit.length
 
     useEffect(() => {
-        getAnnouncementId(urlSplit[tam - 1]).then(data => {
+        getAnnouncement(urlSplit[tam - 1]).then(data => {
             setAd(data)
             setVehicle(data.vehicle)
         })

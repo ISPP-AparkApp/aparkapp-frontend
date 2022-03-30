@@ -127,7 +127,28 @@
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -137,7 +158,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -198,7 +240,10 @@ import SearchPlace from "../components/views/SearchPlace";
 import Publish from "../components/views/Publish";
 import AboutUs from "../components/views/AboutUs";
 import SignUp from "../components/views/SignUp";
-import Vehicle from "../components/views/Vehicle";
+import MapRoute from "../components/views/MapRoute";
+import Notifications from "../components/views/Notifications";
+import Activity from "../components/views/Activity";
+import Reserve from "../components/views/Reserve";
 import { Navigate } from "react-router-dom";
 &nbsp;
 const routes = [
@@ -219,10 +264,10 @@ const routes = [
         fallback: "/home",
     },
     {
-        path: "/vehicle",
-        element: &lt;Vehicle /&gt;,
-        requireAuth: false,
-        fallback: "/home",
+        path: "/notifications",
+        element: &lt;Notifications /&gt;,
+        requireAuth: true,
+        fallback: "/login",
     },
     {
         path: "/home",
@@ -234,7 +279,7 @@ const routes = [
         path: "/publish",
         element: &lt;Publish /&gt;,
         requireAuth: true,
-        fallback: "/login", 
+        fallback: "/login",
     },
     {
         path: "/search",
@@ -243,14 +288,32 @@ const routes = [
         fallback: "/login",
     },
     {
-        path: "*",
-        element: &lt;Navigate to="/home" replace /&gt;,
+        path: "/route/:id",
+        element: &lt;MapRoute /&gt;,
+        requireAuth: true,
+        fallback: "login"
+    },
+    {
+        path: "/activity",
+        element: &lt;Activity /&gt;,
+        requireAuth: true,
+        fallback: "/login",
     },
     {
         path: "/profile",
         element: &lt;Profile /&gt;,
         requireAuth: true,
         fallback: "login"
+    },
+    {
+        path: "/reserve/:id",
+        element: &lt;Reserve /&gt;,
+        requireAuth: true,
+        fallback: "login"
+    },
+    {
+        path: "*",
+        element: &lt;Navigate to="/home" replace /&gt;,
     },
 ];
 &nbsp;
@@ -262,7 +325,7 @@ export default routes;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Mar 23 2022 21:48:25 GMT+0100 (hora estándar de Europa central)
+                at Wed Mar 30 2022 22:08:13 GMT+0200 (hora de verano de Europa central)
             </div>
         <script src="../../prettify.js"></script>
         <script>

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -84,30 +84,16 @@
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -119,51 +105,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from 'react';
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
-import { Card } from 'primereact/card';
-import { Link } from "react-router-dom";
-import "../../css/views/SignUp.css";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import "../../css/views/SignUp.css";
+import React, { useState } from 'react';
+import VehicleRegister from "./VehicleRegister";
+import UserRegister from './UserRegister';
 &nbsp;
-// TODO in sprint 2: We could use React Hook Form to check errors
-const SignUp = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >    return (</span>
+const SignUp = () =&gt; {
+    const [vehicleHidden, setVehicleHidden] = useState(true)
+    const [user, setUser] = useState(null)
+&nbsp;
+    return (
         &lt;div className="flex flex-column align-items-center px-3 md:px-0"&gt;
-            &lt;Card title="Datos personales" className="w-full md:w-auto"&gt;
-                &lt;div className="flex flex-column align-items-center"&gt;
-                    &lt;img alt="logo-full" src="logo-full.png" height="250"&gt;&lt;/img&gt;
-                    &lt;div className="p-inputgroup mt-6 mb-3"&gt;
-                        &lt;span className="p-inputgroup-addon"&gt;
-                            &lt;i className="pi pi-user icons_form"&gt;&lt;/i&gt;
-                        &lt;/span&gt;
-                        &lt;InputText className="input_text" placeholder="Nombre de usuario" /&gt;
-                    &lt;/div&gt;
-                    &lt;div className="p-inputgroup mb-5"&gt;
-                        &lt;span className="p-inputgroup-addon"&gt;
-                            &lt;i className="pi pi-key icons_form"&gt;&lt;/i&gt;
-                        &lt;/span&gt;
-                        &lt;InputText className="input_text" placeholder="Contraseña" /&gt;
-                    &lt;/div&gt;
-                    &lt;Link to="/vehicle"&gt;
-                        &lt;Button className="p-button-raised p-button-lg" label="Siguiente" /&gt;
-                    &lt;/Link&gt;
-                &lt;/div&gt;
-            &lt;/Card&gt;
+            &lt;div className={((vehicleHidden) ? "" : "hidden")}&gt;
+                &lt;UserRegister user={user} setUser={setUser} setVehicleHidden={setVehicleHidden} /&gt;
+            &lt;/div&gt;
+            &lt;div className={(vehicleHidden) ? "hidden" : ""}&gt;
+                &lt;VehicleRegister user={user} setUser={setUser} setVehicleHidden={setVehicleHidden} /&gt;
+            &lt;/div&gt;
         &lt;/div&gt;
     );
 }
@@ -175,7 +133,7 @@ export default SignUp
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Mar 23 2022 21:48:25 GMT+0100 (hora estándar de Europa central)
+                at Wed Mar 30 2022 22:08:13 GMT+0200 (hora de verano de Europa central)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

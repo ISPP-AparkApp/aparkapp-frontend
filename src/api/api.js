@@ -4,8 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'http://127.0.0.1:8000/'
-
+const backendUrl = 'https://aparkapp-s1.herokuapp.com/'
 
 async function checkAuthTokenIsValid() {
     const authTimestamp = await store.getState().session.authTimestamp
@@ -105,34 +104,16 @@ export async function getAnnouncement(a_id) {
     return false
 }
 
-export async function updateAnnouncement(a_id, announcement_data) {
-    const response = await apiPut('api/announcement/' + a_id + "/", announcement_data, true)
-    if (response.status === 200) return true
-    return false
-}
-
-export async function getReservation(r_id) {
-    const response = await apiGet('api/reservation/' + r_id + "/", true)
-    if (response.status === 200) return response.data
-    return false
-}
-
-export async function updateReservation(r_id, reservation_data) {
-    const response = await apiPut('api/reservation/' + r_id + "/", reservation_data, true)
-    if (response.status === 200) return true
-    return false
-}
-
 export async function getReservationUser(r_id) {
     const response = await apiGet('api/reservation/anouncement/' + r_id + "/", true)
     if (response.status === 200) return response.data
     return false
 }
+
 export async function getVehicles() {
     const response = await apiGet('api/users/vehicles/', true)
     if (response.status === 200) return response.data
 }
-
 
 export async function getUser() {
     const response = await apiGet('api/users/', true)
@@ -185,11 +166,6 @@ export async function updateStatusAnnouncement(a_id, announcement_data) {
     return false
 }
 
-export async function getAnnouncementId(id) {
-    const response = await apiGet('api/announcement/' + id + '/', true)
-    if (response.status === 200) return response.data
-}
-
 export async function getBookings() {
     const response = await apiGet('api/reservations/', true)
     if (response.status === 200) return response.data
@@ -208,7 +184,7 @@ export async function editAnnouncement(announcement) {
     }
     return true
 }
-    
+
 export async function register(registerFields) {
     try {
         await apiPost('api/register/', registerFields, false)
