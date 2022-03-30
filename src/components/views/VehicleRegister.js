@@ -52,12 +52,7 @@ const VehicleRegister = (props) => {
         if (response === true) {
             msgs.current.show({ severity: 'success', summary: 'Usuario registrado' });
         } else {
-            let formError = ""
-            for (const [key, value] of Object.entries(response['error'])) {
-                formError += value
-            }
-            formError = formError.split('.').map(str => <p>{str}</p>);
-            return formError
+            return Object.entries(response.error).map(([key, value]) => <p key={key}>{value}</p>);
         }
         window.scrollTo(0, 0)
     }
