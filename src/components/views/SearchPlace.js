@@ -9,8 +9,7 @@ import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
-import { getAnnouncements, reserve } from '../../api/api';
-import { dateFormatter } from '../../utils/dateFormatter';
+import { getAnnouncements } from '../../api/api';
 import ListAds from './ListAds';
 
 const SearchPlace = () => {

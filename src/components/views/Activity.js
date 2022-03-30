@@ -13,6 +13,9 @@ import { SelectButton } from 'primereact/selectbutton';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Messages } from 'primereact/messages';
+import { GMap } from 'primereact/gmap';
+import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
+import {regexLatitudeLongitude} from '../../utils/latLongRegex';
 
 
 const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement }) => {
@@ -112,6 +115,14 @@ const Activity = () => {
     const [limitedMovility, setLimitedMovility] = useState("No");
     const [formErrors, setFormErrors] = useState({})
     const msgs = useRef(null);
+    const msgs2 = useRef(null);
+    
+    const [mapLocation, setMapLocation] = useState(null);
+    const [googleMapsReady, setGoogleMapsReady] = useState(false);
+    const [overlays, setOverlays] = useState([]);
+    const [draggableMarker, setDraggableMarker] = useState(false);
+    const [markerLocation, setMarkerLocation] = useState('');
+    const [dialogVisible2, setDialogVisible2] = useState(false);
 
     useEffect(() => {
         getBookings().then(data => {
@@ -123,21 +134,33 @@ const Activity = () => {
         getVehicles().then(data => {
             setVehicles(data)
         })
+        navigator.geolocation.getCurrentPosition((position) => {
+            setMapLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+          })
+        loadGoogleMaps(() => {
+            setGoogleMapsReady(true);
+          })
+      
+        return () => {
+            removeGoogleMaps();
+        }
         // eslint-disable-next-line
     }, [])
 
-    useEffect(async () => {
-        if (selectedAnnouncement !== null) {
-            setVehicle(selectedAnnouncement.vehicle.license_plate)
-            setDate(dateFormatter(new Date(selectedAnnouncement.date)));
-            setWaitTime(selectedAnnouncement.wait_time);
-            setPrice(selectedAnnouncement.price);
-            setExtension(selectedAnnouncement.allow_wait ? "Sí" : "No");
-            setLocation(selectedAnnouncement.location);
-            setType(selectedAnnouncement.zone);
-            setLimitedMovility(selectedAnnouncement.limited_movility ? "Sí" : "No");
+    useEffect(() => {
+        async function selectedAnnouncementCallback() {
+            if (selectedAnnouncement !== null) {
+                setVehicle(selectedAnnouncement.vehicle.license_plate)
+                setDate(dateFormatter(new Date(selectedAnnouncement.date)));
+                setWaitTime(selectedAnnouncement.wait_time);
+                setPrice(selectedAnnouncement.price);
+                setExtension(selectedAnnouncement.allow_wait ? "Sí" : "No");
+                setLocation(selectedAnnouncement.location);
+                setType(selectedAnnouncement.zone);
+                setLimitedMovility(selectedAnnouncement.limited_movility ? "Sí" : "No");
+            }
         }
-
+        selectedAnnouncementCallback();
     }, [selectedAnnouncement])
 
 
@@ -169,7 +192,6 @@ const Activity = () => {
     const processForm = async (event) => {
         let vehicleSelected = await vehicles.find(v => v.license_plate === vehicle);
         let vehicleId = vehicleSelected.id;
-        var regexLatitudeLongitude = /^([-+]?)([\d]{1,2})(((.)(\d+)(,)))(\s*)(([-+]?)([\d]{1,3})((.)(\d+))?)$/g;
 
         const announcementData = {
             id: selectedAnnouncement.id,
@@ -177,32 +199,27 @@ const Activity = () => {
             wait_time: waitTime,
             price: price,
             allow_wait: extension === "Sí" ? true : false,
-            latitude: regexLatitudeLongitude.test(location) ? parseFloat(location.split(',')[0]) : selectedAnnouncement.latitude,
-            longitude: regexLatitudeLongitude.test(location) ? parseFloat(location.split(',')[1]) : selectedAnnouncement.longitude,
+            latitude: regexLatitudeLongitude(location) ? parseFloat(location.split(',')[0]) : selectedAnnouncement.latitude,
+            longitude: regexLatitudeLongitude(location) ? parseFloat(location.split(',')[1]) : selectedAnnouncement.longitude,
             zone: type,
             limited_movility: limitedMovility === "Sí" ? true : false,
             vehicle: vehicleId,
         }
         let res = await editAnnouncement(announcementData)
         if (res === true) {
+            getBookings().then(data => {
+                setBookings(data)
+            })
+            getMyAnnnouncements().then(data => {
+                setAnnouncements(data)
+            })
+            setDialogVisible(false)
             msgs.current.show({ severity: 'success', summary: 'Anuncio modificado' });
         } else {
             const errors = {}
             errors.global = res
             setFormErrors(errors)
         }
-        var divElement = document.getElementById("pr_id_2_content");
-        divElement.scroll({
-            top: divElement.scrollTo(0, 0),
-            behavior: 'smooth'
-        });
-
-        getBookings().then(data => {
-            setBookings(data)
-        })
-        getMyAnnnouncements().then(data => {
-            setAnnouncements(data)
-        })
     }
 
     const footer =
@@ -212,17 +229,69 @@ const Activity = () => {
         </div>;
 
     const parkTypes = ["Zona libre", "Zona Azul", "Zona Verde", "Zona Roja", "Zona Naranja", "Zona MAR"];
+    
+    const map_options = {
+        center: mapLocation,
+        zoom: 20
+    };
+
+    const visualiseMap = () => {
+        setOverlays([],setDialogVisible2(true));
+    }
+
+    const onHide2 = (event) => {
+        setDialogVisible2(false);
+    }
+
+    const onMapClick = (event) => {
+        addMarker(event.latLng)
+        setMarkerLocation(event.latLng.lat() + ',' + event.latLng.lng())
+        msgs2.current.show({severity: 'success', summary: 'Ubicación seleccionada correctamente'});
+      }
+
+    const addMarker = (latLng) => {
+        let newMarker = new window.google.maps.Marker({
+          position: {
+            lat: latLng.lat(),
+            lng: latLng.lng()
+          },
+          title: "Ubicación de la plaza",
+          draggable: draggableMarker
+        });
+        setMarkerLocation(latLng.lat() + "," + latLng.lng());
+        setOverlays([newMarker]);
+        setDraggableMarker(false);
+      }
+
+    const cancellMap = (event) => {
+        setLocation('');
+        setDialogVisible2(false);
+    }
+
+    const confirmMap = (event) => {
+        setDialogVisible2(false);
+        setLocation(markerLocation);
+    }
+
+    const footerMap = 
+      <div>
+          <Button label="Confirmar" icon="pi pi-check" onClick={confirmMap}  />
+          <Button label="Cancelar" icon="pi pi-times" onClick={cancellMap} />
+      </div>;
+
+    
 
     return (
         <div>
+            <Messages ref={msgs} />
             <div className="grid w-full px-5 pt-5">
                 {bookings.map(bookingProps => (
-                    <div className="col-12 md:col-6 xl:col-4">
+                    <div key={bookingProps.id}  className="col-12 md:col-6 xl:col-4">
                         <BookingCard {...bookingProps}></BookingCard>
                     </div>
                 ))}
                 {announcements.map(announcementProps => (
-                    <div className="col-12 md:col-6 xl:col-4">
+                    <div key={announcementProps.id} className="col-12 md:col-6 xl:col-4">
                         <AnnouncementCard
                             setSelectedAnnouncement={setSelectedAnnouncement}
                             setDialogVisible={setDialogVisible} announcement={announcementProps}>
@@ -232,14 +301,13 @@ const Activity = () => {
             </div>
 
             <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
-                {bookings.length == 0 && announcements.length == 0 ? (
+                {bookings.length === 0 && announcements.length === 0 ? (
                     <Card title={"Parece que aún no tienes actividades"} style={{ color: "black" }}></Card>
                 ) : ""}
             </div>
 
-            <Dialog header="Editar anuncio" visible={dialogVisible} width="300px" modal footer={footer} onHide={onHide} className="activity-dialog" draggable={false}>
-                <div className="flex flex-column ">
-                    <Messages ref={msgs} />
+            <Dialog header="Editar anuncio" visible={dialogVisible} modal footer={footer} onHide={onHide} className="activity-dialog" draggable={false}>
+                <div className="flex flex-column">
                     <span className='text-xl publish_label mb-2 mt-3'>Selecciona tu vehículo</span>
                     <Dropdown className='input_text' value={vehicle} options={vehicles.map(v => v.license_plate)} onChange={(e) => setVehicle(e.value)} />
                     {getFieldError("vehicle")}
@@ -261,7 +329,15 @@ const Activity = () => {
                     {getFieldError("extension")}
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Dónde se encuentra la plaza?</span>
-                    <InputText className="input_text" value={location} disabled /><Button label="Ubicación actual" className="p-button-link" onClick={() =>
+                    <div className='grid'>
+                            <div className='col-10'>
+                                <InputText className="input_text w-full" value={regexLatitudeLongitude(location)? "Ubicación seleccionada": location} disabled />
+                            </div>
+                            <div className='col-2'>
+                                <Button className="w-full map-button" icon="pi pi-map-marker" onClick={()=>visualiseMap()} />
+                            </div>
+                    </div>
+                    <Button label="Ubicación actual" className="p-button-link" onClick={() =>
                         navigator.geolocation.getCurrentPosition(function (position) {
                             setLocation(position.coords.latitude + "," + position.coords.longitude);
                         })} />
@@ -277,6 +353,19 @@ const Activity = () => {
 
                 </div>
             </Dialog>
+            
+            <div className='w-full'>
+                <Dialog header="Localiza tu plaza" visible={dialogVisible2} modal footer={footerMap} onHide={onHide2} className="map-dialog" draggable={false}>
+                    <Messages ref={msgs2} />
+                    <div className='relative'>
+                    {
+                        googleMapsReady && (
+                            <GMap overlays={overlays} options={map_options} className="absolut" style={{width: '100%', minHeight: '520px'}} onMapClick={onMapClick} />
+                        )
+                    }
+                    </div>
+                </Dialog>
+            </div>
         </div>
     )
 }
