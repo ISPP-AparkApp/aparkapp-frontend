@@ -2,15 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import "../../css/views/Activity.css";
-import { getBookings } from '../../api/api';
+import { cancelAnnouncement, getBookings } from '../../api/api';
 import { getMyAnnnouncements } from '../../api/api';
 import { v4 as uuidv4 } from 'uuid';
 import { dateFormatter } from '../../utils/dateFormatter';
 
 // TODO unify card components when back functionality is completed
-const AnnouncementCard = ({ location, date, wait_time }) => {
+
+const cancelAnnounce = async (id) => {
+    const data = {
+        cancelled: true,
+    }
+    cancelAnnouncement(id, data);
+}
+
+const AnnouncementCard = ({id, location, date, wait_time, cancelled }) => {
     let activityStatus;
-    if (Date.parse(date) > Date.now()) {
+    if (cancelled){
+        activityStatus = "Cancelado"
+    }else if (Date.parse(date) > Date.now()) {
         activityStatus = "En curso"
     } else {
         activityStatus = "Finalizado"
@@ -30,23 +40,25 @@ const AnnouncementCard = ({ location, date, wait_time }) => {
                     <li><strong>Precio: </strong> { }</li>
                 </ul>
             </div>
-            <div className="grid w-full">
-                <div className="col-12">
-                    <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" />
+            {cancelled ? "" :
+                <div className="grid w-full">
+                    <div className="col-12">
+                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(id)}/>     
+                    </div>
+                    <div className="col-12">
+                        <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" />
+                    </div>
                 </div>
-                <div className="col-12">
-                    <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" />
-                </div>
-
-            </div>
+            }
         </Card>
     )
 }
 
 const BookingCard = ({ announcement }) => {
     let activityStatus;
-    if (announcement.cancelled) activityStatus = "Cancelado";
-    if (Date.parse(announcement.date) > Date.now()) {
+    if (announcement.cancelled){
+        activityStatus = "Cancelado";  
+    }else if(Date.parse(announcement.date) > Date.now()) {
         activityStatus = "En curso"
     } else {
         activityStatus = "Finalizado"
