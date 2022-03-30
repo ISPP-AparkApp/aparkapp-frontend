@@ -5,7 +5,6 @@ import SearchPlace from "../components/views/SearchPlace";
 import Publish from "../components/views/Publish";
 import AboutUs from "../components/views/AboutUs";
 import SignUp from "../components/views/SignUp";
-import Vehicle from "../components/views/Vehicle";
 import MapRoute from "../components/views/MapRoute";
 import Notifications from "../components/views/Notifications";
 import Reserve from "../components/views/Reserve";
@@ -25,12 +24,6 @@ const routes = [
     {
         path: "/signup",
         element: <SignUp />,
-        requireAuth: false,
-        fallback: "/home",
-    },
-    {
-        path: "/vehicle",
-        element: <Vehicle />,
         requireAuth: false,
         fallback: "/home",
     },

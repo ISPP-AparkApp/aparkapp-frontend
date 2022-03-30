@@ -12,7 +12,8 @@
   border-color: #37693b !important;
 }
 .p-inputtext,
-.input_text::placeholder {
+.input_text::placeholder,
+.p-inputtext::placeholder {
   color: #000000 !important;
   background-color: #eaf7f1 !important;
   border-color: #37693b !important;
@@ -42,5 +43,6 @@
 }
 
 .messageError {
+  margin-left: 0;
   color: #ff0000;
 }
