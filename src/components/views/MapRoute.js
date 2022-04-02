@@ -4,7 +4,7 @@ import { Card } from 'primereact/card';
 import { getAnnouncement, updateStatusAnnouncement } from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import route from "../../images/route.png";
+import RouteVisualization from './RouteVisualization';
 
 const MapRoute = () => {
     const [state, setState] = useState('Initial');
@@ -75,7 +75,7 @@ const MapRoute = () => {
                 pauseOnFocusLoss draggable />
 
             <Card footer={footer}>
-                <img alt="Mapa con ruta" src={route} height="300" className='mr-3 route-img' ></img>
+                <RouteVisualization/>
                 <br></br>
                 <hr></hr>
             </Card>
