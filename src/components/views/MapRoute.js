@@ -3,25 +3,21 @@ import { Button } from "primereact/button";
 import { Card } from 'primereact/card';
 import { getAnnouncement, updateStatusAnnouncement } from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import 'react-toastify/dist/ReactToastify.css';
 import route from "../../images/route.png";
 
 const MapRoute = () => {
-    const [state, setState] = useState('Initial');
-    const [announceId, setAnnounce] = useState(null);
-    const [wait, setWait] = useState(true);
     const [time, setTime] = useState(false);
-    const [show, setShow] = useState(true)
+    const [show, setShow] = useState(true);
+    const [announcement, setAnnouncement] = useState({});
 
-    let urlSplit = window.location.href.split("/");
-    let tam = urlSplit.length;
+    let announceId = window.location.href.split("/").pop();
 
     const getAnnounce = () => {
-        getAnnouncement(urlSplit[tam - 1]).then(
+        getAnnouncement(announceId).then(
             val => {
-                setAnnounce(val.id)
-                setState(val.status)
-                setWait(val.allow_wait)
+                setAnnouncement(val);
             }
         );
     };
@@ -31,43 +27,73 @@ const MapRoute = () => {
             if (time) {
                 setTime(false);
                 getAnnounce();
-                notify();
+                if (show) {
+                    switch (announcement.status) {
+                        case "AcceptDelay":
+                            notify("El ofertante ha aceptado la solicitud de espera");
+                            break;
+                        case "DenyDelay":
+                            notify("El ofertante ha rechazado la solicitud de espera :(");
+                            break;
+                        case "Departure":
+                            notify("Perfecto, salgo");
+                            break;
+                    }
+                }
             }
             else {
                 setTime(true);
             }
-        }, 1500);
+        }, 1000);
         return () => clearInterval(interval);
         // eslint-disable-next-line
-    }, [announceId, state, time, wait]);
+    }, [announcement, time, show]);
 
-    const updateAnnounce = () => { updateStatusAnnouncement(announceId, { status: 'Arrival' }).then(getAnnounce()); }
+    const updateAnnounce = (status) => { updateStatusAnnouncement(announceId, { status: status }).then(getAnnounce()); }
 
-    const notify = () => {
-        if (show && state === "Departure") {
-            toast.success('Perfecto, salgo', {
-                position: "top-center",
-                autoClose: false,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            setShow(false);
-        }
+    const notify = (text) => {
+        toast.info(text, {
+            position: "top-center",
+            autoClose: false,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+        setShow(false);
     }
 
-    const footer = <div className="flex flex-column justify-content-center align-items-center h-fit text-center overflow-hidden">
-        {state === "Initial" ? (
-            <div><div className="mb-3"><Button onClick={() => { updateAnnounce(); }} className="p-button-raised p-button-lg" label="¡He llegado!" /></div>
-                {wait ? (
-                    <div><Button className="p-button-raised p-button-lg mb-1" label="Llego tarde" /></div>) : (<br></br>)
+
+    const notificationsButtons = () => {
+        let result = ""
+
+        if (announcement) {
+            if((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+                result = <div><p>¡Vaya! Parece que has llegado demasido tarde.</p><p>El anuncio ya ha expirado</p></div>
+            }
+            else if ((Date.parse(announcement.date) - Date.now()) < 600000) {
+                if (announcement.status === "Initial" || announcement.status === "AcceptDelay" || announcement.status === "Delay") {
+                    result = <div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg" label="¡He llegado!" /></div>
+                    if (announcement.allow_wait && announcement.status !== "Delay" && announcement.n_extend < 3) { // Debe funcionar cuando n_extend esté en el modelo
+                        result = <div><div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg" label="¡He llegado!" /></div><div><Button onClick={() => { updateAnnounce("Delay"); }} className="p-button-raised p-button-lg mb-1" label="Llego tarde" /></div></div>
+                    }
                 }
-            </div>
-        ) : (<br></br>)
+                else {
+                    result = <span><p>Esperando respuesta del anunciante.</p></span>
+                }
+            }
+            else {
+                result = <span><p>Parece que has llegado demasido pronto.</p><p>Sólo se podrán enviar notificaciones 10 minutos antes del anuncio.</p></span>
+            }
         }
-    </div>
+        else {
+            result = <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="3" animationDuration=".5s" />
+        }
+        return result;
+    }
+
+    const footer = <div className="flex flex-column justify-content-center align-items-center h-fit text-center overflow-hidden">{notificationsButtons()}</div>
 
     return (
         <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">

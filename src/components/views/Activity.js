@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
+import { Link } from 'react-router-dom';
 import "../../css/views/Activity.css";
 import { getBookings } from '../../api/api';
 import { getMyAnnnouncements, getVehicles, editAnnouncement } from '../../api/api';
@@ -90,7 +91,9 @@ const BookingCard = ({ announcement }) => {
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" />
                     </div>
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
+                        <Link to={`/route/${ announcement.id }`}>
+                            <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
+                        </Link>
                     </div>
                 </div>
             }
