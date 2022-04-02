@@ -9,7 +9,7 @@ import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
-import { getAnnouncements } from '../../api/api';
+import { getAnnouncements, addressToCoordinates } from '../../api/api';
 import ListAds from './ListAds';
 
 const SearchPlace = () => {
@@ -23,9 +23,11 @@ const SearchPlace = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
   const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
+  const [address , setAddress] = useState('');
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
+  const map = useRef(null);
 
   function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -139,14 +141,33 @@ const SearchPlace = () => {
     <Button label="No" icon="pi pi-times" onClick={onHide} />
   </div>;
 
+  const searchLocation = async(event) => {
+    let addressObject = {
+      location: address,
+      one_result: true
+    }
+    try{
+      let coordinates = await addressToCoordinates(addressObject)
+      let lat = parseFloat(coordinates[1][0])
+      let lng = parseFloat(coordinates[1][1])
+      map.current.map.setCenter({lat: lat, lng: lng})
+    }catch(e){
+      toast.current.show({ severity: 'error', summary: 'Error', detail: "No se ha encontrado la ubicación" });
+    }
+  }
+
   return (
-    <div className=''>
-      <Toast ref={toast}></Toast>
+    <div>
+      <Toast ref={toast}></Toast>      
+      <div className='w-full flex justify-content-center mt-3' >
+        <InputText className="w-4" placeholder="Busca en la zona donde quieras aparcar" onChange={e=>setAddress(e.target.value)} />
+        <Button icon="pi pi-search" className="ml-2" onClick={searchLocation} />
+      </div>
 
       <div className='block h-30rem'>
         {
           googleMapsReady && (
-            <GMap overlays={overlays} options={options} className="map" onMapReady={onMapReady}
+            <GMap ref={map} overlays={overlays} options={options} className="map" onMapReady={onMapReady}
               onMapClick={onMapClick} onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
           )
         }

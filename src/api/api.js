@@ -193,3 +193,9 @@ export async function register(registerFields) {
     }
     return true
 }  
+
+export async function addressToCoordinates(address) {
+    const response = await apiPost('api/geolocatorToCoordinates/', address, true)
+    if (response.status === 200) return response.data
+    return false
+}
