@@ -13,12 +13,13 @@ import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import "../../css/views/Publish.css";
 import { dateFormatter } from '../../utils/dateFormatter';
+import { Slider } from 'primereact/slider';
 
 const Publish = () => {
     const [vehicle, setVehicle] = useState('');
     const [date, setDate] = useState(new Date());
     const [waitTime, setWaitTime] = useState(0);
-    const [price, setPrice] = useState(0.);
+    const [price, setPrice] = useState(0.5);
     const [extension, setExtension] = useState('No');
     const [location, setLocation] = useState("");
     const [type, setType] = useState();
@@ -127,7 +128,7 @@ const Publish = () => {
     const footer = 
         <div>
             <Button label="Confirmar" icon="pi pi-check" onClick={confirm}  />
-            <Button label="Cancelar" icon="pi pi-times" onClick={cancell} />
+            <Button className="p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={cancell} />
         </div>;
 
     const map_options = {
@@ -177,8 +178,8 @@ const Publish = () => {
                         <InputNumber inputId="waitTime" value={waitTime} onValueChange={(e) => setWaitTime(e.value)} suffix=" minuto/s" showButtons min={0} max={30} />
                         {getFieldError("waitTime")}
 
-                        <span className='text-xl publish_label mb-2 mt-3'>¿Qué precio quieres establecer?</span>
-                        <InputNumber inputId="currency-germany" value={price} onValueChange={(e) => setPrice(e.value)} mode="currency" currency="EUR" locale="de-DE"  min={0.5} max={10}/>
+                        <span className='text-xl publish_label mb-2 mt-3'>¿Qué precio quieres establecer? {price} €</span>
+                        <Slider value={price} onChange={(e) => setPrice(e.value)} min={0.5} max={10} step={0.1} />
                         {getFieldError("price")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Aceptarías esperar más por más dinero?</span>

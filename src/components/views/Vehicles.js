@@ -183,7 +183,7 @@ const getFieldError = (fieldName) => {
           <div className="div-button">
             <Button
               icon="pi pi-trash"
-              className="p-button-rounded p-button-danger mr-2 mt-4"
+              className="p-button-rounded p-button-danger mr-2 mt-4 p-button-cancel"
               onClick={() => {
                 if (vehicles.length === 1) {
                   addMessage();
