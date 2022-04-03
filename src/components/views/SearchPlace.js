@@ -8,6 +8,7 @@ import "../../../node_modules/primereact/datascroller/datascroller.min.css"
 import { getAnnouncements } from '../../api/api';
 import ListAds from './ListAds';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Dialog } from 'primereact/dialog';
 
 const SearchPlace = () => {
   const [googleMapsReady, setGoogleMapsReady] = useState(false);
