@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
-import { useState } from 'react';
 import { DataScroller } from 'primereact/datascroller';
 import "../../css/views/ListAds.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
 import { reserve } from '../../api/api';
 import { dateFormatter } from '../../utils/dateFormatter';
 import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
 
 const ListAds = ({ announcements }) => {
     const reserveAnnouncement = async (id) => {
