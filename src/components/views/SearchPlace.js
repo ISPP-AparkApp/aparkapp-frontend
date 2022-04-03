@@ -16,6 +16,8 @@ const SearchPlace = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
   const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
+  const [listAdsVisible, setListAdsVisible] = useState(false);
+
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
@@ -53,6 +55,7 @@ const SearchPlace = () => {
       let selected = event.overlay.center.toString()
       selected = selected.replace(/[()]/g, '').replace(/ /g, '');
       setAnnouncementsSelecteds(announcementsCircle[selected])
+      setListAdsVisible(true)
     }
   }
 
@@ -99,6 +102,10 @@ const SearchPlace = () => {
     setOverlays(overlays)
   }
 
+  const onHideListAds = (event) => {
+    setListAdsVisible(false);
+  }
+
   const options = {
     center: location,
     zoom: 12
@@ -116,7 +123,10 @@ const SearchPlace = () => {
           ) : <ProgressSpinner />
         }
       </div>
-      <ListAds announcements={announcementsSelecteds}></ListAds>
+      <Dialog visible={listAdsVisible} onHide={onHideListAds}>
+        <ListAds announcements={announcementsSelecteds}></ListAds>
+      </Dialog>
+      
     </div>
 
   );
