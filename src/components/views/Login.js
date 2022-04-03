@@ -16,7 +16,6 @@ const Login = () => {
     const doLogin = async () => {
         setIsLoading(true)
         const isLogged = await login(username, password)
-        setIsLoading(false)
         if (!isLogged) {
             return "El usuario no existe";
         }
