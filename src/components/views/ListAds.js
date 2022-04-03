@@ -1,17 +1,15 @@
-import { Link } from "react-router-dom";
 import { DataScroller } from 'primereact/datascroller';
 import "../../css/views/ListAds.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
-import { reserve } from '../../api/api';
+import { payAnnouncement } from '../../api/api';
 import { dateFormatter } from '../../utils/dateFormatter';
 import { Button } from 'primereact/button';
 
 const ListAds = ({ announcements }) => {
-    const reserveAnnouncement = async (id) => {
-        const reservetData = {
-            announcement: id,
-        }
-        await reserve(reservetData);
+    const pay = async (id) => {
+        payAnnouncement(id).then(data => {
+            window.location.href = data.url;
+        })
     }
 
     const itemTemplate = (data) => {
@@ -19,14 +17,11 @@ const ListAds = ({ announcements }) => {
             <div className="product-item">
                 <div className="product-detail">
                     <div className="product-name">{dateFormatter(new Date(data.date))}</div>
-
                     <div className="product-description">Tiempo de espera: {data.wait_time} min</div>
                     <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility) === 'true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
                 </div>
                 <div className="product-action">
-                    <Link to={`/reserve/${data.id}`}>
-                        <Button icon="pi pi-shopping-cart" label={data.price} onClick={() => reserveAnnouncement(data.id)}>€</Button>
-                    </Link>
+                    <Button icon="pi pi-shopping-cart" label={data.price} onClick={() => pay(data.id)}>€</Button>
                 </div>
             </div>
         );

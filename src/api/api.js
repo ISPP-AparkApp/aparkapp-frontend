@@ -4,7 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'https://aparkapp-backend-s2.herokuapp.com/'
+const backendUrl = 'http://localhost:8000/'
 
 async function checkAuthTokenIsValid() {
     const authTimestamp = await store.getState().session.authTimestamp
@@ -185,6 +185,11 @@ export async function editAnnouncement(announcement) {
     return true
 }
 
+export async function payAnnouncement(id) {
+    const response = await apiPost('api/payments/' + id + "/", true)
+    if (response.status === 200) return response.data
+}
+
 export async function register(registerFields) {
     try {
         await apiPost('api/register/', registerFields, false)
@@ -192,4 +197,4 @@ export async function register(registerFields) {
         return error.response.data
     }
     return true
-}  
+}
