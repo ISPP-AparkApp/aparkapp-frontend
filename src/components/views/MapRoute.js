@@ -33,7 +33,7 @@ const MapRoute = () => {
                             notify("El ofertante ha aceptado la solicitud de espera");
                             break;
                         case "DenyDelay":
-                            notify("El ofertante ha rechazado la solicitud de espera :(");
+                            notify("El ofertante ha rechazado la solicitud de espera 😢");
                             break;
                         case "Departure":
                             notify("Perfecto, salgo");
@@ -69,14 +69,14 @@ const MapRoute = () => {
         let result = ""
 
         if (announcement) {
-            if((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
-                result = <div><p>¡Vaya! Parece que has llegado demasido tarde.</p><p>El anuncio ya ha expirado</p></div>
+            if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+                result = <div><p>¡Vaya! Parece que has llegado demasido tarde.</p><p>El anuncio ya ha expirado.</p></div>
             }
             else if ((Date.parse(announcement.date) - Date.now()) < 600000) {
                 if (announcement.status === "Initial" || announcement.status === "AcceptDelay" || announcement.status === "Delay") {
-                    result = <div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg" label="¡He llegado!" /></div>
-                    if (announcement.allow_wait && announcement.status !== "Delay" && announcement.n_extend < 3) { // Debe funcionar cuando n_extend esté en el modelo
-                        result = <div><div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg" label="¡He llegado!" /></div><div><Button onClick={() => { updateAnnounce("Delay"); }} className="p-button-raised p-button-lg mb-1" label="Llego tarde" /></div></div>
+                    result = <div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg w-full h-full" label="¡He llegado!" /></div>
+                    if (announcement.allow_wait && announcement.status !== "Delay" && announcement.n_extend < 3 || true) { // Debe funcionar cuando n_extend esté en el modelo
+                        result = <div><div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg w-full h-full" label="¡He llegado!" /></div><div><Button onClick={() => { updateAnnounce("Delay"); }} className="p-button-raised p-button-lg mb-1 w-full h-full" label="Llego tarde" /></div></div>
                     }
                 }
                 else {
@@ -100,7 +100,7 @@ const MapRoute = () => {
             <ToastContainer position="top-center" limit={1} autoClose={false} newestOnTop closeOnClick={false} rtl={false}
                 pauseOnFocusLoss draggable />
 
-            <Card footer={footer}>
+            <Card footer={footer} style={{ color: "black" }}>
                 <img alt="Mapa con ruta" src={route} height="300" className='mr-3 route-img' ></img>
                 <br></br>
                 <hr></hr>

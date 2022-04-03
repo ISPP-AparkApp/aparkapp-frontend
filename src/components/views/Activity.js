@@ -56,7 +56,11 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                 <div className="col-12">
                     <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog} />
                 </div>
-
+                <div className="col-12">
+                    <Link to={`/notifications/${ announcement.id }`}>
+                        <Button className="p-button-raised p-button-lg w-full h-full" label="Notificaciones" icon="pi pi-bell" />
+                    </Link>
+                </div>
             </div>
         </Card>
     )
