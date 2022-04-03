@@ -279,8 +279,6 @@ const Activity = () => {
           <Button label="Cancelar" icon="pi pi-times" onClick={cancellMap} />
       </div>;
 
-    
-
     return (
         <div>
             <Messages ref={msgs} />
