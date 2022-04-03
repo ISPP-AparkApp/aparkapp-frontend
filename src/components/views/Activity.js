@@ -4,7 +4,6 @@ import { Button } from 'primereact/button';
 import "../../css/views/Activity.css";
 import { getBookings } from '../../api/api';
 import { getMyAnnnouncements, getVehicles, editAnnouncement } from '../../api/api';
-import { v4 as uuidv4 } from 'uuid';
 import { dateFormatter } from '../../utils/dateFormatter';
 import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
@@ -35,7 +34,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
 
     return (
         // TODO obtain vehicle properties
-        <Card key={uuidv4()} className="activityCard" title={activityStatus}>
+        <Card className="activityCard" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
                     <li><strong>Matrícula:</strong> {announcement.vehicle.license_plate}</li>
@@ -50,7 +49,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
             </div>
             <div className="grid w-full">
                 <div className="col-12">
-                    <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" />
+                    <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" />
                 </div>
                 <div className="col-12">
                     <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog} />
@@ -71,7 +70,7 @@ const BookingCard = ({ announcement }) => {
     }
 
     return (
-        <Card key={uuidv4()} className="activityCard" title={activityStatus}>
+        <Card className="activityCard" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
                     <li><strong>Matrícula:</strong>{announcement.vehicle.license_plate}</li>
@@ -87,7 +86,7 @@ const BookingCard = ({ announcement }) => {
             {announcement.cancelled ? "" :
                 <div className="grid w-full">
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" />
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" />
                     </div>
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
@@ -225,7 +224,7 @@ const Activity = () => {
     const footer =
         <div>
             <Button label="Guardar" icon="pi pi-check" onClick={validate} />
-            <Button label="Cancelar" icon="pi pi-times" onClick={onHide} />
+            <Button className="p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={onHide} />
         </div>;
 
     const parkTypes = ["Zona libre", "Zona Azul", "Zona Verde", "Zona Roja", "Zona Naranja", "Zona MAR"];
@@ -276,7 +275,7 @@ const Activity = () => {
     const footerMap = 
       <div>
           <Button label="Confirmar" icon="pi pi-check" onClick={confirmMap}  />
-          <Button label="Cancelar" icon="pi pi-times" onClick={cancellMap} />
+          <Button className="p-button-cancel" icon="pi pi-times" onClick={cancellMap} />
       </div>;
 
     return (
