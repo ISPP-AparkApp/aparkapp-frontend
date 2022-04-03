@@ -4,7 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'https://aparkapp-backend-s2.herokuapp.com/'
+const backendUrl = 'http://localhost:8000/'
 
 async function checkAuthTokenIsValid() {
     const authTimestamp = await store.getState().session.authTimestamp
