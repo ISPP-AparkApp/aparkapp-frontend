@@ -9,14 +9,21 @@ import { dateFormatter } from '../../utils/dateFormatter';
 
 // TODO unify card components when back functionality is completed
 
-const cancelAnnounce = async (id) => {
+const cancelAnnounce = async (id, setBookings, setAnnouncements) => {
     const data = {
         cancelled: true,
     }
     cancelAnnouncement(id, data);
+
+    getBookings().then(data => {
+        setBookings(data)
+    })
+    getMyAnnnouncements().then(data => {
+        setAnnouncements(data)
+    })
 }
 
-const AnnouncementCard = ({id, location, date, wait_time, cancelled }) => {
+const AnnouncementCard = ({id, location, date, wait_time, cancelled, setBookings, setAnnouncements }) => {
     let activityStatus;
     if (cancelled){
         activityStatus = "Cancelado"
@@ -43,7 +50,7 @@ const AnnouncementCard = ({id, location, date, wait_time, cancelled }) => {
             {cancelled ? "" :
                 <div className="grid w-full">
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(id)}/>     
+                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(id, setBookings, setAnnouncements)}/>     
                     </div>
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" />
@@ -115,7 +122,7 @@ const Activity = () => {
             ))}
             {announcements.map(announcementProps => (
                 <div className="col-12 md:col-6 xl:col-4">
-                    <AnnouncementCard {...announcementProps}></AnnouncementCard>
+                    <AnnouncementCard setBookings = {setBookings} setAnnouncements = {setAnnouncements} {...announcementProps}></AnnouncementCard>
                 </div>
             ))}
         </div>

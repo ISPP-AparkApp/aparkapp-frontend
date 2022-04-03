@@ -206,6 +206,6 @@ export async function getMyAnnnouncements() {
 
 export async function cancelAnnouncement(a_id, announcement_data){
     const response = await apiPut('api/cancel/announcement/' + a_id, announcement_data, true)
-    if (response.status == 200) return true
+    if (response.status === 200) return true
     return false
 }
