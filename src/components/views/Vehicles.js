@@ -12,12 +12,9 @@ const Vehicles = () => {
   const [formErrors, setFormErrors] = useState({})
 
   const types = [
-    { name: "Segmento A", value: "Segmento A" },
-    { name: "Segmento B", value: "Segmento B" },
-    { name: "Segmento C", value: "Segmento C" },
-    { name: "Segmento D", value: "Segmento D" },
-    { name: "Segmento E", value: "Segmento E" },
-    { name: "Segmento F", value: "Segmento F" },
+    { name: "Pequeño", value: "Pequeño" },
+    { name: "Mediano", value: "Mediano" },
+    { name: "Grande", value: "Grande" },
   ];
 
   const [vehicles, setVehicles] = useState([]);
