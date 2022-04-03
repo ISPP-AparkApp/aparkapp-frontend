@@ -12,6 +12,7 @@ const MapRoute = () => {
     const [wait, setWait] = useState(true);
     const [time, setTime] = useState(false);
     const [show, setShow] = useState(true)
+    const [announceLocation, setAnnounceLocation] = useState(null);
 
     let urlSplit = window.location.href.split("/");
     let tam = urlSplit.length;
@@ -22,6 +23,7 @@ const MapRoute = () => {
                 setAnnounce(val.id)
                 setState(val.status)
                 setWait(val.allow_wait)
+                setAnnounceLocation(val.location)
             }
         );
     };
@@ -75,7 +77,7 @@ const MapRoute = () => {
                 pauseOnFocusLoss draggable />
 
             <Card footer={footer}>
-                <RouteVisualization/>
+                <RouteVisualization announceLocation={announceLocation} />
                 <br></br>
                 <hr></hr>
             </Card>

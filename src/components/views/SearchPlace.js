@@ -140,7 +140,7 @@ const SearchPlace = () => {
   </div>;
 
   return (
-    <div className=''>
+    <div>
       <Toast ref={toast}></Toast>
 
       <div className='block h-30rem'>

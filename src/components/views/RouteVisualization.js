@@ -1,57 +1,80 @@
-import { GMap } from "primereact/gmap";
-import React, { useState, useEffect } from "react";
-import { loadGoogleMaps, removeGoogleMaps, initMap } from "../../utils/GoogleMaps";
+import { Box, HStack, IconButton, Text } from '@chakra-ui/react'
+import { FaLocationArrow } from 'react-icons/fa'
+import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api'
+import { useState, useEffect } from 'react'
 
-function RouteVisualization() {
-    const [googleMapsReady, setGoogleMapsReady] = useState(false);
-    const [mapLocation, setMapLocation] = useState(null);
-    const overlays = [
-        new window.google.maps.Marker({ position: { lat: 36.879466, lng: 30.667648 }, title: "Konyaalti" }),
-        new window.google.maps.Marker({ position: { lat: 36.883707, lng: 30.689216 }, title: "Ataturk Park" }),
-        new window.google.maps.Marker({ position: { lat: 36.885233, lng: 30.702323 }, title: "Oldtown" }),
-        new window.google.maps.Polygon({
-            paths: [
-                { lat: 36.9177, lng: 30.7854 }, { lat: 36.8851, lng: 30.7802 }, { lat: 36.8829, lng: 30.8111 }, { lat: 36.9177, lng: 30.8159 }
-            ], strokeOpacity: 0.5, strokeWeight: 1, fillColor: '#1976D2', fillOpacity: 0.35
-        }),
-        new window.google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
-        new window.google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
-    ];
+function RouteVisualization({ announceLocation }) {
+    const [map, setMap] = useState(null)
+    const [directionsResponse, setDirectionsResponse] = useState(null)
+    const [distance, setDistance] = useState('')
+    const [duration, setDuration] = useState('')
+    const [center, setCenter] = useState(null)
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition((position) => {
-            setMapLocation({
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-            });
-        });
+            const c = { lat: position.coords.latitude, lng: position.coords.longitude }
+            calculateRoute(c, announceLocation);
+            setCenter(c)
+        })
+    }, [announceLocation])
 
-        loadGoogleMaps(() => {
-            setGoogleMapsReady(true);
-        });
+    async function calculateRoute(origin, destination) {
+        const directionsService = new window.google.maps.DirectionsService()
+        const results = await directionsService.route({
+            origin: origin,
+            destination: destination,
+            travelMode: window.google.maps.TravelMode.DRIVING,
+        })
+        setDirectionsResponse(results)
+        setDistance(results.routes[0].legs[0].distance.text)
+        setDuration(results.routes[0].legs[0].duration.text)
+    }
 
-        initMap();
-
-        return () => {
-            removeGoogleMaps();
-        };
-    }, []);
-    const map_options = {
-        center: mapLocation,
-        zoom: 12,
-    };
     return (
-        <div>
-            {googleMapsReady && (
-                <GMap
-                    overlays={overlays}
-                    options={map_options}
-                    className="map"
-                    style={{ width: "100%", minHeight: "520px" }}
-                />
-            )}
+        <div className='block h-30rem map'>
+                <GoogleMap
+                    center={center}
+                    zoom={15}
+                    mapContainerStyle={{ width: '100%', height: '100%' }}
+                    options={{
+                        zoomControl: false,
+                        streetViewControl: false,
+                        mapTypeControl: false,
+                        fullscreenControl: false,
+                    }}
+                    onLoad={map => setMap(map)}
+                >
+                    <Marker position={center} />
+                    {directionsResponse && (
+                        <DirectionsRenderer directions={directionsResponse} />
+                    )}
+                </GoogleMap>
+
+            <Box
+                p={4}
+                borderRadius='lg'
+                m={4}
+                bgColor='Green'
+                shadow='base'
+                minW='container.md'
+                zIndex='1'
+            >
+                <HStack spacing={5} mt={5} justifyContent='space-between'>
+                    <Text>Distance: {distance} </Text>
+                    <Text>Duration: {duration} </Text>
+                    <IconButton
+                        aria-label='center back'
+                        icon={<FaLocationArrow />}
+                        isRound
+                        onClick={() => {//Cambiar onClick por onChange o parecido para que no sea necesario pulsar
+                            map.panTo(center)
+                            map.setZoom(15)
+                        }}
+                    />
+                </HStack>
+            </Box>
         </div>
-    );
+    )
 }
 
-export default RouteVisualization;
+export default RouteVisualization
