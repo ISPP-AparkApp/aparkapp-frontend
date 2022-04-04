@@ -1,9 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GMap } from 'primereact/gmap';
-import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { Button } from 'primereact/button';
-import { Checkbox } from 'primereact/checkbox';
 import { Toast } from 'primereact/toast';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { getKm } from '../../utils/getKm';
@@ -13,14 +9,14 @@ import { getAnnouncements, addressToCoordinates } from '../../api/api';
 import ListAds from './ListAds';
 import { Slider } from 'primereact/slider';
 import { Calendar } from 'primereact/calendar';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
 
 const SearchPlace = () => {
   const [googleMapsReady, setGoogleMapsReady] = useState(false);
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [markerTitle, setMarkerTitle] = useState('');
-  const [draggableMarker, setDraggableMarker] = useState(false);
   const [overlays, setOverlays] = useState([]);
-  const [selectedPosition, setSelectedPosition] = useState(null);
   const [location, setLocation] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
@@ -29,6 +25,8 @@ const SearchPlace = () => {
   const [priceFilter, setPriceFilter] = useState([0.0,1.0]);
   const [dateFilter, setDateFilter] = useState("");
   const [dialogVisibleFilter, setDialogVisibleFilter] = useState(false);
+  const [listAdsVisible, setListAdsVisible] = useState(false);
+
 
   const toast = useRef(null);
   const infoWindow = useRef(null);
@@ -51,11 +49,6 @@ const SearchPlace = () => {
     }
   }, [])
 
-  const onMapClick = (event) => {
-    setDialogVisible(true);
-    setSelectedPosition(event.latLng)
-  }
-
   const onOverlayClick = (event) => {
     let isMarker = event.overlay.getTitle !== undefined;
 
@@ -72,6 +65,7 @@ const SearchPlace = () => {
       let selected = event.overlay.center.toString()
       selected = selected.replace(/[()]/g, '').replace(/ /g, '');
       setAnnouncementsSelecteds(announcementsCircle[selected])
+      setListAdsVisible(true)
     }
   }
 
@@ -79,21 +73,6 @@ const SearchPlace = () => {
     toast.current.show({ severity: 'info', summary: 'Marker Dragged', detail: event.overlay.getTitle() });
   }
 
-  const addMarker = () => {
-    let newMarker = new window.google.maps.Marker({
-      position: {
-        lat: selectedPosition.lat(),
-        lng: selectedPosition.lng()
-      },
-      title: markerTitle,
-      draggable: draggableMarker
-    });
-
-    setOverlays([...overlays, newMarker]);
-    setDialogVisible(false);
-    setDraggableMarker(false);
-    setMarkerTitle('');
-  }
   const onMapReady = (event, announcementsToGroup=null) => {
     if (announcementsToGroup === null){
       announcementsToGroup = announcements
@@ -135,8 +114,8 @@ const SearchPlace = () => {
     setOverlays(newOverlays)
   }
 
-  const onHide = (event) => {
-    setDialogVisible(false);
+  const onHideListAds = (event) => {
+    setListAdsVisible(false);
   }
 
   const onHideDialogFilter = (event) => {
@@ -147,11 +126,6 @@ const SearchPlace = () => {
     center: location,
     zoom: 12
   };
-
-  const footer = <div>
-    <Button label="Yes" icon="pi pi-check" onClick={addMarker} />
-    <Button label="No" icon="pi pi-times" onClick={onHide} />
-  </div>;
 
   const filterAnnoncements = () => {
     var filteredAnnouncements = announcements.filter(announcement => {
@@ -204,29 +178,14 @@ const SearchPlace = () => {
 
       <div className='block h-30rem'>
         {
-          googleMapsReady && (
+          googleMapsReady ? (
             <GMap ref={map} overlays={overlays} options={options} className="map" onMapReady={onMapReady}
-              onMapClick={onMapClick} onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
-          )
+              onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
+          ) : <ProgressSpinner />
         }
       </div>
-
-      <ListAds announcements={announcementsSelecteds}></ListAds>
-
-      <Dialog header="New Location" visible={dialogVisible} width="300px" modal footer={footer} onHide={onHide}>
-        <div className="grid p-fluid">
-          <div className="col-2" style={{ paddingTop: '.75em' }}><label htmlFor="title">Label</label></div>
-          <div className="col-10"><InputText type="text" id="title" value={markerTitle} onChange={(e) => setMarkerTitle(e.target.value)} /></div>
-
-          <div className="col-2" style={{ paddingTop: '.75em' }}>Lat</div>
-          <div className="col-10"><InputText readOnly value={selectedPosition ? selectedPosition.lat() : ''} /></div>
-
-          <div className="col-2" style={{ paddingTop: '.75em' }}>Lng</div>
-          <div className="col-10"><InputText readOnly value={selectedPosition ? selectedPosition.lng() : ''} /></div>
-
-          <div className="col-2" style={{ paddingTop: '.75em' }}><label htmlFor="drg">Drag</label></div>
-          <div className="col-10"><Checkbox checked={draggableMarker} onChange={(event) => setDraggableMarker(event.checked)} /></div>
-        </div>
+      <Dialog visible={listAdsVisible} onHide={onHideListAds}>
+        <ListAds announcements={announcementsSelecteds}></ListAds>
       </Dialog>
       
       <Dialog className='filter-dialog' header="Filtro" draggable={false} visible={dialogVisibleFilter} footer={filterFooter} onHide={onHideDialogFilter} resizable={false}>
