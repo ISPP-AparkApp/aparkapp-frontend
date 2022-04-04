@@ -19,6 +19,15 @@ function RouteVisualization({ announceLocation }) {
         })
     }, [announceLocation])
 
+    function zoomToCenter() {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const c = { lat: position.coords.latitude, lng: position.coords.longitude }
+            map.panTo(c)
+            map.setZoom(15)
+            setCenter(c)
+        })
+    }
+
     async function calculateRoute(origin, destination) {
         const directionsService = new window.google.maps.DirectionsService()
         const results = await directionsService.route({
@@ -57,10 +66,7 @@ function RouteVisualization({ announceLocation }) {
                     aria-label='center back'
                     icon={<FaLocationArrow />}
                     isRound
-                    onClick={() => {
-                        map.panTo(center)
-                        map.setZoom(15)
-                    }}
+                    onClick={zoomToCenter}
                 />
             </Card>
         </div>
