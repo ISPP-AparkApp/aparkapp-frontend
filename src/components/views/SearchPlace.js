@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { GMap } from 'primereact/gmap';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import { Toast } from 'primereact/toast';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
@@ -68,25 +67,6 @@ const SearchPlace = () => {
     }
   }
 
-  const handleDragEnd = (event) => {
-    toast.current.show({ severity: 'info', summary: 'Marker Dragged', detail: event.overlay.getTitle() });
-  }
-
-  const addMarker = () => {
-    let newMarker = new window.google.maps.Marker({
-      position: {
-        lat: selectedPosition.lat(),
-        lng: selectedPosition.lng()
-      },
-      title: markerTitle,
-      draggable: draggableMarker
-    });
-
-    setOverlays([...overlays, newMarker]);
-    setDialogVisible(false);
-    setDraggableMarker(false);
-    setMarkerTitle('');
-  }
   const onMapReady = (event) => {
     var groupedAnnouncements = {}
     announcements.forEach(announcement => {
@@ -126,18 +106,10 @@ const SearchPlace = () => {
     setOverlays(overlays)
   }
 
-  const onHide = (event) => {
-    setDialogVisible(false);
-  }
   const options = {
     center: location,
     zoom: 12
   };
-
-  const footer = <div>
-    <Button label="Yes" icon="pi pi-check" onClick={addMarker} />
-    <Button label="No" icon="pi pi-times" onClick={onHide} />
-  </div>;
 
   return (
     <div>
@@ -147,14 +119,14 @@ const SearchPlace = () => {
         {
           googleMapsReady && (
             <GMap overlays={overlays} options={options} className="map" onMapReady={onMapReady}
-              onMapClick={onMapClick} onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
+              onMapClick={onMapClick} onOverlayClick={onOverlayClick} />
           )
         }
       </div>
 
       <ListAds announcements={announcementsSelecteds}></ListAds>
 
-      <Dialog header="New Location" visible={dialogVisible} width="300px" modal footer={footer} onHide={onHide}>
+      <Dialog header="New Location"  width="300px" modal >
         <div className="grid p-fluid">
           <div className="col-2" style={{ paddingTop: '.75em' }}><label htmlFor="title">Label</label></div>
           <div className="col-10"><InputText type="text" id="title" value={markerTitle} onChange={(e) => setMarkerTitle(e.target.value)} /></div>
