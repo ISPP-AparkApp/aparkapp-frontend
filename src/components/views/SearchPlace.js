@@ -142,7 +142,7 @@ const SearchPlace = () => {
 }
   const filterFooter = <div>
     <Button label="Aplicar" icon="pi pi-check" onClick={filterAnnoncements} />
-    <Button label="Limpiar" icon="pi pi-times" onClick={()=>{
+    <Button label="Limpiar" className="p-button-cancel" icon="pi pi-times" onClick={()=>{
       setPriceFilter([0.5,1.0])
       setDateFilter("")
       onMapReady()
