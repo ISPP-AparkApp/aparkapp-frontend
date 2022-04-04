@@ -9,6 +9,7 @@ import { dateFormatter } from '../../utils/dateFormatter';
 import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { InputNumber } from 'primereact/inputnumber';
+import { Link } from 'react-router-dom';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
@@ -44,8 +45,8 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
                     <li><strong>Modelo: </strong> {announcement.vehicle.model}</li>
                     <li><strong>Color: </strong> {announcement.vehicle.color}</li>
-                    <li><strong>Tiempo de espera:</strong> {announcement.wait_time}</li>
-                    <li><strong>Precio:</strong> {announcement.price}</li>
+                    <li><strong>Tiempo de espera:</strong> {announcement.wait_time} min</li>
+                    <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
             </div>
             <div className="grid w-full">
@@ -80,8 +81,8 @@ const BookingCard = ({ announcement }) => {
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
                     <li><strong>Modelo: </strong> {announcement.vehicle.model}</li>
                     <li><strong>Color: </strong> {announcement.vehicle.color}</li>
-                    <li><strong>Tiempo de espera:</strong> {announcement.wait_time}</li>
-                    <li><strong>Precio: </strong> {announcement.price}</li>
+                    <li><strong>Tiempo de espera:</strong> {announcement.wait_time} min</li>
+                    <li><strong>Precio: </strong> {announcement.price} €</li>
                 </ul>
             </div>
             {announcement.cancelled ? "" :
@@ -90,7 +91,9 @@ const BookingCard = ({ announcement }) => {
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" />
                     </div>
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
+                        <Link to={`/route/${announcement.id}`}>
+                            <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
+                        </Link>
                     </div>
                 </div>
             }
