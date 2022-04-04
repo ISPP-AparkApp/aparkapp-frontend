@@ -6,7 +6,7 @@ import { getAnnouncement, updateStatusAnnouncement, getReservationUser } from '.
 import "../../css/views/Notifications.css";
 
 const Notifications = () => {
-    const [announcement, setAnnouncement] = useState({});
+    const [announcement, setAnnouncement] = useState();
     const [user, setUser] = useState(null);
     const [time, setTime] = useState(false);
 

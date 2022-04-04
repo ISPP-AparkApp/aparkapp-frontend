@@ -9,8 +9,10 @@ import route from "../../images/route.png";
 
 const MapRoute = () => {
     const [time, setTime] = useState(false);
-    const [show, setShow] = useState(true);
-    const [announcement, setAnnouncement] = useState({});
+    const [showAccept, setShowAccept] = useState(0);
+    const [showDeny, setShowDeny] = useState(true);
+    const [showDeparture, setShowDeparture] = useState(true);
+    const [announcement, setAnnouncement] = useState();
 
     let announceId = window.location.href.split("/").pop();
 
@@ -27,18 +29,17 @@ const MapRoute = () => {
             if (time) {
                 setTime(false);
                 getAnnounce();
-                if (show) {
-                    switch (announcement.status) {
-                        case "AcceptDelay":
-                            notify("El ofertante ha aceptado la solicitud de espera");
-                            break;
-                        case "DenyDelay":
-                            notify("El ofertante ha rechazado la solicitud de espera 😢");
-                            break;
-                        case "Departure":
-                            notify("Perfecto, salgo");
-                            break;
-                    }
+                if (showAccept < announcement.n_extend && announcement.status === "AcceptDelay") {
+                    notify("El ofertante ha aceptado la solicitud de espera");
+                    setShowAccept(showAccept + 1);
+                }
+                else if (showDeny && announcement.status === "DenyDelay") {
+                    notify("El ofertante ha rechazado la solicitud de espera 😢");
+                    setShowDeny(false);
+                }
+                else if (showDeparture && announcement.status === "Departure") {
+                    notify("Perfecto, salgo");
+                    setShowDeparture(false);
                 }
             }
             else {
@@ -47,7 +48,7 @@ const MapRoute = () => {
         }, 1000);
         return () => clearInterval(interval);
         // eslint-disable-next-line
-    }, [announcement, time, show]);
+    }, [announcement, time, showAccept, showDeny, showDeparture]);
 
     const updateAnnounce = (status) => { updateStatusAnnouncement(announceId, { status: status }).then(getAnnounce()); }
 
@@ -61,7 +62,6 @@ const MapRoute = () => {
             draggable: true,
             progress: undefined,
         });
-        setShow(false);
     }
 
 
@@ -75,7 +75,7 @@ const MapRoute = () => {
             else if ((Date.parse(announcement.date) - Date.now()) < 600000) {
                 if (announcement.status === "Initial" || announcement.status === "AcceptDelay" || announcement.status === "Delay") {
                     result = <div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg w-full h-full" label="¡He llegado!" /></div>
-                    if (announcement.allow_wait && announcement.status !== "Delay" && announcement.n_extend < 3 || true) { // Debe funcionar cuando n_extend esté en el modelo
+                    if (announcement.allow_wait && announcement.status !== "Delay" && announcement.n_extend < 3) { // Debe funcionar cuando n_extend esté en el modelo
                         result = <div><div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg w-full h-full" label="¡He llegado!" /></div><div><Button onClick={() => { updateAnnounce("Delay"); }} className="p-button-raised p-button-lg mb-1 w-full h-full" label="Llego tarde" /></div></div>
                     }
                 }
@@ -97,7 +97,7 @@ const MapRoute = () => {
 
     return (
         <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
-            <ToastContainer position="top-center" limit={1} autoClose={false} newestOnTop closeOnClick={false} rtl={false}
+            <ToastContainer position="top-center" autoClose={false} newestOnTop closeOnClick={false} rtl={false}
                 pauseOnFocusLoss draggable />
 
             <Card footer={footer} style={{ color: "black" }}>
