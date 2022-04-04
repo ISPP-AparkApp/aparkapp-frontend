@@ -1,7 +1,8 @@
-import { Box, HStack, IconButton, Text } from '@chakra-ui/react'
+import { IconButton } from '@chakra-ui/react'
 import { FaLocationArrow } from 'react-icons/fa'
 import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api'
 import { useState, useEffect } from 'react'
+import { Card } from 'primereact/card';
 
 function RouteVisualization({ announceLocation }) {
     const [map, setMap] = useState(null)
@@ -32,47 +33,36 @@ function RouteVisualization({ announceLocation }) {
 
     return (
         <div className='block h-30rem map'>
-                <GoogleMap
-                    center={center}
-                    zoom={15}
-                    mapContainerStyle={{ width: '100%', height: '100%' }}
-                    options={{
-                        zoomControl: false,
-                        streetViewControl: false,
-                        mapTypeControl: false,
-                        fullscreenControl: false,
-                    }}
-                    onLoad={map => setMap(map)}
-                >
-                    <Marker position={center} />
-                    {directionsResponse && (
-                        <DirectionsRenderer directions={directionsResponse} />
-                    )}
-                </GoogleMap>
-
-            <Box
-                p={4}
-                borderRadius='lg'
-                m={4}
-                bgColor='Green'
-                shadow='base'
-                minW='container.md'
-                zIndex='1'
+            <GoogleMap
+                center={center}
+                zoom={15}
+                mapContainerStyle={{ width: '100%', height: '100%' }}
+                options={{
+                    zoomControl: false,
+                    streetViewControl: false,
+                    mapTypeControl: false,
+                    fullscreenControl: false,
+                }}
+                onLoad={map => setMap(map)}
             >
-                <HStack spacing={5} mt={5} justifyContent='space-between'>
-                    <Text>Distance: {distance} </Text>
-                    <Text>Duration: {duration} </Text>
-                    <IconButton
-                        aria-label='center back'
-                        icon={<FaLocationArrow />}
-                        isRound
-                        onClick={() => {//Cambiar onClick por onChange o parecido para que no sea necesario pulsar
-                            map.panTo(center)
-                            map.setZoom(15)
-                        }}
-                    />
-                </HStack>
-            </Box>
+                <Marker position={center} />
+                {directionsResponse && (
+                    <DirectionsRenderer directions={directionsResponse} />
+                )}
+            </GoogleMap>
+
+            <Card title="Información">
+                <p className="text-xl publish_label mb-2 mt-1">Distance: {distance} Duration: {duration}</p>
+                <IconButton
+                    aria-label='center back'
+                    icon={<FaLocationArrow />}
+                    isRound
+                    onClick={() => {
+                        map.panTo(center)
+                        map.setZoom(15)
+                    }}
+                />
+            </Card>
         </div>
     )
 }
