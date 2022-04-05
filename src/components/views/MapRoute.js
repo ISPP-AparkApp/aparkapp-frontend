@@ -74,8 +74,9 @@ const MapRoute = () => {
         <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
             <ToastContainer position="top-center" limit={1} autoClose={false} newestOnTop closeOnClick={false} rtl={false}
                 pauseOnFocusLoss draggable />
-            {footer}
+            
             <RouteVisualization announceLocation={announceLocation} />
+            {footer}
         </div>
     )
 };

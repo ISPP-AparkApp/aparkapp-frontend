@@ -3,6 +3,7 @@ import { FaLocationArrow } from 'react-icons/fa'
 import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api'
 import { useState, useEffect } from 'react'
 import { Card } from 'primereact/card';
+import { Button } from "primereact/button";
 
 function RouteVisualization({ announceLocation }) {
     const [map, setMap] = useState(null)
@@ -42,6 +43,16 @@ function RouteVisualization({ announceLocation }) {
 
     return (
         <div className='block h-30rem map'>
+            <Card title="Información">
+                <p className="text-xl publish_label mt-1">Distancia: {distance} Duración: {duration}</p>
+                <Button
+                    aria-label='center back'
+                    icon={<FaLocationArrow />}
+                    isRound
+                    onClick={zoomToCenter}
+                />
+            </Card>
+
             <GoogleMap
                 center={center}
                 zoom={15}
@@ -59,16 +70,6 @@ function RouteVisualization({ announceLocation }) {
                     <DirectionsRenderer directions={directionsResponse} />
                 )}
             </GoogleMap>
-
-            <Card title="Información">
-                <p className="text-xl publish_label mb-2 mt-1">Distancia: {distance} Duración: {duration}</p>
-                <IconButton
-                    aria-label='center back'
-                    icon={<FaLocationArrow />}
-                    isRound
-                    onClick={zoomToCenter}
-                />
-            </Card>
         </div>
     )
 }
