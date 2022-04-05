@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
-import { Card } from 'primereact/card';
 import { getAnnouncement, updateStatusAnnouncement } from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import route from "../../images/route.png";
+import RouteVisualization from './RouteVisualization';
 
 const MapRoute = () => {
     const [state, setState] = useState('Initial');
@@ -12,6 +11,7 @@ const MapRoute = () => {
     const [wait, setWait] = useState(true);
     const [time, setTime] = useState(false);
     const [show, setShow] = useState(true)
+    const [announceLocation, setAnnounceLocation] = useState("");
 
     let urlSplit = window.location.href.split("/");
     let tam = urlSplit.length;
@@ -22,6 +22,7 @@ const MapRoute = () => {
                 setAnnounce(val.id)
                 setState(val.status)
                 setWait(val.allow_wait)
+                setAnnounceLocation(val.location)
             }
         );
     };
@@ -58,11 +59,11 @@ const MapRoute = () => {
         }
     }
 
-    const footer = <div className="flex flex-column justify-content-center align-items-center h-fit text-center overflow-hidden">
+    const footer = <div>
         {state === "Initial" ? (
-            <div><div className="mb-3"><Button onClick={() => { updateAnnounce(); }} className="p-button-raised p-button-lg" label="¡He llegado!" /></div>
+            <div><Button onClick={() => { updateAnnounce(); }} className="p-button-raised p-button-lg" label="¡He llegado!" />
                 {wait ? (
-                    <div><Button className="p-button-raised p-button-lg mb-1" label="Llego tarde" /></div>) : (<br></br>)
+                    <Button className="p-button-raised p-button-lg mb-1" label="Llego tarde" />) : (<br></br>)
                 }
             </div>
         ) : (<br></br>)
@@ -73,12 +74,8 @@ const MapRoute = () => {
         <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
             <ToastContainer position="top-center" limit={1} autoClose={false} newestOnTop closeOnClick={false} rtl={false}
                 pauseOnFocusLoss draggable />
-
-            <Card footer={footer}>
-                <img alt="Mapa con ruta" src={route} height="300" className='mr-3 route-img' ></img>
-                <br></br>
-                <hr></hr>
-            </Card>
+            {footer}
+            <RouteVisualization announceLocation={announceLocation} />
         </div>
     )
 };
