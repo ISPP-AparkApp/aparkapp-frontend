@@ -10,7 +10,7 @@ const cancelReserve = async (id) => {
     const data = {
         cancelled: true,
     }
-    cancelReservation(id, data);
+    await cancelReservation(id, data);
 }
 
 const aux = async (bookings, id) => {

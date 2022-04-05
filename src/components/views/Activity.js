@@ -82,7 +82,7 @@ const cancelReserve = async (id, setAnnouncements, setBookings) => {
     const data = {
         cancelled: true,
     }
-    cancelReservation(id, data);
+    await cancelReservation(id, data);
     
     getBookings().then(data => {
         setBookings(data)
