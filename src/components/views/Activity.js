@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
+import { Link } from 'react-router-dom';
 import "../../css/views/Activity.css";
 import { cancelAnnouncement, getBookings } from '../../api/api';
 import { getMyAnnnouncements, getVehicles, editAnnouncement } from '../../api/api';
@@ -8,14 +9,13 @@ import { dateFormatter } from '../../utils/dateFormatter';
 import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { InputNumber } from 'primereact/inputnumber';
-import { Link } from 'react-router-dom';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Messages } from 'primereact/messages';
 import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
-import {regexLatitudeLongitude} from '../../utils/latLongRegex';
+import { regexLatitudeLongitude } from '../../utils/latLongRegex';
 
 
 const cancelAnnounce = async (id, setBookings, setAnnouncements) => {
@@ -48,6 +48,20 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         setDialogVisible(true);
     }
 
+    const notificationButton = () => {
+        let result = ""
+
+        
+        if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
+            result = <div className="col-12">
+                <Link to={`/notifications/${announcement.id}`}>
+                    <Button className="p-button-raised p-button-lg w-full h-full" label="Notificaciones" icon="pi pi-bell" />
+                </Link>
+            </div>
+        }
+        return result;
+    }
+
     return (
         // TODO obtain vehicle properties
         <Card className="activityCard" title={activityStatus}>
@@ -71,8 +85,9 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements)}/>     
                     </div>
+                    {notificationButton()}
                 </div>
-            }
+            }    
         </Card>
     )
 }
@@ -86,6 +101,21 @@ const BookingCard = ({ announcement }) => {
     } else {
         activityStatus = "Finalizado"
     }
+
+    const notificationButton = () => {
+        let result = ""
+
+        if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
+            result = <div className="col-12">
+                <Link to={`/route/${announcement.id}`}>
+                    <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
+                </Link>
+            </div>
+        }
+        return result;
+    }
+
+
 
     return (
         <Card className="activityCard" title={activityStatus}>
@@ -106,11 +136,7 @@ const BookingCard = ({ announcement }) => {
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" />
                     </div>
-                    <div className="col-12">
-                        <Link to={`/route/${announcement.id}`}>
-                            <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
-                        </Link>
-                    </div>
+                    {notificationButton()}
                 </div>
             }
         </Card>
@@ -135,7 +161,7 @@ const Activity = () => {
     const [formErrors, setFormErrors] = useState({})
     const msgs = useRef(null);
     const msgs2 = useRef(null);
-    
+
     const [mapLocation, setMapLocation] = useState(null);
     const [googleMapsReady, setGoogleMapsReady] = useState(false);
     const [overlays, setOverlays] = useState([]);
@@ -155,11 +181,11 @@ const Activity = () => {
         })
         navigator.geolocation.getCurrentPosition((position) => {
             setMapLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-          })
+        })
         loadGoogleMaps(() => {
             setGoogleMapsReady(true);
-          })
-      
+        })
+
         return () => {
             removeGoogleMaps();
         }
@@ -248,14 +274,14 @@ const Activity = () => {
         </div>;
 
     const parkTypes = ["Zona libre", "Zona Azul", "Zona Verde", "Zona Roja", "Zona Naranja", "Zona MAR"];
-    
+
     const map_options = {
         center: mapLocation,
         zoom: 20
     };
 
     const visualiseMap = () => {
-        setOverlays([],setDialogVisible2(true));
+        setOverlays([], setDialogVisible2(true));
     }
 
     const onHide2 = (event) => {
@@ -265,22 +291,22 @@ const Activity = () => {
     const onMapClick = (event) => {
         addMarker(event.latLng)
         setMarkerLocation(event.latLng.lat() + ',' + event.latLng.lng())
-        msgs2.current.show({severity: 'success', summary: 'Ubicación seleccionada correctamente'});
-      }
+        msgs2.current.show({ severity: 'success', summary: 'Ubicación seleccionada correctamente' });
+    }
 
     const addMarker = (latLng) => {
         let newMarker = new window.google.maps.Marker({
-          position: {
-            lat: latLng.lat(),
-            lng: latLng.lng()
-          },
-          title: "Ubicación de la plaza",
-          draggable: draggableMarker
+            position: {
+                lat: latLng.lat(),
+                lng: latLng.lng()
+            },
+            title: "Ubicación de la plaza",
+            draggable: draggableMarker
         });
         setMarkerLocation(latLng.lat() + "," + latLng.lng());
         setOverlays([newMarker]);
         setDraggableMarker(false);
-      }
+    }
 
     const cancellMap = (event) => {
         setLocation('');
@@ -303,7 +329,7 @@ const Activity = () => {
             <Messages ref={msgs} />
             <div className="grid w-full px-5 pt-5">
                 {bookings.map(bookingProps => (
-                    <div key={bookingProps.id}  className="col-12 md:col-6 xl:col-4">
+                    <div key={bookingProps.id} className="col-12 md:col-6 xl:col-4">
                         <BookingCard {...bookingProps}></BookingCard>
                     </div>
                 ))}
@@ -349,12 +375,12 @@ const Activity = () => {
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Dónde se encuentra la plaza?</span>
                     <div className='grid'>
-                            <div className='col-10'>
-                                <InputText className="input_text w-full" value={regexLatitudeLongitude(location)? "Ubicación seleccionada": location} disabled />
-                            </div>
-                            <div className='col-2'>
-                                <Button className="w-full map-button" icon="pi pi-map-marker" onClick={()=>visualiseMap()} />
-                            </div>
+                        <div className='col-10'>
+                            <InputText className="input_text w-full" value={regexLatitudeLongitude(location) ? "Ubicación seleccionada" : location} disabled />
+                        </div>
+                        <div className='col-2'>
+                            <Button className="w-full map-button" icon="pi pi-map-marker" onClick={() => visualiseMap()} />
+                        </div>
                     </div>
                     <Button label="Ubicación actual" className="p-button-link" onClick={() =>
                         navigator.geolocation.getCurrentPosition(function (position) {
@@ -372,16 +398,16 @@ const Activity = () => {
 
                 </div>
             </Dialog>
-            
+
             <div className='w-full'>
                 <Dialog header="Localiza tu plaza" visible={dialogVisible2} modal footer={footerMap} onHide={onHide2} className="map-dialog" draggable={false}>
                     <Messages ref={msgs2} />
                     <div className='relative'>
-                    {
-                        googleMapsReady && (
-                            <GMap overlays={overlays} options={map_options} className="absolut" style={{width: '100%', minHeight: '520px'}} onMapClick={onMapClick} />
-                        )
-                    }
+                        {
+                            googleMapsReady && (
+                                <GMap overlays={overlays} options={map_options} className="absolut" style={{ width: '100%', minHeight: '520px' }} onMapClick={onMapClick} />
+                            )
+                        }
                     </div>
                 </Dialog>
             </div>

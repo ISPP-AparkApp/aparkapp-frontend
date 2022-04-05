@@ -183,6 +183,11 @@ export async function editAnnouncement(announcement) {
     return true
 }
 
+export async function payAnnouncement(id) {
+    const response = await apiPost('api/payments/' + id + "/", true)
+    if (response.status === 200) return response.data
+}
+
 export async function register(registerFields) {
     try {
         await apiPost('api/register/', registerFields, false)
@@ -190,7 +195,7 @@ export async function register(registerFields) {
         return error.response.data
     }
     return true
-}  
+}
 
 export async function addressToCoordinates(address) {
     const response = await apiPost('api/geolocatorToCoordinates/', address, true)
