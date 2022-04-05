@@ -22,7 +22,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
 
     let activityStatus;
     if (announcement.cancelled) activityStatus = "Cancelado";
-    if (Date.parse(announcement.date) > Date.now()) {
+    if ( (Date.parse(announcement.date) + announcement.wait_time*60000) > Date.now()) {
         activityStatus = "En curso"
     } else {
         activityStatus = "Finalizado"
@@ -34,7 +34,6 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
     }
 
     return (
-        // TODO obtain vehicle properties
         <Card className="activityCard" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
@@ -64,7 +63,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
 const BookingCard = ({ announcement }) => {
     let activityStatus;
     if (announcement.cancelled) activityStatus = "Cancelado";
-    if (Date.parse(announcement.date) > Date.now()) {
+    if ((Date.parse(announcement.date) + announcement.wait_time*60000) > Date.now()) {
         activityStatus = "En curso"
     } else {
         activityStatus = "Finalizado"
@@ -168,6 +167,7 @@ const Activity = () => {
 
     const onHide = (event) => {
         setSelectedAnnouncement(null)
+        setFormErrors({})
         setDialogVisible(false);
     }
 
@@ -308,6 +308,8 @@ const Activity = () => {
 
             <Dialog header="Editar anuncio" visible={dialogVisible} modal footer={footer} onHide={onHide} className="activity-dialog" draggable={false}>
                 <div className="flex flex-column">
+                    {getFieldError("global")}
+
                     <span className='text-xl publish_label mb-2 mt-3'>Selecciona tu vehículo</span>
                     <Dropdown className='input_text' value={vehicle} options={vehicles.map(v => v.license_plate)} onChange={(e) => setVehicle(e.value)} />
                     {getFieldError("vehicle")}

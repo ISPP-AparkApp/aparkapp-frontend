@@ -21,7 +21,7 @@ export async function refreshAuthToken(refreshToken, refreshAuthTimestamp) {
 
     const newAuthToken = await apiPost('api/refresh-token/', { "refresh": refreshToken }, false)
     const authToken = newAuthToken.data["access"]
-    store.dispatch(refreshAuthTokenAction(authToken))
+    store.dispatch(refreshAuthTokenAction({authToken,refreshToken, refreshAuthTimestamp}))
     return authToken
 }
 
