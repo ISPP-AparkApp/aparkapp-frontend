@@ -2,8 +2,8 @@ describe("CancelReservation", () => {
     beforeEach(() => {
         cy.initialOpen();
         cy.get('a.p-menuitem-link').first().click();
-        cy.get('input[placeholder="Nombre de usuario"]').type("cliente1");
-        cy.get('input[placeholder="Contraseña"]').type("QWerty45");
+        cy.get('input[placeholder="Nombre de usuario"]').type("admin");
+        cy.get('input[placeholder="Contraseña"]').type("admin");
         cy.get('button').click();
     });     
 
