@@ -10,6 +10,16 @@ Cypress.Commands.add("accessSearch", () => {
     cy.get('button').click();
     cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').last().click();
 });
+Cypress.Commands.add("accessActivity", () => {
+    cy.initialOpen();
+    cy.get('a.p-menuitem-link').first().click();
+    cy.get('input[placeholder="Nombre de usuario"]').type("admin");
+    cy.get('input[placeholder="Contraseña"]').type("admin");
+    cy.get('button').click();
+    // eslint-disable-next-line testing-library/await-async-utils
+    cy.wait(1000);
+    cy.get('ul.p-menubar-root-list > li:nth-child(2)').click();
+});
 
 Cypress.Commands.add("createAnnouncement", () => {
     // Login

@@ -44,11 +44,8 @@ const Reserve = () => {
         // eslint-disable-next-line
     }, [])
 
-    
-
     return (
-        
-        <div className="flex flex-column align-items-center px-3 md:px-0">              
+        <div className="flex flex-column align-items-center px-3 md:px-0">
             <Card title={`Matrícula: `} className="activityCard">
                 <div className="flex flex-column  pb-5">
                     <ul className="mt-0">
@@ -63,15 +60,15 @@ const Reserve = () => {
 
                     <div className="align-items-center w-full">
                         <div className="col-12">
+                            <Link to={`/route/${urlSplit[tam - 1]}`}>
+                                <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
+                            </Link>
+                        </div>
+                        <div className="col-12">
                             <Link to={`/activity`}>
                                 <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar"
                                         icon="pi pi-times" onClick={() => aux(bookings, ad.id)} />
                             </Link>            
-                        </div>
-                        <div className="col-12">
-                            <Link to={`/route/${urlSplit[tam - 1]}`}>
-                                <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
-                            </Link>
                         </div>
                     </div>
             </Card>

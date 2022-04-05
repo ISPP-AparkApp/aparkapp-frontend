@@ -29,3 +29,7 @@
 .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
   background-color: #c9e7cc !important;
 }
+
+.p-global-error-register {
+  width: 50%;
+}

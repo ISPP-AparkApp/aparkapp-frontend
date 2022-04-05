@@ -1,120 +1,17 @@
 .map {
   width: 70%;
-  height: 45%;
+  height: 70%;
   position: absolute;
   top: 140px;
   left: 15.5%;
   border-radius: 30px;
 }
 
-.p-datascroller .p-datascroller-header {
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
+.p-dialog.p-component.filter-dialog{
+  width: 500px !important;
 }
 
-.datascroller-demo {
-  align-content: center !important;
-}
-
-.mobility {
-  color: black;
-  vertical-align: middle;
-}
-
-.announcement-card {
-  margin: auto !important;
-  width: 80%;
-}
-
-.datascroller-demo .product-name {
-  color: black;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.datascroller-demo .product-description {
-  color: black;
-  margin: 0 0 1rem 0;
-}
-
-.datascroller-demo .product-category-icon {
-  color: green;
-  vertical-align: middle;
-  margin-right: 0.5rem;
-}
-
-.datascroller-demo .product-category {
-  color: grey;
-  font-weight: 600;
-  vertical-align: middle;
-}
-
-.datascroller-demo .product-item {
-  background-color: white;
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-}
-
-.datascroller-demo .product-item img {
-  width: 150px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  margin-right: 2rem;
-}
-
-.datascroller-demo .product-item .product-detail {
-  flex: 1 1 0;
-}
-
-.datascroller-demo .product-item .p-rating {
-  margin: 0 0 0.5rem 0;
-}
-
-.datascroller-demo .product-item .product-price {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  align-self: flex-end;
-}
-
-.datascroller-demo .product-item .product-action {
-  display: flex;
-  flex-direction: column;
-}
-
-.datascroller-demo .product-item .p-button {
-  margin-bottom: 0.5rem;
-}
-
-@media screen and (max-width: 576px) {
-  .datascroller-demo .product-item {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .datascroller-demo .product-item img {
-    width: 75%;
-    margin: 2rem 0;
-  }
-
-  .datascroller-demo .product-item .product-detail {
-    text-align: center;
-  }
-
-  .datascroller-demo .product-item .product-price {
-    align-self: center;
-  }
-
-  .datascroller-demo .product-item .product-action {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .datascroller-demo .product-item .product-action {
-    margin-top: 2rem;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
+.price-range{
+  margin-top: 10px;
+  text-align: center;
 }

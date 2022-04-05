@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">3.44% </span>
+                <span class="strong">3.03% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/29</span>
+                <span class='fraction'>1/33</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">3.7% </span>
+                <span class="strong">3.22% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/27</span>
+                <span class='fraction'>1/31</span>
             </div>
         
             
@@ -153,10 +153,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,8 +170,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,22 +184,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -205,6 +192,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -218,7 +207,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -231,10 +231,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
-import { Card } from 'primereact/card';
 import { getAnnouncement, updateStatusAnnouncement } from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import RouteVisualization from './RouteVisualization';
 &nbsp;
 const MapRoute = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
     const [state, setState] = <span class="cstat-no" title="statement not covered" >useState('Initial');</span>
@@ -242,16 +242,19 @@ const MapRoute = <span class="fstat-no" title="function not covered" >()</span> 
     const [wait, setWait] = <span class="cstat-no" title="statement not covered" >useState(true);</span>
     const [time, setTime] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
     const [show, setShow] = <span class="cstat-no" title="statement not covered" >useState(true)</span>
+    const [announceLocation, setAnnounceLocation] = <span class="cstat-no" title="statement not covered" >useState("");</span>
 &nbsp;
     let urlSplit = <span class="cstat-no" title="statement not covered" >window.location.href.split("/");</span>
     let tam = <span class="cstat-no" title="statement not covered" >urlSplit.length;</span>
 &nbsp;
     const getAnnounce = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        getAnnouncement(urlSplit[tam - 1]).then(</span>
-<span class="fstat-no" title="function not covered" >            va</span>l =&gt; (<span class="cstat-no" title="statement not covered" >setAnnounce(val.id),</span>
-                setState(val.status),
-                setWait(val.allow_wait)
-            )
+<span class="fstat-no" title="function not covered" >            va</span>l =&gt; {
+<span class="cstat-no" title="statement not covered" >                setAnnounce(val.id)</span>
+<span class="cstat-no" title="statement not covered" >                setState(val.status)</span>
+<span class="cstat-no" title="statement not covered" >                setWait(val.allow_wait)</span>
+<span class="cstat-no" title="statement not covered" >                setAnnounceLocation(val.location)</span>
+            }
         );
     };
 &nbsp;
@@ -267,12 +270,13 @@ const MapRoute = <span class="fstat-no" title="function not covered" >()</span> 
             }
         }, 1500);
 <span class="cstat-no" title="statement not covered" >        return <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >clearInterval(interval);</span></span>
+        // eslint-disable-next-line
     }, [announceId, state, time, wait]);
 &nbsp;
-    const updateAnnounce = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {<span class="cstat-no" title="statement not covered" >updateStatusAnnouncement(announceId, {status: 'Arrival'}).then(getAnnounce());}</span></span>
+    const updateAnnounce = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; { <span class="cstat-no" title="statement not covered" >updateStatusAnnouncement(announceId, { status: 'Arrival' }).then(getAnnounce()); </span>}</span>
 &nbsp;
     const notify = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        if (show &amp;&amp; state == "Departure") {</span>
+<span class="cstat-no" title="statement not covered" >        if (show &amp;&amp; state === "Departure") {</span>
 <span class="cstat-no" title="statement not covered" >            toast.success('Perfecto, salgo', {</span>
                 position: "top-center",
                 autoClose: false,
@@ -286,11 +290,11 @@ const MapRoute = <span class="fstat-no" title="function not covered" >()</span> 
         }
     }
 &nbsp;
-    const footer = <span class="cstat-no" title="statement not covered" >&lt;div className="flex flex-column justify-content-center align-items-center h-fit text-center overflow-hidden"&gt;</span>
-        {state == "Initial" ? (
-            &lt;div&gt;&lt;div className="mb-3"&gt;&lt;Button onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; { <span class="cstat-no" title="statement not covered" >updateAnnounce(); </span>}} className="p-button-raised p-button-lg" label="¡He llegado!" /&gt;&lt;/div&gt;
+    const footer = <span class="cstat-no" title="statement not covered" >&lt;div&gt;</span>
+        {state === "Initial" ? (
+            &lt;div&gt;&lt;Button onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; { <span class="cstat-no" title="statement not covered" >updateAnnounce(); </span>}} className="p-button-raised p-button-lg" label="¡He llegado!" /&gt;
                 {wait ? (
-                    &lt;div&gt;&lt;Button className="p-button-raised p-button-lg mb-1" label="Llego tarde" /&gt;&lt;/div&gt;) : (&lt;br&gt;&lt;/br&gt;)
+                    &lt;Button className="p-button-raised p-button-lg mb-1" label="Llego tarde" /&gt;) : (&lt;br&gt;&lt;/br&gt;)
                 }
             &lt;/div&gt;
         ) : (&lt;br&gt;&lt;/br&gt;)
@@ -301,12 +305,8 @@ const MapRoute = <span class="fstat-no" title="function not covered" >()</span> 
         &lt;div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden"&gt;
             &lt;ToastContainer position="top-center" limit={1} autoClose={false} newestOnTop closeOnClick={false} rtl={false}
                 pauseOnFocusLoss draggable /&gt;
-&nbsp;
-            &lt;Card footer={footer}&gt;
-                &lt;img alt="Mapa con ruta" src="route.png" height="300" className='mr-3 route-img' &gt;&lt;/img&gt;
-                &lt;br&gt;&lt;/br&gt;
-                &lt;hr&gt;&lt;/hr&gt;
-            &lt;/Card&gt;
+            {footer}
+            &lt;RouteVisualization announceLocation={announceLocation} /&gt;
         &lt;/div&gt;
     )
 };
@@ -319,7 +319,7 @@ export default MapRoute;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Apr 05 2022 01:23:29 GMT+0200 (hora de verano de Europa central)
+                at Tue Apr 05 2022 20:02:46 GMT+0200 (hora de verano de Europa central)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
