@@ -7,7 +7,6 @@ describe("SearchPlace", () => {
         // eslint-disable-next-line testing-library/await-async-utils
         cy.wait(1000);
         cy.reload();
-        cy.accessSearch();
         cy.contains("Mapa");
     });
 

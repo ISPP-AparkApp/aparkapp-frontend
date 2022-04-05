@@ -14,7 +14,6 @@ describe("RouteVisualization", () => {
         cy.get('button').contains("Cómo llegar").click();
         // eslint-disable-next-line
         cy.wait(5000);
-        cy.get('button').contains("¡He llegado!");
         cy.contains("km");
     });
 })

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
+import { Link } from 'react-router-dom';
 import "../../css/views/Activity.css";
 import { cancelReservation, cancelAnnouncement, getBookings } from '../../api/api';
 import { getMyAnnnouncements, getVehicles, editAnnouncement } from '../../api/api';
@@ -8,15 +9,14 @@ import { dateFormatter } from '../../utils/dateFormatter';
 import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { InputNumber } from 'primereact/inputnumber';
-import { Link } from 'react-router-dom';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { Messages } from 'primereact/messages';
 import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
-import {regexLatitudeLongitude} from '../../utils/latLongRegex';
-
+import { regexLatitudeLongitude } from '../../utils/latLongRegex';
+import { Slider } from 'primereact/slider';
 
 const cancelAnnounce = async (id, setBookings, setAnnouncements) => {
     const data = {
@@ -37,7 +37,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
     let activityStatus;
     if (announcement.cancelled){
         activityStatus = "Cancelado";
-    } else if (Date.parse(announcement.date) > Date.now()) {
+    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
         activityStatus = "En curso"
     } else {
         activityStatus = "Finalizado"
@@ -48,8 +48,21 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         setDialogVisible(true);
     }
 
+    const notificationButton = () => {
+        let result = ""
+
+        
+        if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
+            result = <div className="col-12">
+                <Link to={`/notifications/${announcement.id}`}>
+                    <Button className="p-button-raised p-button-lg w-full h-full" label="Notificaciones" icon="pi pi-bell" />
+                </Link>
+            </div>
+        }
+        return result;
+    }
+
     return (
-        // TODO obtain vehicle properties
         <Card className="activityCard" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
@@ -71,6 +84,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements)}/>     
                     </div>
+                    {notificationButton()}
                 </div>
             }
         </Card>
@@ -96,11 +110,26 @@ const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements
     let activityStatus;
     if (announcement.cancelled===true || cancelled===true){
         activityStatus = "Cancelado";  
-    }else if(Date.parse(announcement.date) > Date.now()) {
+    }else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
         activityStatus = "En curso"
     } else {
         activityStatus = "Finalizado"
     }
+
+    const notificationButton = () => {
+        let result = ""
+
+        if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
+            result = <div className="col-12">
+                <Link to={`/route/${announcement.id}`}>
+                    <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
+                </Link>
+            </div>
+        }
+        return result;
+    }
+
+
 
     return (
         <Card className="activityCard" title={activityStatus}>
@@ -126,6 +155,7 @@ const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings)} />
                     </div>
+                    {notificationButton()}
                 </div>
             }
         </Card>
@@ -146,11 +176,11 @@ const Activity = () => {
     const [extension, setExtension] = useState('No');
     const [location, setLocation] = useState("");
     const [type, setType] = useState("");
-    const [limitedMovility, setLimitedMovility] = useState("No");
+    const [limitedMobility, setLimitedMobility] = useState("No");
     const [formErrors, setFormErrors] = useState({})
     const msgs = useRef(null);
     const msgs2 = useRef(null);
-    
+
     const [mapLocation, setMapLocation] = useState(null);
     const [googleMapsReady, setGoogleMapsReady] = useState(false);
     const [overlays, setOverlays] = useState([]);
@@ -170,11 +200,11 @@ const Activity = () => {
         })
         navigator.geolocation.getCurrentPosition((position) => {
             setMapLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-          })
+        })
         loadGoogleMaps(() => {
             setGoogleMapsReady(true);
-          })
-      
+        })
+
         return () => {
             removeGoogleMaps();
         }
@@ -191,7 +221,7 @@ const Activity = () => {
                 setExtension(selectedAnnouncement.allow_wait ? "Sí" : "No");
                 setLocation(selectedAnnouncement.location);
                 setType(selectedAnnouncement.zone);
-                setLimitedMovility(selectedAnnouncement.limited_movility ? "Sí" : "No");
+                setLimitedMobility(selectedAnnouncement.limited_mobility ? "Sí" : "No");
             }
         }
         selectedAnnouncementCallback();
@@ -200,6 +230,7 @@ const Activity = () => {
 
     const onHide = (event) => {
         setSelectedAnnouncement(null)
+        setFormErrors({})
         setDialogVisible(false);
     }
 
@@ -215,7 +246,7 @@ const Activity = () => {
         if (!price) errors.price = "Precio requerido"
         if (!location) errors.location = "Ubicación requerida"
         if (!type) errors.type = "Tipo de aparcamiento requerido"
-        if (!limitedMovility) errors.limitedMovility = "Movilidad limitada requerida"
+        if (!limitedMobility) errors.limitedMobility = "Movilidad limitada requerida"
         setFormErrors(errors)
 
         if (!Object.keys(errors).length) {
@@ -236,7 +267,7 @@ const Activity = () => {
             latitude: regexLatitudeLongitude(location) ? parseFloat(location.split(',')[0]) : selectedAnnouncement.latitude,
             longitude: regexLatitudeLongitude(location) ? parseFloat(location.split(',')[1]) : selectedAnnouncement.longitude,
             zone: type,
-            limited_movility: limitedMovility === "Sí" ? true : false,
+            limited_mobility: limitedMobility === "Sí" ? true : false,
             vehicle: vehicleId,
         }
         let res = await editAnnouncement(announcementData)
@@ -263,14 +294,14 @@ const Activity = () => {
         </div>;
 
     const parkTypes = ["Zona libre", "Zona Azul", "Zona Verde", "Zona Roja", "Zona Naranja", "Zona MAR"];
-    
+
     const map_options = {
         center: mapLocation,
         zoom: 20
     };
 
     const visualiseMap = () => {
-        setOverlays([],setDialogVisible2(true));
+        setOverlays([], setDialogVisible2(true));
     }
 
     const onHide2 = (event) => {
@@ -280,22 +311,22 @@ const Activity = () => {
     const onMapClick = (event) => {
         addMarker(event.latLng)
         setMarkerLocation(event.latLng.lat() + ',' + event.latLng.lng())
-        msgs2.current.show({severity: 'success', summary: 'Ubicación seleccionada correctamente'});
-      }
+        msgs2.current.show({ severity: 'success', summary: 'Ubicación seleccionada correctamente' });
+    }
 
     const addMarker = (latLng) => {
         let newMarker = new window.google.maps.Marker({
-          position: {
-            lat: latLng.lat(),
-            lng: latLng.lng()
-          },
-          title: "Ubicación de la plaza",
-          draggable: draggableMarker
+            position: {
+                lat: latLng.lat(),
+                lng: latLng.lng()
+            },
+            title: "Ubicación de la plaza",
+            draggable: draggableMarker
         });
         setMarkerLocation(latLng.lat() + "," + latLng.lng());
         setOverlays([newMarker]);
         setDraggableMarker(false);
-      }
+    }
 
     const cancellMap = (event) => {
         setLocation('');
@@ -307,11 +338,11 @@ const Activity = () => {
         setLocation(markerLocation);
     }
 
-    const footerMap = 
-      <div>
-          <Button label="Confirmar" icon="pi pi-check" onClick={confirmMap}  />
-          <Button className="p-button-cancel" icon="pi pi-times" onClick={cancellMap} />
-      </div>;
+    const footerMap =
+        <div>
+            <Button label="Confirmar" icon="pi pi-check" onClick={confirmMap} />
+            <Button label="Cancelar" className="p-button-cancel" icon="pi pi-times" onClick={cancellMap} />
+        </div>;
 
     return (
         <div>
@@ -342,6 +373,8 @@ const Activity = () => {
 
             <Dialog header="Editar anuncio" visible={dialogVisible} modal footer={footer} onHide={onHide} className="activity-dialog" draggable={false}>
                 <div className="flex flex-column">
+                    {getFieldError("global")}
+
                     <span className='text-xl publish_label mb-2 mt-3'>Selecciona tu vehículo</span>
                     <Dropdown className='input_text' value={vehicle} options={vehicles.map(v => v.license_plate)} onChange={(e) => setVehicle(e.value)} />
                     {getFieldError("vehicle")}
@@ -354,8 +387,8 @@ const Activity = () => {
                     <InputNumber inputId="waitTime" value={waitTime} onValueChange={(e) => setWaitTime(e.value)} suffix=" minuto/s" showButtons min={0} max={30} />
                     {getFieldError("waitTime")}
 
-                    <span className='text-xl publish_label mb-2 mt-3'>¿Qué precio quieres establecer?</span>
-                    <InputNumber inputId="currency-germany" value={price} onValueChange={(e) => setPrice(e.value)} mode="currency" currency="EUR" locale="de-DE" min={0.5} max={10} />
+                    <span className='text-xl publish_label mb-2 mt-3'>¿Qué precio quieres establecer? {price} €</span>
+                    <Slider value={price} onChange={(e) => setPrice(e.value)} min={0.5} max={10} step={0.1} />
                     {getFieldError("price")}
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Aceptarías esperar más por más dinero?</span>
@@ -364,12 +397,12 @@ const Activity = () => {
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Dónde se encuentra la plaza?</span>
                     <div className='grid'>
-                            <div className='col-10'>
-                                <InputText className="input_text w-full" value={regexLatitudeLongitude(location)? "Ubicación seleccionada": location} disabled />
-                            </div>
-                            <div className='col-2'>
-                                <Button className="w-full map-button" icon="pi pi-map-marker" onClick={()=>visualiseMap()} />
-                            </div>
+                        <div className='col-10'>
+                            <InputText className="input_text w-full" value={regexLatitudeLongitude(location) ? "Ubicación seleccionada" : location} disabled />
+                        </div>
+                        <div className='col-2'>
+                            <Button className="w-full map-button" icon="pi pi-map-marker" onClick={() => visualiseMap()} />
+                        </div>
                     </div>
                     <Button label="Ubicación actual" className="p-button-link" onClick={() =>
                         navigator.geolocation.getCurrentPosition(function (position) {
@@ -382,21 +415,21 @@ const Activity = () => {
                     {getFieldError("type")}
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Se trata de una plaza de movilidad limitada?</span>
-                    <SelectButton unselectable={false} value={limitedMovility} onChange={(e) => setLimitedMovility(e.value)} options={["Sí", "No"]} />
-                    {getFieldError("limitedMovility")}
+                    <SelectButton unselectable={false} value={limitedMobility} onChange={(e) => setLimitedMobility(e.value)} options={["Sí", "No"]} />
+                    {getFieldError("limitedMobility")}
 
                 </div>
             </Dialog>
-            
+
             <div className='w-full'>
                 <Dialog header="Localiza tu plaza" visible={dialogVisible2} modal footer={footerMap} onHide={onHide2} className="map-dialog" draggable={false}>
                     <Messages ref={msgs2} />
                     <div className='relative'>
-                    {
-                        googleMapsReady && (
-                            <GMap overlays={overlays} options={map_options} className="absolut" style={{width: '100%', minHeight: '520px'}} onMapClick={onMapClick} />
-                        )
-                    }
+                        {
+                            googleMapsReady && (
+                                <GMap overlays={overlays} options={map_options} className="absolut" style={{ width: '100%', minHeight: '520px' }} onMapClick={onMapClick} />
+                            )
+                        }
                     </div>
                 </Dialog>
             </div>

@@ -4,7 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction, logou
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'http://localhost:8000/'
+const backendUrl = 'http://127.0.0.1:8000/'
 
 async function checkAuthTokenIsValid(authTimestamp) {
     return authTimestamp + authTokenValidTime > Date.now()
@@ -15,13 +15,12 @@ async function checkRefreshAuthTokenIsValid(refreshAuthTimestamp) {
 }
 
 export async function refreshAuthToken(refreshToken, refreshAuthTimestamp) {
-    if (!checkRefreshAuthTokenIsValid(refreshAuthTimestamp)) {
+    if (! await checkRefreshAuthTokenIsValid(refreshAuthTimestamp)) {
         return null
     }
-
     const newAuthToken = await apiPost('api/refresh-token/', { "refresh": refreshToken }, false)
     const authToken = newAuthToken.data["access"]
-    store.dispatch(refreshAuthTokenAction(authToken))
+    store.dispatch(refreshAuthTokenAction({ authToken, refreshToken, refreshAuthTimestamp }))
     return authToken
 }
 
@@ -30,7 +29,7 @@ async function getAuthToken() {
     const authTimestamp = store.getState().session.authTimestamp
     const refreshToken = store.getState().session.refreshToken
     const refreshAuthTimestamp = store.getState().session.refreshAuthTimestamp
-    if (!checkAuthTokenIsValid(authTimestamp)) {
+    if (! await checkAuthTokenIsValid(authTimestamp)) {
         authToken = await refreshAuthToken(refreshToken, refreshAuthTimestamp)
         if (!authToken) {
             store.dispatch(logoutAction())
@@ -183,6 +182,11 @@ export async function editAnnouncement(announcement) {
     return true
 }
 
+export async function payAnnouncement(id) {
+    const response = await apiPost('api/payments/' + id + "/", true)
+    if (response.status === 200) return response.data
+}
+
 export async function register(registerFields) {
     try {
         await apiPost('api/register/', registerFields, false)
@@ -190,7 +194,7 @@ export async function register(registerFields) {
         return error.response.data
     }
     return true
-}  
+}
 
 export async function addressToCoordinates(address) {
     const response = await apiPost('api/geolocatorToCoordinates/', address, true)

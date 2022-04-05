@@ -14,8 +14,7 @@ describe("Sign up", () => {
         cy.get('input[placeholder="Nombre"]').type("Manolo");
         cy.get('input[placeholder="Apellidos"]').type("López García");
         cy.get('input[placeholder="Número de teléfono"]').type("656543454");
-        cy.get('input[placeholder="Fecha de nacimiento"]').click();
-        cy.get('td.p-datepicker-today').click()
+        cy.get('input[placeholder="Fecha de nacimiento"]').type("11/23/2000");
         cy.get('button').first().click()
 
         // vehicle information

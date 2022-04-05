@@ -23,7 +23,7 @@ const Publish = () => {
     const [extension, setExtension] = useState('No');
     const [location, setLocation] = useState("");
     const [type, setType] = useState();
-    const [limitedMovility, setLimitedMovility] = useState("No");
+    const [limitedMobility, setLimitedMobility] = useState("No");
     const [vehicles, setVehicles] = useState([]);
     const [dialogVisible, setDialogVisible] = useState(false);
     const [mapLocation, setMapLocation] = useState(null);
@@ -70,7 +70,7 @@ const Publish = () => {
         if(!price) errors.price = "Precio requerido"
         if(!location) errors.location = "Ubicación requerida"
         if(!type) errors.type = "Tipo de aparcamiento requerido"
-        if(!limitedMovility) errors.limitedMovility = "Movilidad limitada requerida"
+        if(!limitedMobility) errors.limitedMobility = "Movilidad limitada requerida"
         
         if (location){
             const latLng = location.split(',')
@@ -97,7 +97,7 @@ const Publish = () => {
             latitude: parseFloat(location.split(',')[0]),
             longitude: parseFloat(location.split(',')[1]),
             zone: type,
-            limited_movility: limitedMovility === "Sí" ? true : false,
+            limited_mobility: limitedMobility === "Sí" ? true : false,
             vehicle: vehicleId,
         }
         let res = await publish(announcementData);
@@ -207,8 +207,8 @@ const Publish = () => {
                         {getFieldError("type")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Se trata de una plaza de movilidad limitada?</span>
-                        <SelectButton unselectable={false} value={limitedMovility} options={options} onChange={(e) => setLimitedMovility(e.value)} />
-                        {getFieldError("limitedMovility")}
+                        <SelectButton unselectable={false} value={limitedMobility} options={options} onChange={(e) => setLimitedMobility(e.value)} />
+                        {getFieldError("limitedMobility")}
 
                         <Button label="Publicar" className="p-button-raised p-button-lg mt-5" onClick={validate}/>
                     </div>

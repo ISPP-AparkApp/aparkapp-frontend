@@ -125,7 +125,7 @@ const VehicleRegister = (props) => {
                         <span className="p-inputgroup-addon">
                             <i className="pi pi-ellipsis-h icons_form"></i>
                         </span>
-                        <Dropdown className="input_text" value={selectedType} options={types} onChange={(e) => setSelectedType(e.target.value)} optionLabel="name" placeholder="Segmento" />
+                        <Dropdown className="input_text" value={selectedType} options={types} onChange={(e) => setSelectedType(e.target.value)} optionLabel="name" placeholder="Tamaño" />
                     </div>
                     {getFieldError("selectedType")}
                     <div className="grid w-full mt-4">
