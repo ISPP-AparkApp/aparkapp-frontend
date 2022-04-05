@@ -78,13 +78,13 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
             </div>
             {announcement.cancelled ? "" :
                 <div className="grid w-full">
+                    {notificationButton()}
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog}/>
                     </div>
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements)}/>     
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements)}/>     
                     </div>
-                    {notificationButton()}
                 </div>
             }
         </Card>
@@ -147,15 +147,10 @@ const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements
             </div>
             {(announcement.cancelled || cancelled) ? "" :
                 <div className="grid w-full">
-                    <div className="col-12">
-                        <Link to={`/route/${announcement.id}`}>
-                            <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
-                        </Link>
-                    </div>
-                    <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings)} />
-                    </div>
                     {notificationButton()}
+                    <div className="col-12">
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings)} />
+                    </div>
                 </div>
             }
         </Card>
