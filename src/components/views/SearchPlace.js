@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GMap } from 'primereact/gmap';
-import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { Checkbox } from 'primereact/checkbox';
 import { Toast } from 'primereact/toast';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { getKm } from '../../utils/getKm';
@@ -13,11 +10,7 @@ import ListAds from './ListAds';
 
 const SearchPlace = () => {
   const [googleMapsReady, setGoogleMapsReady] = useState(false);
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [markerTitle, setMarkerTitle] = useState('');
-  const [draggableMarker, setDraggableMarker] = useState(false);
   const [overlays, setOverlays] = useState([]);
-  const [selectedPosition, setSelectedPosition] = useState(null);
   const [location, setLocation] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
@@ -42,11 +35,6 @@ const SearchPlace = () => {
       removeGoogleMaps();
     }
   }, [])
-
-  const onMapClick = (event) => {
-    setDialogVisible(true);
-    setSelectedPosition(event.latLng)
-  }
 
   const onOverlayClick = (event) => {
     let isMarker = event.overlay.getTitle !== undefined;
@@ -118,29 +106,12 @@ const SearchPlace = () => {
       <div className='block h-30rem'>
         {
           googleMapsReady && (
-            <GMap overlays={overlays} options={options} className="map" onMapReady={onMapReady}
-              onMapClick={onMapClick} onOverlayClick={onOverlayClick} />
+            <GMap overlays={overlays} options={options} className="map" onMapReady={onMapReady} onOverlayClick={onOverlayClick} />
           )
         }
       </div>
 
       <ListAds announcements={announcementsSelecteds}></ListAds>
-
-      <Dialog header="New Location"  width="300px" modal >
-        <div className="grid p-fluid">
-          <div className="col-2" style={{ paddingTop: '.75em' }}><label htmlFor="title">Label</label></div>
-          <div className="col-10"><InputText type="text" id="title" value={markerTitle} onChange={(e) => setMarkerTitle(e.target.value)} /></div>
-
-          <div className="col-2" style={{ paddingTop: '.75em' }}>Lat</div>
-          <div className="col-10"><InputText readOnly value={selectedPosition ? selectedPosition.lat() : ''} /></div>
-
-          <div className="col-2" style={{ paddingTop: '.75em' }}>Lng</div>
-          <div className="col-10"><InputText readOnly value={selectedPosition ? selectedPosition.lng() : ''} /></div>
-
-          <div className="col-2" style={{ paddingTop: '.75em' }}><label htmlFor="drg">Drag</label></div>
-          <div className="col-10"><Checkbox checked={draggableMarker} onChange={(event) => setDraggableMarker(event.checked)} /></div>
-        </div>
-      </Dialog>
     </div>
 
   );

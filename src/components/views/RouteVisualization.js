@@ -61,7 +61,7 @@ function RouteVisualization({ announceLocation }) {
             </GoogleMap>
 
             <Card title="Información">
-                <p className="text-xl publish_label mb-2 mt-1">Distance: {distance} Duration: {duration}</p>
+                <p className="text-xl publish_label mb-2 mt-1">Distancia: {distance} Duración: {duration}</p>
                 <IconButton
                     aria-label='center back'
                     icon={<FaLocationArrow />}

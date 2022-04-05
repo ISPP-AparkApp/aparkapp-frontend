@@ -11,7 +11,7 @@ const MapRoute = () => {
     const [wait, setWait] = useState(true);
     const [time, setTime] = useState(false);
     const [show, setShow] = useState(true)
-    const [announceLocation, setAnnounceLocation] = useState(null);
+    const [announceLocation, setAnnounceLocation] = useState("");
 
     let urlSplit = window.location.href.split("/");
     let tam = urlSplit.length;
