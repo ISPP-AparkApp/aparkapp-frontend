@@ -31,7 +31,7 @@ const ListAds = ({ announcements }) => {
         <div className='announcements-list'>
             <div className="datascroller-demo block">
                 <div className='announcement-card'>
-                    <DataScroller value={announcements} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Desliza hacia abajo para ver más" emptyMessage="Selecciona una zona para visualizar los anuncios" />
+                    <DataScroller value={announcements} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Plazas disponibles en la zona" emptyMessage="Selecciona una zona para visualizar los anuncios" />
                 </div>
             </div>
         </div>

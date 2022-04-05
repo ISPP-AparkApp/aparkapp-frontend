@@ -3,6 +3,7 @@ import { Button } from 'primereact/button';
 import "../../css/views/Login.css";
 import { InputText } from 'primereact/inputtext';
 import { Card } from 'primereact/card';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { Link } from "react-router-dom";
 import { login } from "../../api/api";
 
@@ -10,8 +11,10 @@ const Login = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [formErrors, setFormErrors] = useState({})
+    const [isLoading, setIsLoading] = useState(false)
 
     const doLogin = async () => {
+        setIsLoading(true)
         const isLogged = await login(username, password)
         if (!isLogged) {
             return "El usuario no existe";
@@ -47,6 +50,7 @@ const Login = () => {
             <Card title="Inicio de sesión" className="w-full md:w-auto">
                 <div className="flex flex-column align-items-center">
                     <img alt="logo-full" src="logo-full.png" height="250" className="mb-4"></img>
+                    {isLoading ? <ProgressSpinner /> : null}
                     {getFieldError("global")}
                     <div className="field w-full">
                         <div className="p-inputgroup mt-4">
