@@ -18,11 +18,16 @@ import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { regexLatitudeLongitude } from '../../utils/latLongRegex';
 import { Slider } from 'primereact/slider';
 
-const cancelAnnounce = async (id, setBookings, setAnnouncements) => {
+const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs) => {
     const data = {
         cancelled: true,
     }
-    await cancelAnnouncement(id, data);
+    let res = await cancelAnnouncement(id, data);
+    if (res !== true){
+        msgs.current.show({ severity: 'error', detail: res });
+        window.scrollTo(0, 0)
+        return;
+    }
 
     getBookings().then(data => {
         setBookings(data)
@@ -32,7 +37,7 @@ const cancelAnnounce = async (id, setBookings, setAnnouncements) => {
     })
 }
 
-const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement, setAnnouncements, setBookings }) => {
+const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement, setAnnouncements, setBookings, msgs }) => {
 
     let activityStatus;
     if (announcement.cancelled){
@@ -82,7 +87,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog}/>
                     </div>
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements)}/>     
+                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs)}/>     
                     </div>
                     {notificationButton()}
                 </div>
@@ -340,7 +345,8 @@ const Activity = () => {
                             setAnnouncements={setAnnouncements}
                             setBookings={setBookings}
                             setSelectedAnnouncement={setSelectedAnnouncement}
-                            setDialogVisible={setDialogVisible} announcement={announcementProps}>
+                            setDialogVisible={setDialogVisible} announcement={announcementProps}
+                            msgs={msgs}>
                         </AnnouncementCard>
                     </div>
                 ))}
