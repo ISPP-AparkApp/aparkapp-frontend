@@ -16,13 +16,13 @@ import { Messages } from 'primereact/messages';
 import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { regexLatitudeLongitude } from '../../utils/latLongRegex';
-
+import { Slider } from 'primereact/slider';
 
 const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement }) => {
 
     let activityStatus;
     if (announcement.cancelled) activityStatus = "Cancelado";
-    if (Date.parse(announcement.date) > Date.now()) {
+    if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
         activityStatus = "En curso"
     } else {
         activityStatus = "Finalizado"
@@ -48,7 +48,6 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
     }
 
     return (
-        // TODO obtain vehicle properties
         <Card className="activityCard" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
@@ -78,7 +77,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
 const BookingCard = ({ announcement }) => {
     let activityStatus;
     if (announcement.cancelled) activityStatus = "Cancelado";
-    if (Date.parse(announcement.date) > Date.now()) {
+    if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
         activityStatus = "En curso"
     } else {
         activityStatus = "Finalizado"
@@ -139,7 +138,7 @@ const Activity = () => {
     const [extension, setExtension] = useState('No');
     const [location, setLocation] = useState("");
     const [type, setType] = useState("");
-    const [limitedMovility, setLimitedMovility] = useState("No");
+    const [limitedMobility, setLimitedMobility] = useState("No");
     const [formErrors, setFormErrors] = useState({})
     const msgs = useRef(null);
     const msgs2 = useRef(null);
@@ -184,7 +183,7 @@ const Activity = () => {
                 setExtension(selectedAnnouncement.allow_wait ? "Sí" : "No");
                 setLocation(selectedAnnouncement.location);
                 setType(selectedAnnouncement.zone);
-                setLimitedMovility(selectedAnnouncement.limited_movility ? "Sí" : "No");
+                setLimitedMobility(selectedAnnouncement.limited_mobility ? "Sí" : "No");
             }
         }
         selectedAnnouncementCallback();
@@ -193,6 +192,7 @@ const Activity = () => {
 
     const onHide = (event) => {
         setSelectedAnnouncement(null)
+        setFormErrors({})
         setDialogVisible(false);
     }
 
@@ -208,7 +208,7 @@ const Activity = () => {
         if (!price) errors.price = "Precio requerido"
         if (!location) errors.location = "Ubicación requerida"
         if (!type) errors.type = "Tipo de aparcamiento requerido"
-        if (!limitedMovility) errors.limitedMovility = "Movilidad limitada requerida"
+        if (!limitedMobility) errors.limitedMobility = "Movilidad limitada requerida"
         setFormErrors(errors)
 
         if (!Object.keys(errors).length) {
@@ -229,7 +229,7 @@ const Activity = () => {
             latitude: regexLatitudeLongitude(location) ? parseFloat(location.split(',')[0]) : selectedAnnouncement.latitude,
             longitude: regexLatitudeLongitude(location) ? parseFloat(location.split(',')[1]) : selectedAnnouncement.longitude,
             zone: type,
-            limited_movility: limitedMovility === "Sí" ? true : false,
+            limited_mobility: limitedMobility === "Sí" ? true : false,
             vehicle: vehicleId,
         }
         let res = await editAnnouncement(announcementData)
@@ -300,11 +300,11 @@ const Activity = () => {
         setLocation(markerLocation);
     }
 
-    const footerMap = 
-      <div>
-          <Button label="Confirmar" icon="pi pi-check" onClick={confirmMap}  />
-          <Button className="p-button-cancel" icon="pi pi-times" onClick={cancellMap} />
-      </div>;
+    const footerMap =
+        <div>
+            <Button label="Confirmar" icon="pi pi-check" onClick={confirmMap} />
+            <Button label="Cancelar" className="p-button-cancel" icon="pi pi-times" onClick={cancellMap} />
+        </div>;
 
     return (
         <div>
@@ -333,6 +333,8 @@ const Activity = () => {
 
             <Dialog header="Editar anuncio" visible={dialogVisible} modal footer={footer} onHide={onHide} className="activity-dialog" draggable={false}>
                 <div className="flex flex-column">
+                    {getFieldError("global")}
+
                     <span className='text-xl publish_label mb-2 mt-3'>Selecciona tu vehículo</span>
                     <Dropdown className='input_text' value={vehicle} options={vehicles.map(v => v.license_plate)} onChange={(e) => setVehicle(e.value)} />
                     {getFieldError("vehicle")}
@@ -345,8 +347,8 @@ const Activity = () => {
                     <InputNumber inputId="waitTime" value={waitTime} onValueChange={(e) => setWaitTime(e.value)} suffix=" minuto/s" showButtons min={0} max={30} />
                     {getFieldError("waitTime")}
 
-                    <span className='text-xl publish_label mb-2 mt-3'>¿Qué precio quieres establecer?</span>
-                    <InputNumber inputId="currency-germany" value={price} onValueChange={(e) => setPrice(e.value)} mode="currency" currency="EUR" locale="de-DE" min={0.5} max={10} />
+                    <span className='text-xl publish_label mb-2 mt-3'>¿Qué precio quieres establecer? {price} €</span>
+                    <Slider value={price} onChange={(e) => setPrice(e.value)} min={0.5} max={10} step={0.1} />
                     {getFieldError("price")}
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Aceptarías esperar más por más dinero?</span>
@@ -373,8 +375,8 @@ const Activity = () => {
                     {getFieldError("type")}
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Se trata de una plaza de movilidad limitada?</span>
-                    <SelectButton unselectable={false} value={limitedMovility} onChange={(e) => setLimitedMovility(e.value)} options={["Sí", "No"]} />
-                    {getFieldError("limitedMovility")}
+                    <SelectButton unselectable={false} value={limitedMobility} onChange={(e) => setLimitedMobility(e.value)} options={["Sí", "No"]} />
+                    {getFieldError("limitedMobility")}
 
                 </div>
             </Dialog>
