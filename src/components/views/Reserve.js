@@ -24,7 +24,7 @@ const Reserve = () => {
 
     return (
         <div className="flex flex-column align-items-center px-3 md:px-0">
-            <Card title={`Matrícula: `} className="activityCard">
+            <Card title={"Matrícula: " + (vehicle == null ? ("") : (vehicle.license_plate))} className="activityCard">
                 <div className="flex flex-column  pb-5">
                     <ul className="mt-0">
                         <li><strong>Fecha y hora: </strong>{ad == null ? ("") : (dateFormatter(new Date(ad.date)))}</li>
