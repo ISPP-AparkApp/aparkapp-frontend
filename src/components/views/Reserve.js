@@ -11,11 +11,10 @@ const Reserve = () => {
     const [ad, setAd] = useState()
     const [vehicle, setVehicle] = useState()
 
-    var urlSplit = window.location.href.split("/");
-    var tam = urlSplit.length
+    var urlSplit =  window.location.href.split("/").pop();
 
     useEffect(() => {
-        getAnnouncement(urlSplit[tam - 1]).then(data => {
+        getAnnouncement(urlSplit).then(data => {
             setAd(data)
             setVehicle(data.vehicle)
         })
@@ -42,7 +41,7 @@ const Reserve = () => {
                                 icon="pi pi-times" onClick={() => setReserved(false)} />
                         </div>
                         <div className="col-12">
-                            <Link to={`/route/${urlSplit[tam - 1]}`}>
+                            <Link to={`/route/${urlSplit}`}>
                                 <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
                             </Link>
                         </div>

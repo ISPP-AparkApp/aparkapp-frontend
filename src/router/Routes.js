@@ -29,7 +29,7 @@ const routes = [
         fallback: "/home",
     },
     {
-        path: "/notifications",
+        path: "/notifications/:id",
         element: <Notifications />,
         requireAuth: true,
         fallback: "/login",
