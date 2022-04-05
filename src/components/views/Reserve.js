@@ -37,7 +37,7 @@ const Reserve = () => {
                 {reserved ? (
                     <div className="align-items-center w-full">
                         <div className="col-12">
-                            <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar"
+                            <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar"
                                 icon="pi pi-times" onClick={() => setReserved(false)} />
                         </div>
                         <div className="col-12">

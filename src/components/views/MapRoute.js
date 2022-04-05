@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
-import { Card } from 'primereact/card';
 import { getAnnouncement, updateStatusAnnouncement } from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import 'react-toastify/dist/ReactToastify.css';
-import route from "../../images/route.png";
+import RouteVisualization from './RouteVisualization';
 
 const MapRoute = () => {
     const [time, setTime] = useState(false);
@@ -64,7 +63,6 @@ const MapRoute = () => {
         });
     }
 
-
     const notificationsButtons = () => {
         let result = ""
 
@@ -98,13 +96,9 @@ const MapRoute = () => {
     return (
         <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
             <ToastContainer position="top-center" autoClose={false} newestOnTop closeOnClick={false} rtl={false}
-                pauseOnFocusLoss draggable />
-
-            <Card footer={footer} style={{ color: "black" }}>
-                <img alt="Mapa con ruta" src={route} height="300" className='mr-3 route-img' ></img>
-                <br></br>
-                <hr></hr>
-            </Card>
+                pauseOnFocusLoss draggable />           
+            <RouteVisualization announceLocation={announcement.location} />
+            {footer}
         </div>
     )
 };
