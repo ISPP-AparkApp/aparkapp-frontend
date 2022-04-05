@@ -19,8 +19,11 @@ export const sessionSlice = createSlice({
             localStorage.setItem("refreshAuthTimestamp", Date.now())
         },
         refreshAuthToken(state, action) {
-            state.authToken = action.payload
+            const { authToken, refreshToken, refreshAuthTimestamp } = action.payload
+            state.authToken = authToken
             state.authTimestamp = Date.now()
+            state.refreshToken = refreshToken
+            state.refreshAuthTimestamp = refreshAuthTimestamp
         },
         logout(state) {
             Object.keys(state).forEach(x => delete state[x])
