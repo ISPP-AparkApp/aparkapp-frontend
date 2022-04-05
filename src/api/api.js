@@ -201,3 +201,12 @@ export async function addressToCoordinates(address) {
     if (response.status === 200) return response.data
     return false
 }
+
+export async function cancelAnnouncement(a_id, announcement_data){
+    try {
+        await apiPut('api/cancel/announcement/' + a_id, announcement_data, true)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
+}
