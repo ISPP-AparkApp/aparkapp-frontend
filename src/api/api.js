@@ -1,27 +1,22 @@
 import axios from "axios";
 import store from "../store";
-import { login as loginAction, refreshAuthToken as refreshAuthTokenAction } from "../store/session";
+import { login as loginAction, refreshAuthToken as refreshAuthTokenAction, logout as logoutAction } from "../store/session";
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'http://127.0.0.1:8000/'
+const backendUrl = 'http://localhost:8000/'
 
-async function checkAuthTokenIsValid() {
-    const authTimestamp = await store.getState().session.authTimestamp
+async function checkAuthTokenIsValid(authTimestamp) {
     return authTimestamp + authTokenValidTime > Date.now()
 }
 
-async function checkRefreshAuthTokenIsValid() {
-    const refreshAuthTimestamp = await store.getState().session.refreshAuthTimestamp
+async function checkRefreshAuthTokenIsValid(refreshAuthTimestamp) {
     return refreshAuthTimestamp + refreshAuthTokenValidTime > Date.now()
 }
 
-async function refreshAuthToken() {
-    const refreshToken = await store.getState().session.refreshToken
-    if (!refreshToken) {
-        throw new Error("No refreshToken provided")
-    } else if (!await checkRefreshAuthTokenIsValid()) {
-        throw new Error("Refresh token expired")
+export async function refreshAuthToken(refreshToken, refreshAuthTimestamp) {
+    if (!checkRefreshAuthTokenIsValid(refreshAuthTimestamp)) {
+        return null
     }
 
     const newAuthToken = await apiPost('api/refresh-token/', { "refresh": refreshToken }, false)
@@ -31,12 +26,15 @@ async function refreshAuthToken() {
 }
 
 async function getAuthToken() {
-    let authToken = await store.getState().session.authToken
-    if (!authToken) {
-        throw new Error("No authToken provided")
-    } else if (!await checkAuthTokenIsValid()) {
-        authToken = await refreshAuthToken()
-        store.dispatch(refreshAuthTokenAction(authToken))
+    let authToken = store.getState().session.authToken
+    const authTimestamp = store.getState().session.authTimestamp
+    const refreshToken = store.getState().session.refreshToken
+    const refreshAuthTimestamp = store.getState().session.refreshAuthTimestamp
+    if (!checkAuthTokenIsValid(authTimestamp)) {
+        authToken = await refreshAuthToken(refreshToken, refreshAuthTimestamp)
+        if (!authToken) {
+            store.dispatch(logoutAction())
+        }
     }
     return authToken
 }
@@ -74,7 +72,7 @@ export async function login(username, password) {
     let response
     try {
         response = await apiPost('api/login/', { "username": username, "password": password }, false)
-    } catch(e) {
+    } catch (e) {
         return false
     }
     const { refresh: refreshToken, access: authToken } = response.data
@@ -94,44 +92,26 @@ export async function publish(announcementData) {
 
 export async function getUserAnnouncements() {
     const response = await apiGet('api/announcement/user/', true)
-    if (response.status === 200) return  response.data
+    if (response.status === 200) return response.data
     return false
 }
 
 export async function getAnnouncement(a_id) {
     const response = await apiGet('api/announcement/' + a_id + '/', true)
-    if (response.status === 200) return  response.data
-    return false
-}
-
-export async function updateAnnouncement(a_id, announcement_data) {
-    const response = await apiPut('api/announcement/' + a_id + "/", announcement_data, true)
-    if (response.status === 200) return true
-    return false
-}
-
-export async function getReservation(r_id) {
-    const response = await apiGet('api/reservation/' + r_id + "/", true)
-    if (response.status === 200) return  response.data
-    return false
-}
-
-export async function updateReservation(r_id, reservation_data) {
-    const response = await apiPut('api/reservation/' + r_id + "/", reservation_data, true)
-    if (response.status === 200) return true
+    if (response.status === 200) return response.data
     return false
 }
 
 export async function getReservationUser(r_id) {
     const response = await apiGet('api/reservation/anouncement/' + r_id + "/", true)
-    if (response.status === 200) return  response.data
+    if (response.status === 200) return response.data
     return false
 }
+
 export async function getVehicles() {
     const response = await apiGet('api/users/vehicles/', true)
     if (response.status === 200) return response.data
 }
-
 
 export async function getUser() {
     const response = await apiGet('api/users/', true)
@@ -173,7 +153,7 @@ export async function getAnnouncements() {
 }
 
 export async function reserve(reserveData) {
-    const response = await apiPost('api/reservations/', reserveData, true) 
+    const response = await apiPost('api/reservations/', reserveData, true)
     if (response.status !== 200) return false
     return true
 }
@@ -184,16 +164,6 @@ export async function updateStatusAnnouncement(a_id, announcement_data) {
     return false
 }
 
-export async function getVehicleId(id) {
-    const response = await apiGet('api/vehicles/'+id+'/', true) 
-    if (response.status === 200) return response.data
-}
-
-export async function getAnnouncementId(id) {
-    const response = await apiGet('api/announcement/'+id+'/', true) 
-    if (response.status === 200) return response.data
-}
-
 export async function getBookings() {
     const response = await apiGet('api/reservations/', true)
     if (response.status === 200) return response.data
@@ -202,6 +172,30 @@ export async function getBookings() {
 export async function getMyAnnnouncements() {
     const response = await apiGet('api/myAnnouncements/', true)
     if (response.status === 200) return response.data
+}
+
+export async function editAnnouncement(announcement) {
+    try {
+        await apiPut('api/announcement/' + announcement.id + "/", announcement, true)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
+}
+
+export async function register(registerFields) {
+    try {
+        await apiPost('api/register/', registerFields, false)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
+}  
+
+export async function addressToCoordinates(address) {
+    const response = await apiPost('api/geolocatorToCoordinates/', address, true)
+    if (response.status === 200) return response.data
+    return false
 }
 
 export async function cancelAnnouncement(a_id, announcement_data){

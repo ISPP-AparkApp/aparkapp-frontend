@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.76% </span>
+                <span class="strong">13.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/17</span>
+                <span class='fraction'>2/15</span>
             </div>
         
             
@@ -39,7 +39,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
@@ -134,9 +134,7 @@
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -144,20 +142,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -200,7 +196,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -214,44 +210,42 @@ import { Card } from 'primereact/card';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import "../../css/views/Reserve.css";
-import { getAnnouncementId } from '../../api/api';
-import { getVehicleId } from '../../api/api';
+import { getAnnouncement } from '../../api/api';
+import { dateFormatter } from '../../utils/dateFormatter';
 &nbsp;
-const Reserve = <span class="fstat-no" title="function not covered" >({</span> }) =&gt; {
-&nbsp;
+const Reserve = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
     const [reserved, setReserved] = <span class="cstat-no" title="statement not covered" >useState(true)</span>
     const [ad, setAd] = <span class="cstat-no" title="statement not covered" >useState()</span>
     const [vehicle, setVehicle] = <span class="cstat-no" title="statement not covered" >useState()</span>
 &nbsp;
     var urlSplit = <span class="cstat-no" title="statement not covered" >window.location.href.split("/");</span>
     var tam = <span class="cstat-no" title="statement not covered" >urlSplit.length</span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >    useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >        try{</span>
-<span class="cstat-no" title="statement not covered" >            getAnnouncementId(urlSplit[tam - 1]).then(<span class="fstat-no" title="function not covered" >da</span>ta =&gt; <span class="cstat-no" title="statement not covered" >setAd(data))</span></span>
-<span class="cstat-no" title="statement not covered" >            getVehicleId(ad.vehicle).then(<span class="fstat-no" title="function not covered" >v </span>=&gt; <span class="cstat-no" title="statement not covered" >setVehicle(v))</span></span>
-        }catch{
-           
-        }
-        
-    }, [ad,vehicle])
-    
-<span class="cstat-no" title="statement not covered" >    return ( </span>
+<span class="cstat-no" title="statement not covered" >        getAnnouncement(urlSplit[tam - 1]).then(<span class="fstat-no" title="function not covered" >da</span>ta =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            setAd(data)</span>
+<span class="cstat-no" title="statement not covered" >            setVehicle(data.vehicle)</span>
+        })
+        // eslint-disable-next-line
+    }, [])
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return (</span>
         &lt;div className="flex flex-column align-items-center px-3 md:px-0"&gt;
             &lt;Card title={`Matrícula: `} className="activityCard"&gt;
                 &lt;div className="flex flex-column  pb-5"&gt;
                     &lt;ul className="mt-0"&gt;
-                        &lt;li&gt;&lt;strong&gt;Fecha y hora: &lt;/strong&gt;{ad==null ? (""):(ad.date)}&lt;/li&gt;
-                        &lt;li&gt;&lt;strong&gt;Dirección: &lt;/strong&gt;{ad==null ? (""):(ad.location)}&lt;/li&gt;
-                        &lt;li&gt;&lt;strong&gt;Modelo: &lt;/strong&gt;{vehicle==null ? (""):(vehicle.brand)}&lt;/li&gt;
-                        &lt;li&gt;&lt;strong&gt;Color: &lt;/strong&gt;{vehicle==null ? (""):(vehicle.color)}&lt;/li&gt;
-                        &lt;li&gt;&lt;strong&gt;Tiempo de espera: &lt;/strong&gt; {ad==null ? (""):(ad.wait_time)} min&lt;/li&gt;
-                        &lt;li&gt;&lt;strong&gt;Precio: &lt;/strong&gt; {ad==null ? (""):(ad.price)} €&lt;/li&gt;
+                        &lt;li&gt;&lt;strong&gt;Fecha y hora: &lt;/strong&gt;{ad == null ? ("") : (dateFormatter(new Date(ad.date)))}&lt;/li&gt;
+                        &lt;li&gt;&lt;strong&gt;Dirección: &lt;/strong&gt;{ad == null ? ("") : (ad.location)}&lt;/li&gt;
+                        &lt;li&gt;&lt;strong&gt;Modelo: &lt;/strong&gt;{vehicle == null ? ("") : (vehicle.brand)}&lt;/li&gt;
+                        &lt;li&gt;&lt;strong&gt;Color: &lt;/strong&gt;{vehicle == null ? ("") : (vehicle.color)}&lt;/li&gt;
+                        &lt;li&gt;&lt;strong&gt;Tiempo de espera: &lt;/strong&gt; {ad == null ? ("") : (ad.wait_time)} min&lt;/li&gt;
+                        &lt;li&gt;&lt;strong&gt;Precio: &lt;/strong&gt; {ad == null ? ("") : (ad.price)} €&lt;/li&gt;
                     &lt;/ul&gt;
                 &lt;/div&gt;
                 {reserved ? (
                     &lt;div className="align-items-center w-full"&gt;
                         &lt;div className="col-12"&gt;
-                            &lt;Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar"
+                            &lt;Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar"
                                 icon="pi pi-times" onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >setReserved(false)}</span> /&gt;
                         &lt;/div&gt;
                         &lt;div className="col-12"&gt;
@@ -289,7 +283,7 @@ export default Reserves;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Tue Apr 05 2022 01:59:21 GMT+0200 (hora de verano de Europa central)
+                at Tue Apr 05 2022 20:02:46 GMT+0200 (hora de verano de Europa central)
             </div>
         <script src="../../../prettify.js"></script>
         <script>
