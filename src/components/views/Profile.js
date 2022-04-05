@@ -148,7 +148,7 @@ const Profile = () => {
                       setFormErrors({});
                     }}
                     label="Cancelar"
-                    className="p-button-rounded p-button-raised p-button-danger p-button-lg mr-2 mt-6"
+                    className="p-button-rounded p-button-raised p-button-danger p-button-lg mr-2 mt-6 p-button-cancel"
                   />
                   <Button
                     label="Guardar"

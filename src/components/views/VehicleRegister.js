@@ -19,12 +19,9 @@ const VehicleRegister = (props) => {
     const msgs = useRef(null);
 
     const types = [
-        { name: "Segmento A" },
-        { name: "Segmento B" },
-        { name: "Segmento C" },
-        { name: "Segmento D" },
-        { name: "Segmento E" },
-        { name: "Segmento F" },
+        { name: "Pequeño" },
+        { name: "Mediano" },
+        { name: "Grande" },
     ]
 
     const doRegister = async () => {
