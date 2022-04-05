@@ -3,7 +3,7 @@ import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Link } from 'react-router-dom';
 import "../../css/views/Activity.css";
-import { cancelAnnouncement, getBookings } from '../../api/api';
+import { cancelReservation, cancelAnnouncement, getBookings } from '../../api/api';
 import { getMyAnnnouncements, getVehicles, editAnnouncement } from '../../api/api';
 import { dateFormatter } from '../../utils/dateFormatter';
 import { Dialog } from 'primereact/dialog';
@@ -60,7 +60,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
             result = <div className="col-12">
                 <Link to={`/notifications/${announcement.id}`}>
-                    <Button className="p-button-raised p-button-lg w-full h-full" label="Notificaciones" icon="pi pi-bell" />
+                    <Button className="p-button-raised p-button-lg w-full h-full p-button-noti" label="Notificaciones" icon="pi pi-bell" />
                 </Link>
             </div>
         }
@@ -83,25 +83,39 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
             </div>
             {announcement.cancelled ? "" :
                 <div className="grid w-full">
+                    {notificationButton()}
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog}/>
                     </div>
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs)}/>     
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs)}/>     
                     </div>
-                    {notificationButton()}
                 </div>
             }    
         </Card>
     )
 }
 
-const BookingCard = ({ announcement }) => {
-    let activityStatus;
-    if (announcement.cancelled){
-        activityStatus = "Cancelado";  
-    }else if((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
 
+const cancelReserve = async (id, setAnnouncements, setBookings) => {
+    const data = {
+        cancelled: true,
+    }
+    await cancelReservation(id, data);
+    
+    getBookings().then(data => {
+        setBookings(data)
+    })
+    getMyAnnnouncements().then(data => {
+        setAnnouncements(data)
+    })
+}
+
+const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements }) => {
+    let activityStatus;
+    if (announcement.cancelled===true || cancelled===true){
+        activityStatus = "Cancelado";  
+    }else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
         activityStatus = "En curso"
     } else {
         activityStatus = "Finalizado"
@@ -136,12 +150,12 @@ const BookingCard = ({ announcement }) => {
                     <li><strong>Precio: </strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {announcement.cancelled ? "" :
+            {(announcement.cancelled || cancelled) ? "" :
                 <div className="grid w-full">
-                    <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" />
-                    </div>
                     {notificationButton()}
+                    <div className="col-12">
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings)} />
+                    </div>
                 </div>
             }
         </Card>
@@ -335,8 +349,8 @@ const Activity = () => {
             <Messages ref={msgs} />
             <div className="grid w-full px-5 pt-5">
                 {bookings.map(bookingProps => (
-                    <div key={bookingProps.id} className="col-12 md:col-6 xl:col-4">
-                        <BookingCard {...bookingProps}></BookingCard>
+                    <div key={bookingProps.id}  className="col-12 md:col-6 xl:col-4">
+                        <BookingCard cancelled = {bookingProps.cancelled} setAnnouncements={setAnnouncements} setBookings={setBookings} id = {bookingProps.id} {...bookingProps}></BookingCard>
                     </div>
                 ))}
                 {announcements.map(announcementProps => (

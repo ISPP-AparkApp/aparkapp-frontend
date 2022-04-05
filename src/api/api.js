@@ -210,3 +210,9 @@ export async function cancelAnnouncement(a_id, announcement_data){
     }
     return true
 }
+
+export async function cancelReservation(a_id, announcement_data){
+    const response = await apiPut('api/cancel/reservation/' + a_id + '/', announcement_data, true)
+    if (response.status === 200) return true
+    return false
+}

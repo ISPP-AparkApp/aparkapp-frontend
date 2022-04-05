@@ -3,13 +3,32 @@ import { Card } from 'primereact/card';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import "../../css/views/Reserve.css";
-import { getAnnouncement } from '../../api/api';
+import { getAnnouncement, getBookings, cancelReservation } from '../../api/api';
 import { dateFormatter } from '../../utils/dateFormatter';
+
+const cancelReserve = async (id) => {
+    const data = {
+        cancelled: true,
+    }
+    await cancelReservation(id, data);
+}
+
+const aux = async (bookings, id) => {
+    
+    {bookings.map (bookingProps => (
+        
+        (bookingProps.announcement.id === id) ? cancelReserve(bookingProps.id) : null
+
+    ))}
+
+}
+
 
 const Reserve = () => {
     const [reserved, setReserved] = useState(true)
     const [ad, setAd] = useState()
     const [vehicle, setVehicle] = useState()
+    const [bookings, setBookings] = useState([])
 
     var urlSplit =  window.location.href.split("/").pop();
 
@@ -17,6 +36,9 @@ const Reserve = () => {
         getAnnouncement(urlSplit).then(data => {
             setAd(data)
             setVehicle(data.vehicle)
+        })
+        getBookings().then(data => {
+            setBookings(data)
         })
         // eslint-disable-next-line
     }, [])
@@ -34,27 +56,20 @@ const Reserve = () => {
                         <li><strong>Precio: </strong> {ad == null ? ("") : (ad.price)} €</li>
                     </ul>
                 </div>
-                {reserved ? (
+
                     <div className="align-items-center w-full">
-                        <div className="col-12">
-                            <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar"
-                                icon="pi pi-times" onClick={() => setReserved(false)} />
-                        </div>
                         <div className="col-12">
                             <Link to={`/route/${urlSplit}`}>
                                 <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
                             </Link>
                         </div>
-                    </div>
-                ) : (
-                    <div className="align-items-center w-full">
                         <div className="col-12">
-                            <Button className="p-button-raised p-button-lg w-full h-full"
-                                label="Reservar" onClick={() => setReserved(true)}
-                            />
+                            <Link to={`/activity`}>
+                                <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar"
+                                        icon="pi pi-times" onClick={() => aux(bookings, ad.id)} />
+                            </Link>            
                         </div>
                     </div>
-                )}
             </Card>
         </div>
     )
@@ -68,4 +83,5 @@ const Reserves = () => {
         </div>
     )
 }
+
 export default Reserves;
