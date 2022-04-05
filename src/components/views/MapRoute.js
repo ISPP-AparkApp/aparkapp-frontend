@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { getAnnouncement, updateStatusAnnouncement } from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
+import { Card } from 'primereact/card';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import 'react-toastify/dist/ReactToastify.css';
 import RouteVisualization from './RouteVisualization';
+import "../../css/views/MapRoute.css";
 
 const MapRoute = () => {
     const [time, setTime] = useState(false);
@@ -73,7 +75,7 @@ const MapRoute = () => {
             else if ((Date.parse(announcement.date) - Date.now()) < 600000) {
                 if (announcement.status === "Initial" || announcement.status === "AcceptDelay" || announcement.status === "Delay") {
                     result = <div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg w-full h-full" label="¡He llegado!" /></div>
-                    if (announcement.allow_wait && announcement.status !== "Delay" && announcement.n_extend < 3) { // Debe funcionar cuando n_extend esté en el modelo
+                    if (announcement.allow_wait && announcement.status !== "Delay" && announcement.n_extend < 3) { 
                         result = <div><div className="mb-3"><Button onClick={() => { updateAnnounce("Arrival"); }} className="p-button-raised p-button-lg w-full h-full" label="¡He llegado!" /></div><div><Button onClick={() => { updateAnnounce("Delay"); }} className="p-button-raised p-button-lg mb-1 w-full h-full" label="Llego tarde" /></div></div>
                     }
                 }
@@ -97,6 +99,10 @@ const MapRoute = () => {
         <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
             <ToastContainer position="top-center" autoClose={false} newestOnTop closeOnClick={false} rtl={false}
                 pauseOnFocusLoss draggable />           
+            <RouteVisualization announceLocation={ announcement ? (announcement.location) : ("")} />
+            <Card className="notifyCard" style={{color: "black"}} title="Notificaciones">
+                {footer}
+            </Card>
         </div>
     )
 };
