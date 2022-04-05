@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
+import { Link } from 'react-router-dom';
 import "../../css/views/Activity.css";
 import { getBookings } from '../../api/api';
 import { getMyAnnnouncements, getVehicles, editAnnouncement } from '../../api/api';
@@ -8,7 +9,6 @@ import { dateFormatter } from '../../utils/dateFormatter';
 import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { InputNumber } from 'primereact/inputnumber';
-import { Link } from 'react-router-dom';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
@@ -33,6 +33,20 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         setDialogVisible(true);
     }
 
+    const notificationButton = () => {
+        let result = ""
+
+        
+        if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
+            result = <div className="col-12">
+                <Link to={`/notifications/${announcement.id}`}>
+                    <Button className="p-button-raised p-button-lg w-full h-full" label="Notificaciones" icon="pi pi-bell" />
+                </Link>
+            </div>
+        }
+        return result;
+    }
+
     return (
         <Card className="activityCard" title={activityStatus}>
             <div className="flex flex-column pb-5">
@@ -54,7 +68,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                 <div className="col-12">
                     <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog} />
                 </div>
-
+                {notificationButton()}
             </div>
         </Card>
     )
@@ -68,6 +82,21 @@ const BookingCard = ({ announcement }) => {
     } else {
         activityStatus = "Finalizado"
     }
+
+    const notificationButton = () => {
+        let result = ""
+
+        if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
+            result = <div className="col-12">
+                <Link to={`/route/${announcement.id}`}>
+                    <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
+                </Link>
+            </div>
+        }
+        return result;
+    }
+
+
 
     return (
         <Card className="activityCard" title={activityStatus}>
@@ -88,11 +117,7 @@ const BookingCard = ({ announcement }) => {
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" />
                     </div>
-                    <div className="col-12">
-                        <Link to={`/route/${announcement.id}`}>
-                            <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
-                        </Link>
-                    </div>
+                    {notificationButton()}
                 </div>
             }
         </Card>
