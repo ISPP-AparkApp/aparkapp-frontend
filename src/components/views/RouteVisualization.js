@@ -1,5 +1,3 @@
-import { IconButton } from '@chakra-ui/react'
-import { FaLocationArrow } from 'react-icons/fa'
 import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api'
 import { useState, useEffect } from 'react'
 import { Card } from 'primereact/card';
@@ -43,16 +41,6 @@ function RouteVisualization({ announceLocation }) {
 
     return (
         <div className='block h-30rem map'>
-            <Card title="Información">
-                <p className="text-xl publish_label mt-1">Distancia: {distance} Duración: {duration}</p>
-                <Button
-                    aria-label='center back'
-                    icon={<FaLocationArrow />}
-                    isRound
-                    onClick={zoomToCenter}
-                />
-            </Card>
-
             <GoogleMap
                 center={center}
                 zoom={15}
@@ -70,6 +58,14 @@ function RouteVisualization({ announceLocation }) {
                     <DirectionsRenderer directions={directionsResponse} />
                 )}
             </GoogleMap>
+            <Card title="Información">
+                <p className="text-xl publish_label mt-1">Distancia: {distance} Duración: {duration}</p>
+                <Button
+                    label="Ver mi localización"
+                    icon="pi pi-map-marker"
+                    onClick={zoomToCenter}
+                />
+            </Card>
         </div>
     )
 }
