@@ -14,10 +14,9 @@ const cancelReserve = async (id) => {
 }
 
 const aux = async (bookings, id) => {
-    {bookings.map (bookingProps => (
+    bookings.map(bookingProps =>
         (bookingProps.announcement.id === id) ? cancelReserve(bookingProps.id) : null
-    ))}
-
+    ).then(window.location.href = "/activity")
 }
 
 const Reserve = () => {
@@ -51,18 +50,16 @@ const Reserve = () => {
                     </ul>
                 </div>
 
-                    <div className="align-items-center w-full">
-                        <div className="col-12">
-                            <Link to={`/route/${urlSplit}`}>
-                                <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
-                            </Link>
-                        </div>
-                        <div className="col-12">
-                            <Link to={`/activity`}>
-                                <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar"
-                                        icon="pi pi-times" onClick={async () => await aux(bookings, ad.id)} />
-                            </Link>
-                        </div>
+                <div className="align-items-center w-full">
+                    <div className="col-12">
+                        <Link to={`/route/${urlSplit}`}>
+                            <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
+                        </Link>
+                    </div>
+                    <div className="col-12">
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar"
+                            icon="pi pi-times" onClick={async () => await aux(bookings, ad.id)} />
+                    </div>
                 </div>
             </Card>
         </div>
