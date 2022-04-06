@@ -14,18 +14,14 @@ const cancelReserve = async (id) => {
 }
 
 const aux = async (bookings, id) => {
-    
     {bookings.map (bookingProps => (
-        
         (bookingProps.announcement.id === id) ? cancelReserve(bookingProps.id) : null
-
     ))}
 
 }
 
 
 const Reserve = () => {
-    const [reserved, setReserved] = useState(true)
     const [ad, setAd] = useState()
     const [vehicle, setVehicle] = useState()
     const [bookings, setBookings] = useState([])
@@ -66,8 +62,8 @@ const Reserve = () => {
                         <div className="col-12">
                             <Link to={`/activity`}>
                                 <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar"
-                                        icon="pi pi-times" onClick={() => aux(bookings, ad.id)} />
-                            </Link>            
+                                        icon="pi pi-times" onClick={async () => await aux(bookings, ad.id)} />
+                            </Link>
                         </div>
                     </div>
             </Card>
