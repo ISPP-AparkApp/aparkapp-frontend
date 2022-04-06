@@ -202,16 +202,16 @@ export async function addressToCoordinates(address) {
     return false
 }
 
-export async function cancelAnnouncement(a_id, announcement_data){
+export async function cancelAnnouncement(a_id, announcement_data) {
     try {
-        await apiPut('api/cancel/announcement/' + a_id, announcement_data, true)
+        await apiPut('api/cancel/announcement/' + a_id + '/', announcement_data, true)
     } catch (error) {
         return error.response.data
     }
     return true
 }
 
-export async function cancelReservation(a_id, announcement_data){
+export async function cancelReservation(a_id, announcement_data) {
     const response = await apiPut('api/cancel/reservation/' + a_id + '/', announcement_data, true)
     if (response.status === 200) return true
     return false
