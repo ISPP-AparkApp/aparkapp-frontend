@@ -1,7 +1,33 @@
-import './css/App.css';
+import "./css/App.css";
+import Headerbar from "./components/Headerbar";
+import Router from "./router/Router";
+import { useEffect, useState } from "react";
+import { refreshAuthToken } from "./api/api";
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 function App() {
-  return <p>Hello world</p>;
+  const [appIsLoaded, setAppIsLoaded] = useState(false)
+  useEffect(() => {
+    const savedRefreshToken = localStorage.getItem("refreshToken")
+    const savedRefreshTimestamp = localStorage.getItem("refreshAuthTimestamp")
+    if (!savedRefreshToken || !savedRefreshTimestamp) {
+      return setAppIsLoaded(true);
+    }
+    refreshAuthToken(savedRefreshToken, savedRefreshTimestamp).then(() => {
+      setAppIsLoaded(true)
+    })
+  }, [])
+
+  return appIsLoaded
+    ? (
+      <div className="App">
+        <Headerbar />
+        <Router />
+      </div>
+    )
+    : (
+      <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="3" animationDuration=".5s" />
+    )
 }
 
 export default App;

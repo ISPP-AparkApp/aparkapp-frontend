@@ -1,0 +1,8 @@
+{
+  "env": {
+    "browserPermissions": {
+      "notifications": "allow",
+      "geolocation": "allow"
+    }
+  }
+}

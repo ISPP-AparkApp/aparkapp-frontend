@@ -1,0 +1,43 @@
+.activityCard {
+  background-color: #ffffff !important;
+  color: black !important;
+  box-shadow: 2px 2px 5px #000000 !important;
+}
+
+.p-dialog-header,
+.p-dialog-content,
+.p-dialog-footer {
+  color: black !important;
+  background-color: #eaf7f1 !important;
+  overflow-y: auto !important;
+}
+
+.p-inputtext::placeholder {
+  color: #000000 !important;
+}
+
+.p-dialog-footer {
+  padding: 10px !important;
+}
+
+.activity-dialog {
+  width: 500px !important;
+}
+
+.pi-times {
+  color: #000000 !important;
+}
+
+.map-dialog {
+  width: 80% !important;
+}
+
+.p-button-cancel {
+  background-color: #ecb8c3 !important;
+  border-color: #fd8282 !important;
+}
+
+.p-button-noti{
+  background-color: #0091ff81 !important;
+  border-color: #002583 !important;
+}
