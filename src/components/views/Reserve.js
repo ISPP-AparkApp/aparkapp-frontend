@@ -20,13 +20,11 @@ const aux = async (bookings, id) => {
 
 }
 
-
 const Reserve = () => {
     const [ad, setAd] = useState()
     const [vehicle, setVehicle] = useState()
     const [bookings, setBookings] = useState([])
-
-    var urlSplit =  window.location.href.split("/").pop();
+    var urlSplit = window.location.href.split("/").pop();
 
     useEffect(() => {
         getAnnouncement(urlSplit).then(data => {
@@ -65,7 +63,7 @@ const Reserve = () => {
                                         icon="pi pi-times" onClick={async () => await aux(bookings, ad.id)} />
                             </Link>
                         </div>
-                    </div>
+                </div>
             </Card>
         </div>
     )
