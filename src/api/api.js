@@ -11,7 +11,7 @@ async function checkAuthTokenIsValid(authTimestamp) {
 }
 
 async function checkRefreshAuthTokenIsValid(refreshAuthTimestamp) {
-    return refreshAuthTimestamp + refreshAuthTokenValidTime > Date.now()
+    return parseInt(refreshAuthTimestamp) + refreshAuthTokenValidTime > Date.now()
 }
 
 export async function refreshAuthToken(refreshToken, refreshAuthTimestamp) {
