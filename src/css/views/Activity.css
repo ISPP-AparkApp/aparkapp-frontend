@@ -37,7 +37,15 @@
   border-color: #fd8282 !important;
 }
 
-.p-button-noti{
+.p-button-noti {
   background-color: #0091ff81 !important;
   border-color: #002583 !important;
+}
+
+.p-checkbox-box {
+  background-color: white !important;
+}
+
+.p-checkbox-box.p-highlight {
+  background-color: #81c784 !important;
 }

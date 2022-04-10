@@ -17,18 +17,19 @@ import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { regexLatitudeLongitude } from '../../utils/latLongRegex';
 import { Slider } from 'primereact/slider';
+import { Checkbox } from 'primereact/checkbox';
 
 const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs) => {
     const data = {
         cancelled: true,
     }
     let res = await cancelAnnouncement(id, data);
-    if (res !== true){
+    if (res !== true) {
         msgs.current.show({ severity: 'error', detail: res });
         window.scrollTo(0, 0)
         return;
     }
-
+    // the app is not reloaded automatically when cancel status changes
     getBookings().then(data => {
         setBookings(data)
     })
@@ -40,12 +41,12 @@ const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs) => {
 const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement, setAnnouncements, setBookings, msgs }) => {
 
     let activityStatus;
-    if (announcement.cancelled){
-        activityStatus = "Cancelado";
-    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
-        activityStatus = "En curso"
-    } else {
+    if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
         activityStatus = "Finalizado"
+    } else if (announcement.cancelled) {
+        activityStatus = "Cancelado";
+    } else {
+        activityStatus = "En curso"
     }
 
     const visualiseDialog = () => {
@@ -56,7 +57,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
     const notificationButton = () => {
         let result = ""
 
-        
+
         if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
             result = <div className="col-12">
                 <Link to={`/notifications/${announcement.id}`}>
@@ -68,7 +69,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
     }
 
     return (
-        <Card className="activityCard" title={activityStatus}>
+        <Card className="activityCard h-full" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
                     <li><strong>Matrícula:</strong> {announcement.vehicle.license_plate}</li>
@@ -81,17 +82,17 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {announcement.cancelled ? "" :
+            {announcement.cancelled || (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() ? "" :
                 <div className="grid w-full">
                     {notificationButton()}
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog}/>
+                        <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog} />
                     </div>
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs)}/>     
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs)} />
                     </div>
                 </div>
-            }    
+            }
         </Card>
     )
 }
@@ -102,7 +103,7 @@ const cancelReserve = async (id, setAnnouncements, setBookings) => {
         cancelled: true,
     }
     await cancelReservation(id, data);
-    
+
     getBookings().then(data => {
         setBookings(data)
     })
@@ -111,14 +112,15 @@ const cancelReserve = async (id, setAnnouncements, setBookings) => {
     })
 }
 
-const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements }) => {
+const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncements }) => {
     let activityStatus;
-    if (announcement.cancelled===true || cancelled===true){
-        activityStatus = "Cancelado";  
-    }else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
-        activityStatus = "En curso"
-    } else {
+
+    if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
         activityStatus = "Finalizado"
+    } else if (announcement.cancelled === true || cancelled === true) {
+        activityStatus = "Cancelado";
+    } else {
+        activityStatus = "Reservado"
     }
 
     const notificationButton = () => {
@@ -137,7 +139,7 @@ const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements
 
 
     return (
-        <Card className="activityCard" title={activityStatus}>
+        <Card className="activityCard h-full" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
                     <li><strong>Matrícula:</strong>{announcement.vehicle.license_plate}</li>
@@ -150,7 +152,7 @@ const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements
                     <li><strong>Precio: </strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {(announcement.cancelled || cancelled) ? "" :
+            {(announcement.cancelled || cancelled || (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) ? "" :
                 <div className="grid w-full">
                     {notificationButton()}
                     <div className="col-12">
@@ -187,13 +189,24 @@ const Activity = () => {
     const [draggableMarker, setDraggableMarker] = useState(false);
     const [markerLocation, setMarkerLocation] = useState('');
     const [dialogVisible2, setDialogVisible2] = useState(false);
+    const [selectedActivity, setSelectedActivity] = useState("Anuncios y reservas");
+    const [dialogVisibleFilter, setDialogVisibleFilter] = useState(false);
+    const [freeState, setFreeState] = useState(true);
+    const [notDoneState, setNotDoneState] = useState(true);
+    const [cancelledState, setCancelledState] = useState(true);
+    const [finishedState, setFinishedState] = useState(true);
+    const [reservedState, setReservedState] = useState(true);
+    const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
+    const [filteredBookings, setFilteredBookings] = useState([]);
 
     useEffect(() => {
         getBookings().then(data => {
             setBookings(data)
+            setFilteredBookings(data)
         })
         getMyAnnnouncements().then(data => {
             setAnnouncements(data)
+            setFilteredAnnouncements(data)
         })
         getVehicles().then(data => {
             setVehicles(data)
@@ -344,26 +357,115 @@ const Activity = () => {
             <Button label="Cancelar" className="p-button-cancel" icon="pi pi-times" onClick={cancellMap} />
         </div>;
 
+    const activities = [
+        { name: "Anuncios y reservas" },
+        { name: "Anuncios" },
+        { name: "Reservas" }
+    ]
+
+    const onActivityChange = (e) => {
+        setSelectedActivity(e.value.name)
+    }
+
+    const filterActivities = () => {
+        //TODO: FILTER BY FREE, NOT DONE, RESERVED
+
+        let announcementFiltered = announcements
+        let bookingFiltered = bookings
+
+        if (cancelledState) {
+            announcementFiltered = announcementFiltered.filter((a) => a.cancelled)
+            bookingFiltered = bookingFiltered.filter((b) => b.cancelled)
+        }
+
+        if (finishedState) {
+            announcementFiltered = announcementFiltered.filter((a) => (
+                (Date.parse(a.date) + a.wait_time * 60000) < Date.now()
+            ))
+
+            bookingFiltered = bookingFiltered.filter((b) => (
+                (Date.parse(b.date) + b.wait_time * 60000) < Date.now()
+            ))
+        }
+
+        setFilteredAnnouncements(announcementFiltered)
+        setFilteredBookings(bookingFiltered)
+
+        setDialogVisibleFilter(false)
+    }
+
+    const filterFooter = <div>
+        <Button label="Aplicar" icon="pi pi-check" onClick={filterActivities} />
+        <Button label="Mostrar todos" className="p-button-noti" icon="pi pi-check-circle" onClick={() => {
+            setFreeState(true);
+            setNotDoneState(true);
+            setCancelledState(true);
+            setFinishedState(true);
+            setReservedState(true);
+            setDialogVisibleFilter(false);
+            setFilteredAnnouncements(announcements);
+            setFilteredBookings(bookings);
+        }} />
+    </div>;
+
+    const onHideDialogFilter = () => {
+        setDialogVisibleFilter(false);
+    }
+
     return (
         <div>
             <Messages ref={msgs} />
+            <div className='w-full flex justify-content-center mt-3' >
+                <Dropdown className="w-3" value={selectedActivity} options={activities} onChange={onActivityChange} optionLabel="name" placeholder={selectedActivity} />
+                <Button icon="pi pi-filter" className="ml-2" onClick={() => setDialogVisibleFilter(true)} />
+            </div>
             <div className="grid w-full px-5 pt-5">
-                {bookings.map(bookingProps => (
-                    <div key={bookingProps.id}  className="col-12 md:col-6 xl:col-4">
-                        <BookingCard cancelled = {bookingProps.cancelled} setAnnouncements={setAnnouncements} setBookings={setBookings} id = {bookingProps.id} {...bookingProps}></BookingCard>
+                {selectedActivity === "Reservas" || selectedActivity === "Anuncios y reservas" ?
+                    filteredBookings.map(bookingProps => (
+                        <div key={bookingProps.id} className="col-12 md:col-6 xl:col-4">
+                            <BookingCard cancelled={bookingProps.cancelled} setAnnouncements={setAnnouncements} setBookings={setBookings} id={bookingProps.id} {...bookingProps}></BookingCard>
+                        </div>
+                    )) : ""}
+                {selectedActivity === "Anuncios" || selectedActivity === "Anuncios y reservas" ?
+                    filteredAnnouncements.map(announcementProps => (
+                        <div key={announcementProps.id} className="col-12 md:col-6 xl:col-4">
+                            <AnnouncementCard
+                                setAnnouncements={setAnnouncements}
+                                setBookings={setBookings}
+                                setSelectedAnnouncement={setSelectedAnnouncement}
+                                setDialogVisible={setDialogVisible} announcement={announcementProps}
+                                msgs={msgs}>
+                            </AnnouncementCard>
+                        </div>
+                    )) : ""}
+                <Dialog className='filter-dialog' header="Filtrar por plazas" draggable={false} visible={dialogVisibleFilter} footer={filterFooter} onHide={onHideDialogFilter} resizable={false}>
+                    <div className="flex flex-column">
+                        {(selectedActivity === "Anuncios" || selectedActivity === "Anuncios y reservas") ?
+                            <div className="flex flex-column">
+                                <div className="flex">
+                                    <Checkbox className="mr-2" inputId="freeState" name="freeState" checked={freeState} onChange={() => setFreeState(!freeState)} />
+                                    <label htmlFor="freeState">Libres</label>
+                                </div>
+                                <div className="flex mt-3">
+                                    <Checkbox className="mr-2" inputId="notDoneState" name="notDoneState" checked={notDoneState} onChange={() => setNotDoneState(!notDoneState)} />
+                                    <label htmlFor="notDoneState">No realizados</label>
+                                </div>
+                            </div> : ""
+                        }
+                        <div className="flex mt-3">
+                            <Checkbox className="mr-2" inputId="finishedState" name="finishedState" checked={finishedState} onChange={() => setFinishedState(!finishedState)} />
+                            <label htmlFor="finishedState">Terminados</label>
+                        </div>
+                        <div className="flex mt-3">
+                            <Checkbox className="mr-2" inputId="cancelledState" name="cancelledState" checked={cancelledState} onChange={() => setCancelledState(!cancelledState)} />
+                            <label htmlFor="cancelledState">Cancelados</label>
+                        </div>
+                        <div className="flex mt-3">
+                            <Checkbox className="mr-2" inputId="reservedState" name="reservedState" checked={reservedState} onChange={() => setReservedState(!reservedState)} />
+                            <label htmlFor="reservedState">Reservados</label>
+                        </div>
                     </div>
-                ))}
-                {announcements.map(announcementProps => (
-                    <div key={announcementProps.id} className="col-12 md:col-6 xl:col-4">
-                        <AnnouncementCard
-                            setAnnouncements={setAnnouncements}
-                            setBookings={setBookings}
-                            setSelectedAnnouncement={setSelectedAnnouncement}
-                            setDialogVisible={setDialogVisible} announcement={announcementProps}
-                            msgs={msgs}>
-                        </AnnouncementCard>
-                    </div>
-                ))}
+                </Dialog>
             </div>
 
             <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
