@@ -28,6 +28,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "aparkapp-s2"
-          heroku_email: "ferherque@alum.us.es"
+          heroku_api_key: ${{secrets.HEROKU_API_KEY_2}}
+          heroku_app_name: "aparkapp"
+          heroku_email: "fernandohq23@outlook.com"
