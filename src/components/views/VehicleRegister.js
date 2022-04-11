@@ -56,7 +56,6 @@ const VehicleRegister = (props) => {
 
     const validate = async () => {
         const errors = {}
-
         if (!brand) errors.brand = 'La marca es requerida';
         if (!model) errors.model = 'El modelo es requerido';
         if (!licensePlate) errors.licensePlate = 'La matrícula es requerida';

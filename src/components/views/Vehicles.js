@@ -4,12 +4,19 @@ import { InputText } from "primereact/inputtext";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import { Messages } from 'primereact/messages';
 import { Dropdown } from "primereact/dropdown";
-import { getVehicles, deleteVehicle, updateVehicle } from "../../api/api";
+import { getVehicles, deleteVehicle, updateVehicle, registerVehicle } from "../../api/api";
 
 const Vehicles = () => {
   const [isEditing, setEditing] = useState(0);
   const [updated, setUpdated] = useState(0);
-  const [formErrors, setFormErrors] = useState({})
+  const [createVehicle, setCreateVehicle] = useState(false);
+  const [brand, setBrand] = useState("");
+  const [model, setModel] = useState("");
+  const [licensePlate, setlicensePlate] = useState("");
+  const [color, setColor] = useState("");
+  const [type, setType] = useState();
+  const [formErrors, setFormErrors] = useState({});
+  const [formErrorsNewVehicle, setFormErrorsNewVehicle] = useState({});
 
   const types = [
     { name: "Pequeño", value: "Pequeño" },
@@ -26,44 +33,103 @@ const Vehicles = () => {
     }
   }, [updated, isEditing]);
 
+  const cleanData = () => {
+    setBrand("");
+    setModel("");
+    setlicensePlate("");
+    setColor("");
+    setType(null);
+    setFormErrors({});
+  }
   const message = useRef(null);
 
   const addMessage = () => {
     message.current.show([
-        { severity: 'error', summary: 'No es posible eliminar su único vehículo' },
+      { severity: 'error', summary: 'No es posible eliminar su único vehículo' },
     ]);
-}
-
-const validate = async (list_position) => {
-  const errors = {}
-  const v = vehicles[list_position]
-
-  var regexLicensePlate = /^[A-Za-z]{0,2}[0-9]{4}[A-Za-z]{2,3}$/
-  if (!regexLicensePlate.test(v.license_plate)) {
-    errors.license_plate = 'La matrícula introducida no es válida';
   }
 
-  if (v.brand.length < 3 || v.brand.length > 30) {
-    errors.brand = 'La marca del vehículo debe tener entre 3 y 30 caracteres';
-  }
+  const validate = async (list_position) => {
+    const errors = {}
+    const v = vehicles[list_position]
 
-  if (v.model.length < 2 || v.model.length > 50) {
-    errors.model = 'El modelo del vehículo debe tener entre 1 y 50 caracteres';
-  }
+    var regexLicensePlate = /^[A-Za-z]{0,2}[0-9]{4}[A-Za-z]{2,3}$/
+    if (!regexLicensePlate.test(v.license_plate)) {
+      errors.license_plate = 'La matrícula introducida no es válida';
+    }
 
-  if (v.color.length < 3 || v.color.length > 30) {
-    errors.color = 'El color del vehículo debe tener entre 3 y 30 caracteres';
-  }
+    if (v.brand.length < 3 || v.brand.length > 30) {
+      errors.brand = 'La marca del vehículo debe tener entre 3 y 30 caracteres';
+    }
 
-  setFormErrors(errors)
-  if (!Object.keys(errors).length) {
-    updateVehicle(v.id, v).then(() => setEditing(0)).then(() => setUpdated(0))
-  }
-}
+    if (v.model.length < 2 || v.model.length > 50) {
+      errors.model = 'El modelo del vehículo debe tener entre 1 y 50 caracteres';
+    }
 
-const getFieldError = (fieldName) => {
-  return formErrors[fieldName] && <p className="messageError">{formErrors[fieldName]}</p>
-}
+    if (v.color.length < 3 || v.color.length > 30) {
+      errors.color = 'El color del vehículo debe tener entre 3 y 30 caracteres';
+    }
+
+    setFormErrors(errors)
+    if (!Object.keys(errors).length) {
+      updateVehicle(v.id, v).then(() => setEditing(0)).then(() => setUpdated(0))
+    }
+
+  }
+  const validateNewVehicle = async () => {
+    const errors = {}
+    var regexLicensePlate = /^[A-Za-z]{0,2}[0-9]{4}[A-Za-z]{2,3}$/
+    if (!regexLicensePlate.test(licensePlate)) {
+      errors.licensePlate = 'La matrícula introducida no es válida';
+    }
+
+    if (brand.length < 3 || brand.length > 30) {
+      errors.brand = 'La marca del vehículo debe tener entre 3 y 30 caracteres';
+    }
+
+    if (model.length < 2 || model.length > 50) {
+      errors.model = 'El modelo del vehículo debe tener entre 1 y 50 caracteres';
+    }
+
+    if (color.length < 3 || color.length > 30) {
+      errors.color = 'El color del vehículo debe tener entre 3 y 30 caracteres';
+    }
+    if (!type) errors.type = 'El segmento es requerido';
+
+    setFormErrorsNewVehicle(errors)
+    if (!Object.keys(errors).length) {
+      const err = await newVehicle();
+      getVehicles().then((data) => setVehicles(data)).then(setCreateVehicle(false))
+      if (err) {
+        setFormErrorsNewVehicle({ global: err })
+    }
+    }
+  }
+  const newVehicle = async () => {
+    console.log(brand)
+    const vehicleData = {
+      brand: brand,
+      model: model,
+      license_plate: licensePlate,
+      color: color,
+      type: type,
+    }
+    let result = await registerVehicle(vehicleData);
+    if (result === true) {
+      message.current.show({ severity: 'success', summary: 'Vehiculo creado' });
+    } else {
+      const errors = {}
+      errors.global = result
+      setFormErrorsNewVehicle(errors)
+    }
+    window.scrollTo(0, 0)
+  }
+  const getFieldError = (fieldName) => {
+    return formErrors[fieldName] && <p className="messageError">{formErrors[fieldName]}</p>
+  }
+  const getFieldErrorNewVehicle = (fieldName) => {
+    return formErrorsNewVehicle[fieldName] && <p className="messageError">{formErrorsNewVehicle[fieldName]}</p>
+  }
 
   const items = vehicles.map((v, i) => (
     <AccordionTab
@@ -185,7 +251,7 @@ const getFieldError = (fieldName) => {
                 if (vehicles.length === 1) {
                   addMessage();
                 } else {
-                deleteVehicle(v.id).then(() => setUpdated(0));
+                  deleteVehicle(v.id).then(() => setUpdated(0));
                 }
               }}
             />
@@ -198,9 +264,86 @@ const getFieldError = (fieldName) => {
         </div>
       )}
     </AccordionTab>
+
   ));
 
-  return <Fragment><Messages ref={message} /><Accordion activeIndex={0}>{items}</Accordion></Fragment>;
+  return (
+    <Fragment>
+      <Messages ref={message} />
+      {!createVehicle ? (
+        <Accordion activeIndex={0}>{items}</Accordion>
+      ) : (
+        <div className="form">
+          <p className="text-xl publish_label mb-2 mt-1">Matrícula</p>
+          <InputText
+            value={licensePlate}
+            onChange={(b) =>
+              setlicensePlate(b.target.value)
+            }
+          />
+          {getFieldErrorNewVehicle("licensePlate")}
+          <p className="text-xl publish_label mb-2 mt-1">Marca</p>
+          <InputText
+            value={brand}
+            onChange={(b) =>
+              setBrand(b.target.value)
+            }
+          />
+          {getFieldErrorNewVehicle("brand")}
+          <p className="text-xl publish_label mb-2 mt-1">Modelo</p>
+          <InputText
+            value={model}
+            onChange={(m) =>
+              setModel(m.target.value)
+            }
+          />
+          {getFieldErrorNewVehicle("model")}
+          <p className="text-xl publish_label mb-2 mt-1">Color</p>
+          <InputText
+            value={color}
+            onChange={(c) =>
+              setColor(c.target.value)
+            }
+          />
+          {getFieldErrorNewVehicle("color")}
+          <p className="text-xl publish_label mb-2 mt-1">Segmento</p>
+          <Dropdown
+            className="input_text"
+            options={types}
+            optionLabel="name"
+            value={type}
+            onChange={(e) => {
+              setType(e.value);
+            }}
+            placeholder="Tamaño"
+          />
+          {getFieldErrorNewVehicle("type")}
+          <div className="div-button">
+            <Button
+              label="Cancelar"
+              onClick={() => {
+                setCreateVehicle(false);
+                setFormErrorsNewVehicle({});
+              }}
+              className="p-button-rounded p-button-raised p-button-danger p-button-lg mr-2 mt-6 p-button-cancel"
+            />
+            <Button
+              label="Guardar"
+              onClick={validateNewVehicle}
+              className="p-button-raised p-button-rounded p-button-lg mt-6"
+            />
+          </div>
+        </div>
+      )}
+      <div className="div-button mt-4">
+        <Button
+          onClick={() => {setCreateVehicle(true);cleanData();}}
+          className="p-button p-component p-speeddial-button p-button-rounded p-speeddial-rotate p-button-icon-only">
+          <span className="p-button-icon p-c pi pi-plus"></span>
+        </Button>
+      </div>
+    </Fragment>
+  );
 };
 
 export default Vehicles;
