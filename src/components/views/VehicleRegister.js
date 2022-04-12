@@ -60,7 +60,7 @@ const VehicleRegister = (props) => {
         if (!model) errors.model = 'El modelo es requerido';
         if (!licensePlate) errors.licensePlate = 'La matrícula es requerida';
         if (!color) errors.color = 'El color es requerido';
-        if (!selectedType) errors.selectedType = 'El segmento es requerido';
+        if (!selectedType) errors.selectedType = 'El tamaño es requerido';
 
         var regexLicensePlate = /^[A-Za-z]{0,2}[0-9]{4}[A-Za-z]{2,3}$/
         if (!regexLicensePlate.test(licensePlate)) errors.licensePlate = 'La matrícula introducida no es válida';

@@ -94,7 +94,7 @@ const Vehicles = () => {
     if (color.length < 3 || color.length > 30) {
       errors.color = 'El color del vehículo debe tener entre 3 y 30 caracteres';
     }
-    if (!type) errors.type = 'El segmento es requerido';
+    if (!type) errors.type = 'El tamaño es requerido';
 
     setFormErrorsNewVehicle(errors)
     if (!Object.keys(errors).length) {
@@ -196,7 +196,7 @@ const Vehicles = () => {
             }}
           />
           {getFieldError("color")}
-          <p className="text-xl publish_label mb-2 mt-1">Segmento</p>
+          <p className="text-xl publish_label mb-2 mt-1">Tamaño</p>
           <Dropdown
             options={types}
             optionLabel="name"
@@ -241,7 +241,7 @@ const Vehicles = () => {
           <p className="text-xl">{v.model}</p>
           <b className="text-l">Color</b>
           <p className="text-xl">{v.color}</p>
-          <b className="text-l">Segmento</b>
+          <b className="text-l">Tamaño</b>
           <p className="text-xl">{v.type}</p>
           <div className="div-button">
             <Button
@@ -271,7 +271,14 @@ const Vehicles = () => {
     <Fragment>
       <Messages ref={message} />
       {!createVehicle ? (
-        <Accordion activeIndex={0}>{items}</Accordion>
+        <div className="div-button mt-4">
+          <Accordion activeIndex={0}>{items}</Accordion>
+          <Button
+            onClick={() => {setCreateVehicle(true);cleanData();}}
+            className="p-button p-component p-speeddial-button p-button-rounded p-speeddial-rotate p-button-icon-only">
+            <span className="p-button-icon p-c pi pi-plus"></span>
+          </Button>
+        </div>
       ) : (
         <div className="form">
           <p className="text-xl publish_label mb-2 mt-1">Matrícula</p>
@@ -306,7 +313,7 @@ const Vehicles = () => {
             }
           />
           {getFieldErrorNewVehicle("color")}
-          <p className="text-xl publish_label mb-2 mt-1">Segmento</p>
+          <p className="text-xl publish_label mb-2 mt-1">Tamaño</p>
           <Dropdown
             className="input_text"
             options={types}
@@ -335,13 +342,7 @@ const Vehicles = () => {
           </div>
         </div>
       )}
-      <div className="div-button mt-4">
-        <Button
-          onClick={() => {setCreateVehicle(true);cleanData();}}
-          className="p-button p-component p-speeddial-button p-button-rounded p-speeddial-rotate p-button-icon-only">
-          <span className="p-button-icon p-c pi pi-plus"></span>
-        </Button>
-      </div>
+      
     </Fragment>
   );
 };
