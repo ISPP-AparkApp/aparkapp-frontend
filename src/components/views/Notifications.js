@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Card } from 'primereact/card';
 import { Avatar } from 'primereact/avatar';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { getAnnouncement, updateStatusAnnouncement, getReservationUser } from '../../api/api';
 import "../../css/views/Notifications.css";
 
@@ -15,7 +16,7 @@ const Notifications = () => {
     const getAnnounce = () => {
         getAnnouncement(announceId).then(val => {
             setAnnouncement(val);
-            if (!user) { getReservationUser(val.id).then(u => setUser(u.first_name)); }
+            if (!user) { getReservationUser(val.id).then(u => u ? setUser(u.first_name) : setUser("Cancelled")); }
         });
     };
 
@@ -41,7 +42,7 @@ const Notifications = () => {
         let f = ""
         let result = []
 
-        if (announcement) {
+        if (announcement && user && user !== "Cancelled") {
             switch (announcement.status) {
                 case "Delay":
                     h = <span className="pi pi-clock text-xl">   {user} se ha retrasado</span>;
@@ -60,9 +61,17 @@ const Notifications = () => {
                     result = [h, c, f];
                     break;
             }
+        } else if(user === "Cancelled") {
+            h = "Reserva cancelada"
+            c = <p className="mb-0 text-xl">Puede salir de su plaza de aparcamiento cuando desee</p>
+            result = [h, c, f]
         }
         else {
-            h = "Parece que no tienes notificaciones"
+            c = <ProgressSpinner
+            style={{ width: "50px", height: "50px" }}
+            strokeWidth="3"
+            animationDuration=".5s"
+          />
             result = [h, c, f];
         }
         return result;

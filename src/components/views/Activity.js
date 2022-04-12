@@ -16,6 +16,7 @@ import { Messages } from 'primereact/messages';
 import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { regexLatitudeLongitude } from '../../utils/latLongRegex';
+import { confirmDialog } from 'primereact/confirmdialog';
 import { Slider } from 'primereact/slider';
 
 const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs) => {
@@ -55,8 +56,6 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
 
     const notificationButton = () => {
         let result = ""
-
-        
         if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
             result = <div className="col-12">
                 <Link to={`/notifications/${announcement.id}`}>
@@ -134,7 +133,15 @@ const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements
         return result;
     }
 
-
+    const confirm = (id, setAnnouncements, setBookings) => {
+        confirmDialog({
+            message: '¿Seguro que desea cancelar? Perderá el importe abonado',
+            header: 'Confirmación',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            accept: () => cancelReserve(id, setAnnouncements, setBookings),
+        });
+    };
 
     return (
         <Card className="activityCard" title={activityStatus}>
@@ -154,7 +161,7 @@ const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements
                 <div className="grid w-full">
                     {notificationButton()}
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings)} />
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => confirm(id, setAnnouncements, setBookings)} />
                     </div>
                 </div>
             }

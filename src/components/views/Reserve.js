@@ -5,18 +5,19 @@ import { Link } from 'react-router-dom';
 import "../../css/views/Reserve.css";
 import { getAnnouncement, getBookings, cancelReservation } from '../../api/api';
 import { dateFormatter } from '../../utils/dateFormatter';
+import { confirmDialog } from 'primereact/confirmdialog';
 
-const cancelReserve = async (id) => {
+const cancelReserve = (id) => {
     const data = {
         cancelled: true,
     }
-    await cancelReservation(id, data);
+    cancelReservation(id, data);
 }
 
 const aux = async (bookings, id) => {
-    bookings.map(bookingProps =>
+    await bookings.map(bookingProps =>
         (bookingProps.announcement.id === id) ? cancelReserve(bookingProps.id) : null
-    ).then(window.location.href = "/activity")
+    )
 }
 
 const Reserve = () => {
@@ -24,6 +25,24 @@ const Reserve = () => {
     const [vehicle, setVehicle] = useState()
     const [bookings, setBookings] = useState([])
     var urlSplit = window.location.href.split("/").pop();
+
+    const confirm = () => {
+        confirmDialog({
+            message: '¿Seguro que desea cancelar? Perderá el importe abonado',
+            header: 'Confirmación',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            accept
+        });
+    };
+
+    const accept = () => {
+        aux(bookings, ad.id);
+        setTimeout(function () {
+            window.location.href = "/activity";
+            window.clearTimeout();
+        }, 1500);
+    }
 
     useEffect(() => {
         getAnnouncement(urlSplit).then(data => {
@@ -58,7 +77,7 @@ const Reserve = () => {
                     </div>
                     <div className="col-12">
                         <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar"
-                            icon="pi pi-times" onClick={async () => await aux(bookings, ad.id)} />
+                            icon="pi pi-times" onClick={confirm} />
                     </div>
                 </div>
             </Card>

@@ -102,9 +102,13 @@ export async function getAnnouncement(a_id) {
 }
 
 export async function getReservationUser(r_id) {
-    const response = await apiGet('api/reservation/anouncement/' + r_id + "/", true)
-    if (response.status === 200) return response.data
-    return false
+    try {
+        const response = await apiGet('api/reservation/anouncement/' + r_id + "/", true)
+        if (response.status === 200) return response.data
+    } catch (error) {
+        return false
+    }
+    return true
 }
 
 export async function getVehicles() {
