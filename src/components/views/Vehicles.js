@@ -106,7 +106,6 @@ const Vehicles = () => {
     }
   }
   const newVehicle = async () => {
-    console.log(brand)
     const vehicleData = {
       brand: brand,
       model: model,
