@@ -4,6 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import { Card } from 'primereact/card';
 import { Calendar } from 'primereact/calendar';
 
+
 const UserRegister = (props) => {
 
     const [username, setUsername] = useState("");
@@ -107,7 +108,7 @@ const UserRegister = (props) => {
                     <span className="p-inputgroup-addon">
                         <i className="pi pi-calendar icons_form"></i>
                     </span>
-                    <Calendar className="p-birthdate-calendar" placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} />
+                    <Calendar className="p-birthdate-calendar" placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} yearNavigator monthNavigator yearRange="1900:2004" />
                 </div>
                 {getFieldError("birthdate")}
 
