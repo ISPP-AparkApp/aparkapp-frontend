@@ -9,6 +9,7 @@ import MapRoute from "../components/views/MapRoute";
 import Notifications from "../components/views/Notifications";
 import Activity from "../components/views/Activity";
 import Reserve from "../components/views/Reserve";
+import Error from "../components/views/Error";
 import { Navigate } from "react-router-dom";
 
 const routes = [
@@ -78,7 +79,7 @@ const routes = [
     },
     {
         path: "*",
-        element: <Navigate to="/home" replace />,
+        element: <Error />,
     },
 ];
 
