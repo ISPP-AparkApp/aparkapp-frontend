@@ -117,6 +117,16 @@ export async function getUser() {
     if (response.status === 200) return response.data
 }
 
+export async function getOneUser(id) {
+    const response = await apiGet('api/users/' + id + '/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function getUserRatings(id) {
+    const response = await apiGet('api/rating/' + id + '/', true)
+    if (response.status === 200) return response.data
+}
+
 export async function getProfile() {
     const response = await apiGet('api/profiles/', true)
     if (response.status === 200) return response.data
