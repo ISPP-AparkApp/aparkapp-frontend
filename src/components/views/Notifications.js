@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
 import { Card } from 'primereact/card';
 import { Avatar } from 'primereact/avatar';
-import { getAnnouncement, updateStatusAnnouncement, getReservationUser } from '../../api/api';
+import { getAnnouncement, updateStatusAnnouncement, getReservationUser, transaction } from '../../api/api';
 import "../../css/views/Notifications.css";
 
 const Notifications = () => {
@@ -34,6 +34,7 @@ const Notifications = () => {
     }, [announcement, time, user]);
 
     const updateAnnounce = (status) => { updateStatusAnnouncement(announcement.id, { status: status }).then(getAnnounce()); }
+    const transferAmount = () => { transaction(announcement.id) };
 
     const notificationsContent = () => {
         let h = ""
@@ -46,13 +47,13 @@ const Notifications = () => {
                 case "Delay":
                     h = <span className="pi pi-clock text-xl">   {user} se ha retrasado</span>;
                     c = <div><p className="mb-0 text-xl"><Avatar style={{ color: "white" }} icon="pi pi-user" />   Llego tarde</p><p className="text-xs">Aceptar supone esperar 5 minutos más y recibir 50 céntimos más sobre el precio final</p><br></br><hr></hr></div>
-                    f = <div><div><Button onClick={() => { updateAnnounce("AcceptDelay"); }} className="p-button-raised p-button-lg mb-3 w-full h-full" label="Vale, te espero" /></div><div><Button onClick={() => { updateAnnounce("DenyDelay"); }} className="p-button-raised p-button-lg w-full h-full" label="Lo siento, me voy" /></div></div>
+                    f = <div><div><Button onClick={() => { transferAmount(); }} className="p-button-raised p-button-lg mb-3 w-full h-full" label="Vale, te espero" /></div><div><Button onClick={() => { updateAnnounce("DenyDelay"); }} className="p-button-raised p-button-lg w-full h-full" label="Lo siento, me voy" /></div></div>
                     result = [h, c, f];
                     break;
                 case "Arrival":
                     h = <span className="pi pi-map-marker text-xl">   {user} está en tu ubicación</span>;
                     c = <div><p className="mb-0 text-xl"><Avatar style={{ color: "white" }} icon="pi pi-user" />   ¡He llegado!</p><br></br><hr></hr></div>
-                    f = <span><Button onClick={() => { updateAnnounce("Departure"); }} className="p-button-raised p-button-lg w-full h-full" label="Perfecto, salgo" /></span>
+                    f = <span><Button onClick={() => updateAnnounce("Departure") } className="p-button-raised p-button-lg w-full h-full" label="Perfecto, salgo" /></span>
                     result = [h, c, f];
                     break;
                 default:
