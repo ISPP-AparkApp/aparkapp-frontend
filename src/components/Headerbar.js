@@ -15,24 +15,26 @@ const Headerbar = () => {
     const userIsLogged = useSelector(isUserLogged);
     const dispatch = useDispatch();
 
-    if (credit === "")  // Init credit in headerbar
+    if (userIsLogged && credit === "")  // Init credit in headerbar
         getMyBalance().then(data => {
             setCredit(data.slice(1) + data[0])
         })
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (time) {
-                setTime(false);
-                getMyBalance().then(data => {
-                    setCredit(data.slice(1) + data[0])
-                })
-            }
-            else {
-                setTime(true);
-            }
-        }, 3000);
-        return () => clearInterval(interval);
+        if (userIsLogged) {
+            const interval = setInterval(() => {
+                if (time) {
+                    setTime(false);
+                    getMyBalance().then(data => {
+                        setCredit(data.slice(1) + data[0])
+                    })
+                }
+                else {
+                    setTime(true);
+                }
+            }, 3000);
+            return () => clearInterval(interval);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [credit, time]);
 

@@ -72,7 +72,7 @@ const Credit = () => {
                     <TabPanel header="Añadir" leftIcon="pi pi-shopping-cart">
                         <div>
                             <p className="text-xl publish_label">Seleccione la cantidad que desea adquirir</p>
-                            <Button label="2.5€" className="p-button-raised p-button-lg mb-3 w-full h-full" onClick={() => pay("2.5")} />
+                            <Button label="2.50€" className="p-button-raised p-button-lg mb-3 w-full h-full" onClick={() => pay("2.50")} />
                             <Button label="5€" className="p-button-raised p-button-lg mb-3 w-full h-full" onClick={() => pay("5")} />
                             <Button label="10€" className="p-button-raised p-button-lg mb-3 w-full h-full" onClick={() => pay("10")} />
                             <Button label="20€" className="p-button-raised p-button-lg mb-3 w-full h-full" onClick={() => pay("20")} />

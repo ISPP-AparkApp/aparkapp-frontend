@@ -8,7 +8,7 @@ describe("Vehicles", () => {
     });
 
     it("edit vehicle successfully", () => {
-        cy.get("ul.p-menubar-root-list > li:nth-child(3)").click()
+        cy.get("ul.p-menubar-root-list > li:nth-child(4)").click()
         cy.get('[id^=pr_id_1_header_1]').click()
         cy.get('button').last().click();
         cy.get('input').first().clear().type('1111XXX')
@@ -23,7 +23,7 @@ describe("Vehicles", () => {
     });
 
     it("edit vehicle unsuccessfully", () => {
-        cy.get("ul.p-menubar-root-list > li:nth-child(3)").click()
+        cy.get("ul.p-menubar-root-list > li:nth-child(4)").click()
         cy.get('[id^=pr_id_1_header_1]').click()
         cy.get('button').last().click();
         cy.get('input').first().clear().type('Bad License Plate')
