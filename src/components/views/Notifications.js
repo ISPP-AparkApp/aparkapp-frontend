@@ -4,6 +4,7 @@ import { Card } from 'primereact/card';
 import { Avatar } from 'primereact/avatar';
 import { getAnnouncement, updateStatusAnnouncement, getReservationUser, transaction } from '../../api/api';
 import "../../css/views/Notifications.css";
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const Notifications = () => {
     const [announcement, setAnnouncement] = useState();
@@ -63,7 +64,7 @@ const Notifications = () => {
             }
         }
         else {
-            h = "Parece que no tienes notificaciones"
+            c = <ProgressSpinner />
             result = [h, c, f];
         }
         return result;
