@@ -12,6 +12,10 @@
   vertical-align: middle;
 }
 
+.p-rating .p-rating-icon.pi-star-fill {
+  color: #000000 !important;
+}
+
 .announcement-card {
   margin: auto !important;
   width: 80%;

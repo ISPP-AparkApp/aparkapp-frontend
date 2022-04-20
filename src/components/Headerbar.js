@@ -1,15 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menubar } from 'primereact/menubar';
 import "../css/Headerbar.css";
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { isUserLogged, logout } from "../store/session";
 import logo from "../images/logo.png";
+import { getMyBalance } from "./../api/api";
+
 
 const Headerbar = () => {
-    const navigate = useNavigate()
-    const userIsLogged = useSelector(isUserLogged)
-    const dispatch = useDispatch()
+    const [credit, setCredit] = useState("");
+    const [time, setTime] = useState(false);
+    const navigate = useNavigate();
+    const userIsLogged = useSelector(isUserLogged);
+    const dispatch = useDispatch();
+
+    if (userIsLogged && credit === "")  // Init credit in headerbar
+        getMyBalance().then(data => {
+            setCredit(data.slice(1) + data[0])
+        })
+
+    useEffect(() => {
+        if (userIsLogged) {
+            const interval = setInterval(() => {
+                if (time) {
+                    setTime(false);
+                    getMyBalance().then(data => {
+                        setCredit(data.slice(1) + data[0])
+                    })
+                }
+                else {
+                    setTime(true);
+                }
+            }, 3000);
+            return () => clearInterval(interval);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [credit, time, userIsLogged]);
+
 
     const itemsUser = [
         {
@@ -28,6 +56,13 @@ const Headerbar = () => {
         },
         {
             className: "right-start",
+            label: credit,
+            icon: 'pi pi-wallet',
+            command: () => {
+                navigate("/credit")
+            }
+        },
+        {
             label: 'Perfil',
             icon: 'pi pi-user',
             command: () => {

@@ -1,0 +1,15 @@
+.chip_paypal {
+    background-color: #ffde92 !important;
+    color: #bb5504 !important;
+    font-weight: 700 !important;
+    font-size: small !important;
+    float: left;
+}
+
+.pi-shopping-cart {
+    margin-right: 0.5rem;
+}
+
+.pi-money-bill {
+    margin-right: 0.5rem;
+}
