@@ -36,7 +36,7 @@ const Headerbar = () => {
             return () => clearInterval(interval);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [credit, time]);
+    }, [credit, time, userIsLogged]);
 
 
     const itemsUser = [
