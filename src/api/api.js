@@ -11,7 +11,7 @@ async function checkAuthTokenIsValid(authTimestamp) {
 }
 
 async function checkRefreshAuthTokenIsValid(refreshAuthTimestamp) {
-    return refreshAuthTimestamp + refreshAuthTokenValidTime > Date.now()
+    return parseInt(refreshAuthTimestamp) + refreshAuthTokenValidTime > Date.now()
 }
 
 export async function refreshAuthToken(refreshToken, refreshAuthTimestamp) {
@@ -114,6 +114,16 @@ export async function getVehicles() {
 
 export async function getUser() {
     const response = await apiGet('api/users/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function getOneUser(id) {
+    const response = await apiGet('api/users/' + id + '/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function getUserRatings(id) {
+    const response = await apiGet('api/rating/' + id + '/', true)
     if (response.status === 200) return response.data
 }
 

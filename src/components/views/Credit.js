@@ -24,7 +24,6 @@ const Credit = () => {
             errors.email = 'El email es requerido';
         if (parseFloat(credit.slice(0, -1)) < parseFloat(amount.slice(1)))
             errors.credit = 'No tienes crédito suficiente';
-       
         if (errors.email)
             msgs.current.show({ severity: 'error', detail: errors.email }, window.scrollTo(0, 0));
         if (errors.credit)
@@ -51,7 +50,7 @@ const Credit = () => {
                     icon: 'pi pi-info-circle',
                     acceptLabel: 'Confirmar',
                     rejectLabel: 'Cancelar',
-                    accept: () => withdrawWithPayPal(credit)
+                    accept: () => { withdrawWithPayPal(credit); msgs.current.show({ severity: 'success', detail: "El saldo ha sido retirado correctamente" }, window.scrollTo(0, 0)); }
                 });
         });
     };
