@@ -1,15 +1,38 @@
 import { DataScroller } from 'primereact/datascroller';
 import "../../css/views/ListAds.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
-import { payAnnouncement } from '../../api/api';
+import { payAnnouncement, getOneUser, getUserRatings } from '../../api/api';
 import { dateFormatter } from '../../utils/dateFormatter';
 import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { useState } from 'react';
+import { Rating } from 'primereact/rating';
 
 const ListAds = ({ announcements }) => {
+    const [showDialog, setShowDialog] = useState(false);
+    const [user, setUser] = useState(null)
+    const [comments, setComments] = useState([])
+
     const pay = async (id) => {
         payAnnouncement(id).then(data => {
             window.location.href = data.url;
         })
+    }
+
+    function getRatings(data) {
+        getOneUser(data.user).then(data => setUser(data.username))
+        getUserRatings(data.user).then(data => {
+            var c = []
+            data.forEach(d => c.push(
+                <div key={d.id}>
+                    <p>{"- " + d.comment}
+                    </p>
+                    <Rating value={d.rate} readOnly stars={5} cancel={false} disabled />
+                </div>
+            ))
+            setComments(c)
+        })
+        setShowDialog(true)
     }
 
     const itemTemplate = (data) => {
@@ -20,6 +43,7 @@ const ListAds = ({ announcements }) => {
                     <div className="product-description">Tiempo de espera: {data.wait_time} min</div>
                     <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility) === 'true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
                 </div>
+                <Button icon="pi pi-star" label="Valoraciones" onClick={() => getRatings(data)} />
                 <div className="product-action">
                     <Button icon="pi pi-shopping-cart" label={data.price} onClick={() => pay(data.id)}>€</Button>
                 </div>
@@ -34,6 +58,9 @@ const ListAds = ({ announcements }) => {
                     <DataScroller value={announcements} itemTemplate={itemTemplate} rows={5} inline scrollHeight="500px" header="Plazas disponibles en la zona" emptyMessage="Selecciona una zona para visualizar los anuncios" />
                 </div>
             </div>
+            <Dialog header={"Valoraciones del usuario: " + user} visible={showDialog} onHide={() => setShowDialog(false)}>
+                {comments}
+            </Dialog>
         </div>
     )
 }
