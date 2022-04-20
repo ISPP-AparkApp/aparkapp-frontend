@@ -192,9 +192,33 @@ export async function editAnnouncement(announcement) {
     return true
 }
 
-export async function payAnnouncement(id) {
-    const response = await apiPost('api/payments/' + id + "/", true)
+export async function addCredit(amount) {
+    const response = await apiPost('api/userBalanceRecharge/', amount, true)
     if (response.status === 200) return response.data
+    return false
+}
+
+export async function getMyBalance() {
+    const response = await apiGet('api/userAccountBalance/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function withdrawCredit(amount) {
+    try {
+        await apiPut('api/userAccountBalance/', amount, true)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
+}
+
+export async function transaction(a_id) {
+    try {
+        await apiPut('api/balanceTransactions/' + a_id + "/", true)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
 }
 
 export async function register(registerFields) {
