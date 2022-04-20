@@ -181,7 +181,7 @@ const SearchPlace = () => {
           googleMapsReady ? (
             <GMap ref={map} overlays={overlays} options={options} className="map" onMapReady={onMapReady}
               onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
-          ) : <ProgressSpinner className='loading'/>
+          ) : <ProgressSpinner className='loadingMap'/>
         }
       </div>
       <Dialog visible={listAdsVisible} onHide={onHideListAds}>
