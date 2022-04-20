@@ -4,6 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import { Card } from 'primereact/card';
 import { Calendar } from 'primereact/calendar';
 
+
 const UserRegister = (props) => {
 
     const [username, setUsername] = useState("");
@@ -57,6 +58,9 @@ const UserRegister = (props) => {
         return formErrors[fieldName] && <span className="messageError">{formErrors[fieldName]}</span>
     }
 
+    let anyoActual = new Date().getFullYear();
+    let rango = "1900:" + anyoActual;
+
     return (
         <Card title="Datos personales" className={"w-full md:w-auto"}>
             <div className="flex flex-column">
@@ -107,7 +111,7 @@ const UserRegister = (props) => {
                     <span className="p-inputgroup-addon">
                         <i className="pi pi-calendar icons_form"></i>
                     </span>
-                    <Calendar className="p-birthdate-calendar" placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} />
+                    <Calendar className="p-birthdate-calendar" placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} yearNavigator monthNavigator yearRange={rango} />
                 </div>
                 {getFieldError("birthdate")}
 
