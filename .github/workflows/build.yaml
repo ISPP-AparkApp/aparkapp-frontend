@@ -21,7 +21,7 @@ jobs:
           coverage-reports: coverage/clover.xml
 
   deploy:
-    if: ${{github.ref == 'refs/heads/develop'}}
+    if: ${{github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'}}
     name: Heroku
     runs-on: ubuntu-latest
     steps:

@@ -156,11 +156,7 @@ const MapRoute = () => {
       }
     } else {
       result = (
-        <ProgressSpinner
-          style={{ width: "50px", height: "50px" }}
-          strokeWidth="3"
-          animationDuration=".5s"
-        />
+        <ProgressSpinner className="loadingMapRoute"/>
       );
     }
     return result;

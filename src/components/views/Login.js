@@ -17,6 +17,7 @@ const Login = () => {
         setIsLoading(true)
         const isLogged = await login(username, password)
         if (!isLogged) {
+            setIsLoading(false)
             return "El usuario no existe";
         }
     }
