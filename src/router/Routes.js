@@ -14,6 +14,10 @@ import { Navigate } from "react-router-dom";
 
 const routes = [
     {
+        path: "/",
+        element: <Home />,
+    },
+    {
         path: "/about",
         element: <AboutUs />,
     },
