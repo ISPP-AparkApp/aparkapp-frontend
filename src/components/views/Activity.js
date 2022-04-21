@@ -41,12 +41,18 @@ const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs) => {
 const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement, setAnnouncements, setBookings, msgs }) => {
 
     let activityStatus;
-    if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+    if (announcement.reservation_set.length === 0 && (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+        activityStatus = "No realizado"
+    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
         activityStatus = "Finalizado"
-    } else if (announcement.cancelled) {
+    } else if (announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === true) {
         activityStatus = "Cancelado";
+    } else if (announcement.reservation_set.length > 0) {
+        activityStatus = "Reservado"
+    } else if (announcement.reservation_set.length === 0 && (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+        activityStatus = "No realizado"
     } else {
-        activityStatus = "En curso"
+        activityStatus = "Libre"
     }
 
     const visualiseDialog = () => {
@@ -72,7 +78,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         <Card className="activityCard h-full" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
-                    <li><strong>Matrícula:</strong> {announcement.vehicle.license_plate}</li>
+                    <li><strong>Matrícula: </strong> {announcement.vehicle.license_plate}</li>
                     <li><strong>Fecha y hora: </strong>{dateFormatter(new Date(announcement.date))}</li>
                     <li><strong>Dirección: </strong> {announcement.location}</li>
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
@@ -82,7 +88,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {announcement.cancelled || (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() ? "" :
+            {(announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === true) || (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() ? "" :
                 <div className="grid w-full">
                     {notificationButton()}
                     <div className="col-12">
@@ -115,12 +121,12 @@ const cancelReserve = async (id, setAnnouncements, setBookings) => {
 const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncements }) => {
     let activityStatus;
 
-    if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
-        activityStatus = "Finalizado"
-    } else if (announcement.cancelled === true || cancelled === true) {
+    if (announcement.cancelled === true || cancelled === true) {
         activityStatus = "Cancelado";
+    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+        activityStatus = "Finalizado"
     } else {
-        activityStatus = "Reservado"
+        activityStatus = "En curso"
     }
 
     const notificationButton = () => {
@@ -196,6 +202,7 @@ const Activity = () => {
     const [cancelledState, setCancelledState] = useState(true);
     const [finishedState, setFinishedState] = useState(true);
     const [reservedState, setReservedState] = useState(true);
+    const [inProgressState, setInProgressState] = useState(true);
     const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
     const [filteredBookings, setFilteredBookings] = useState([]);
 
@@ -368,29 +375,55 @@ const Activity = () => {
     }
 
     const filterActivities = () => {
-        //TODO: FILTER BY FREE, NOT DONE, RESERVED
 
-        let announcementFiltered = announcements
-        let bookingFiltered = bookings
+        let announcementFiltered = []
+        let bookingFiltered = []
 
         if (cancelledState) {
-            announcementFiltered = announcementFiltered.filter((a) => a.cancelled)
-            bookingFiltered = bookingFiltered.filter((b) => b.cancelled)
+            announcementFiltered = announcements.filter((a) =>
+                (Date.parse(a.date) + a.wait_time * 60000) > Date.now() && a.reservation_set.length > 0 && a.reservation_set[0].cancelled === true
+            ).concat(announcementFiltered)
+            bookingFiltered = bookings.filter((b) => b.cancelled).concat(bookingFiltered)
         }
 
         if (finishedState) {
-            announcementFiltered = announcementFiltered.filter((a) => (
-                (Date.parse(a.date) + a.wait_time * 60000) < Date.now()
-            ))
-
-            bookingFiltered = bookingFiltered.filter((b) => (
-                (Date.parse(b.date) + b.wait_time * 60000) < Date.now()
-            ))
+            announcementFiltered = announcements.filter((a) => (
+                (Date.parse(a.date) + a.wait_time * 60000) < Date.now() && a.reservation_set.length > 0
+            )).concat(announcementFiltered)
+            bookingFiltered = bookings.filter((b) => (
+                (Date.parse(b.announcement.date) + b.announcement.wait_time * 60000) < Date.now()
+            )).concat(bookingFiltered)
         }
 
-        setFilteredAnnouncements(announcementFiltered)
-        setFilteredBookings(bookingFiltered)
+        if (reservedState) {
+            announcementFiltered = announcements.filter((a) => (
+                (Date.parse(a.date) + a.wait_time * 60000) > Date.now() && a.reservation_set.length > 0 && a.reservation_set[0].cancelled === false
+            )).concat(announcementFiltered)
+        }
 
+        if (freeState) {
+            announcementFiltered = announcements.filter((a) => (
+                (Date.parse(a.date) + a.wait_time * 60000) > Date.now() && a.reservation_set.length === 0
+            )).concat(announcementFiltered)
+        }
+
+        if (notDoneState) {
+            announcementFiltered = announcements.filter((a) => (
+                (Date.parse(a.date) + a.wait_time * 60000) < Date.now() && a.reservation_set.length === 0
+            )).concat(announcementFiltered)
+        }
+
+        if (inProgressState) {
+            bookingFiltered = bookings.filter((b) => (
+                !b.cancelled && (Date.parse(b.date) + b.wait_time * 60000) > Date.now()
+            )).concat(bookingFiltered)
+        }
+
+        let uniqueAnnouncements = [...new Set(announcementFiltered)]
+        let uniqueBookings = [...new Set(bookingFiltered)]
+
+        setFilteredAnnouncements(uniqueAnnouncements)
+        setFilteredBookings(uniqueBookings)
         setDialogVisibleFilter(false)
     }
 
@@ -402,6 +435,7 @@ const Activity = () => {
             setCancelledState(true);
             setFinishedState(true);
             setReservedState(true);
+            setInProgressState(true)
             setDialogVisibleFilter(false);
             setFilteredAnnouncements(announcements);
             setFilteredBookings(bookings);
@@ -450,6 +484,16 @@ const Activity = () => {
                                     <Checkbox className="mr-2" inputId="notDoneState" name="notDoneState" checked={notDoneState} onChange={() => setNotDoneState(!notDoneState)} />
                                     <label htmlFor="notDoneState">No realizados</label>
                                 </div>
+                                <div className="flex mt-3">
+                                    <Checkbox className="mr-2" inputId="reservedState" name="reservedState" checked={reservedState} onChange={() => setReservedState(!reservedState)} />
+                                    <label htmlFor="reservedState">Reservados</label>
+                                </div>
+                            </div> : ""
+                        }
+                        {(selectedActivity === "Reservas") ?
+                            <div className="flex mt-3">
+                                <Checkbox className="mr-2" inputId="inProgressState" name="inProgressState" checked={inProgressState} onChange={() => setInProgressState(!inProgressState)} />
+                                <label htmlFor="inProgressState">En curso</label>
                             </div> : ""
                         }
                         <div className="flex mt-3">
@@ -460,16 +504,12 @@ const Activity = () => {
                             <Checkbox className="mr-2" inputId="cancelledState" name="cancelledState" checked={cancelledState} onChange={() => setCancelledState(!cancelledState)} />
                             <label htmlFor="cancelledState">Cancelados</label>
                         </div>
-                        <div className="flex mt-3">
-                            <Checkbox className="mr-2" inputId="reservedState" name="reservedState" checked={reservedState} onChange={() => setReservedState(!reservedState)} />
-                            <label htmlFor="reservedState">Reservados</label>
-                        </div>
                     </div>
                 </Dialog>
             </div>
 
             <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
-                {bookings.length === 0 && announcements.length === 0 ? (
+                {filteredBookings.length === 0 && filteredAnnouncements.length === 0 ? (
                     <Card title={"Parece que aún no tienes actividades"} style={{ color: "black" }}></Card>
                 ) : ""}
             </div>
