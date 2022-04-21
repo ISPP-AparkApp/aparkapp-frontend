@@ -150,7 +150,7 @@ const SearchPlace = () => {
     }} />
   </div>;
 
-  
+
 
   const searchLocation = async(event) => {
     let addressObject = {
@@ -169,7 +169,7 @@ const SearchPlace = () => {
 
   return (
     <div>
-      <Toast ref={toast}></Toast>      
+      <Toast ref={toast}></Toast>
       <div className='w-full flex justify-content-center mt-3' >
         <InputText className="w-4" placeholder="Busca en la zona donde quieras aparcar" onChange={e=>setAddress(e.target.value)} />
         <Button icon="pi pi-search" className="ml-2" onClick={searchLocation} />
@@ -187,7 +187,7 @@ const SearchPlace = () => {
       <Dialog visible={listAdsVisible} onHide={onHideListAds}>
         <ListAds announcements={announcementsSelecteds}></ListAds>
       </Dialog>
-      
+
       <Dialog className='filter-dialog' header="Filtro" draggable={false} visible={dialogVisibleFilter} footer={filterFooter} onHide={onHideDialogFilter} resizable={false}>
         <div className="flex flex-column">
           <span className='text-xl publish_label mb-2'>¿Qué día deseas aparcar?</span>
@@ -195,7 +195,7 @@ const SearchPlace = () => {
 
           <span className='text-xl publish_label mb-2 mt-3'>Escoge un rango de precios</span>
           <Slider value={priceFilter} onChange={(e) => setPriceFilter(e.value)} range min={0.5} max={10} step={0.1} />
-          <div className="w-full price-range">  
+          <div className="w-full price-range">
             <span className='text-m mb-2 '>{priceFilter[0]}€ - {priceFilter[1]}€</span>
           </div>
         </div>

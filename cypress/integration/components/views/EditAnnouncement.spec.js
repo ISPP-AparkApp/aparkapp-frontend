@@ -6,7 +6,7 @@ describe("Edit", () => {
         cy.get('input[placeholder="Contraseña"]').type("admin");
         cy.get('button').click();
     });
-    
+
     it("Edit succesfuly", () => {
         cy.contains('Actividad').click()
         cy.contains('Editar anuncio').click()

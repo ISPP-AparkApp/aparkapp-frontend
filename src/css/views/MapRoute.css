@@ -3,15 +3,15 @@
     position: initial;
 }
 
-@media screen and (max-width: 450px){ 
-    .notifyCard { 
+@media screen and (max-width: 450px){
+    .notifyCard {
         margin-top: 70%;
     }
 }
 
 @media screen and (min-width: 450px){
     .notifyCard {
-        margin-top: 16%; 
+        margin-top: 16%;
     }
 }
 
