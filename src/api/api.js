@@ -216,3 +216,12 @@ export async function cancelReservation(a_id, announcement_data) {
     if (response.status === 200) return true
     return false
 }
+
+export async function rateAnnouncement(data, type, id) {
+    try {
+        await apiPost('api/rating/' + type + '/' + id + "/", data, true)
+    } catch(error) {
+        return error.response.data
+    }
+    return true
+}

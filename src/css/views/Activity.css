@@ -49,3 +49,16 @@
 .p-checkbox-box.p-highlight {
   background-color: #81c784 !important;
 }
+
+.p-button-rate {
+  background-color: #f8f690 !important;
+  border-color: #fedd24 !important;
+}
+
+.p-rating-icon.pi.pi-star {
+  color: #3f3e03 !important;
+}
+
+.p-rating-icon.pi.pi-star-fill {
+  color: #1c5e04 !important;
+}
