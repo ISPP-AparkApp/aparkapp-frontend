@@ -26,7 +26,7 @@ const ListAds = ({ announcements }) => {
 
     const confirmPay = (id, price) => {
         confirmDialog({
-          message: 'Se cobrará ' + price + '€ del crédito actual que posee',
+          message: 'Se cobrará ' + price + ' € del crédito actual que posee',
           header: '¿Deseas confirmar la compra?',
           icon: 'pi pi-info-circle',
           acceptLabel: 'Confirmar',

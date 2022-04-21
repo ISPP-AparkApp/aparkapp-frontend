@@ -31,7 +31,7 @@ const Credit = () => {
     }
 
     getMyBalance().then(data => {
-        setCredit(data.slice(1) + data[0]);
+        setCredit(data.replace('€', '').replace(',', '.'));
     })
 
     const pay = async (price) => {
@@ -45,7 +45,7 @@ const Credit = () => {
         validate(credit).then(() => {
             if (!errors.email && !errors.credit)
                 confirmDialog({
-                    message: 'Se retirarán ' + credit.slice(1) + '€ del crédito actual que posee y se le enviará a la cuenta de Paypal con correo ' + email,
+                    message: 'Se retirarán ' + credit.slice(1) + ' € del crédito actual que posee y se le enviará a la cuenta de Paypal con correo ' + email,
                     header: '¿Deseas confirmar el traspaso?',
                     icon: 'pi pi-info-circle',
                     acceptLabel: 'Confirmar',
@@ -59,14 +59,14 @@ const Credit = () => {
         const amount = { funds: credit, funds_currency: "EUR" };
         withdrawCredit(amount);
         getMyBalance().then(data => {
-            setCredit(data.slice(1) + data[0]);
+            setCredit(data.replace('€', '').replace(',', '.'));
         });
     }
 
     return (
         <div className="flex flex-column align-items-center mx-3 text-center">
             <Card className="w-full md:w-auto">
-                <p className="text-xl publish_label">Crédito actual: {credit}</p>
+                <p className="text-xl publish_label">Crédito actual: {credit} €</p>
                 <TabView className="tabview-header-icon">
                     <TabPanel header="Añadir" leftIcon="pi pi-shopping-cart">
                         <div>

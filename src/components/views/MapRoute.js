@@ -29,12 +29,13 @@ const MapRoute = () => {
 
   const getBalance = () => {
     getMyBalance().then((val) => {
-      setCredit(val);
+      setCredit(val.replace('€', '').replace(',', '.'));
     });
   };
 
   const notifyWait = () => {
-    parseFloat(credit.slice(1)) >= 0.5 ? updateAnnounce("Delay") : noCredit();
+    console.log(credit)
+    parseFloat(credit) >= 0.5 ? updateAnnounce("Delay") : noCredit();
   }
 
   const noCredit = () => {
