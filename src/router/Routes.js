@@ -10,6 +10,7 @@ import Notifications from "../components/views/Notifications";
 import Activity from "../components/views/Activity";
 import Reserve from "../components/views/Reserve";
 import Error from "../components/views/Error";
+import Credit from "../components/views/Credit";
 
 const routes = [
     {
@@ -67,6 +68,12 @@ const routes = [
     {
         path: "/profile",
         element: <Profile />,
+        requireAuth: true,
+        fallback: "login"
+    },
+    {
+        path: "/credit",
+        element: <Credit />,
         requireAuth: true,
         fallback: "login"
     },
