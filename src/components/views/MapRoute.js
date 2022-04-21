@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "primereact/button";
-import { getAnnouncement, updateStatusAnnouncement } from "../../api/api";
+import { getAnnouncement, updateStatusAnnouncement, getMyBalance } from "../../api/api";
 import { ToastContainer, toast } from "react-toastify";
 import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
 import "react-toastify/dist/ReactToastify.css";
 import RouteVisualization from "./RouteVisualization";
+import { confirmDialog } from 'primereact/confirmdialog';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import "../../css/views/MapRoute.css";
 
@@ -16,6 +17,7 @@ const MapRoute = () => {
   const [showDeparture, setShowDeparture] = useState(true);
   const [announcement, setAnnouncement] = useState();
   const [googleMapsReady, setGoogleMapsReady] = useState(false);
+  const [credit, setCredit] = useState("");
 
   let announceId = window.location.href.split("/").pop();
 
@@ -25,15 +27,39 @@ const MapRoute = () => {
     });
   };
 
+  const getBalance = () => {
+    getMyBalance().then((val) => {
+      setCredit(val.replace('€', '').replace(',', '.'));
+    });
+  };
+
+  const notifyWait = () => {
+    console.log(credit)
+    parseFloat(credit) >= 0.5 ? updateAnnounce("Delay") : noCredit();
+  }
+
+  const noCredit = () => {
+    confirmDialog({
+      message: 'No dispones del crédito suficiente.',
+      header: 'Alerta',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Añadir crédito',
+      rejectLabel: 'Cancelar',
+      accept: () => window.location.href = "/credit"
+    });
+  };
+
   useEffect(() => {
     loadGoogleMaps(() => {
-        setGoogleMapsReady(true);
-      })
-  
+      setGoogleMapsReady(true);
+    })
+    getBalance();
+
     return () => {
-        removeGoogleMaps();
+      removeGoogleMaps();
     }
   }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (time) {
@@ -126,13 +152,7 @@ const MapRoute = () => {
                   />
                 </div>
                 <div>
-                  <Button
-                    onClick={() => {
-                      updateAnnounce("Delay");
-                    }}
-                    className="p-button-raised p-button-lg mb-1 w-full h-full"
-                    label="Llego tarde"
-                  />
+                  <Button onClick={() => { notifyWait(); }} className="p-button-raised p-button-lg mb-1 w-full h-full" label="Llego tarde"/>
                 </div>
               </div>
             );
@@ -148,20 +168,12 @@ const MapRoute = () => {
         result = (
           <span>
             <p>Parece que has llegado demasido pronto.</p>
-            <p>
-              Sólo se podrán enviar notificaciones 10 minutos antes del anuncio.
-            </p>
+            <p>Sólo se podrán enviar notificaciones 10 minutos antes del anuncio.</p>
           </span>
         );
       }
     } else {
-      result = (
-        <ProgressSpinner
-          style={{ width: "50px", height: "50px" }}
-          strokeWidth="3"
-          animationDuration=".5s"
-        />
-      );
+      result = (<ProgressSpinner style={{ width: "50px", height: "50px" }} strokeWidth="3" animationDuration=".5s"/>);
     }
     return result;
   };
@@ -184,17 +196,9 @@ const MapRoute = () => {
         draggable
       />
       {
-        googleMapsReady && (
-            <RouteVisualization
-            announceLocation={announcement ? announcement.location : ""}
-          />
-        )
-    }
-      <Card
-        className="notifyCard"
-        style={{ color: "black" }}
-        title="Notificaciones"
-      >
+        googleMapsReady && (<RouteVisualization announceLocation={announcement ? announcement.location : ""}/>)
+      }
+      <Card className="notifyCard" style={{ color: "black" }} title="Notificaciones">
         {footer}
       </Card>
     </div>

@@ -1,7 +1,7 @@
 .activityCard {
-  background-color: #ffffff !important;
+  background-color: #fff !important;
   color: black !important;
-  box-shadow: 2px 2px 5px #000000 !important;
+  box-shadow: 2px 2px 5px #000 !important;
 }
 
 .p-dialog-header,
@@ -13,7 +13,7 @@
 }
 
 .p-inputtext::placeholder {
-  color: #000000 !important;
+  color: #000 !important;
 }
 
 .p-dialog-footer {
@@ -25,7 +25,7 @@
 }
 
 .pi-times {
-  color: #000000 !important;
+  color: #000 !important;
 }
 
 .map-dialog {

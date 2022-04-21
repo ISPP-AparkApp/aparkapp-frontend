@@ -5,7 +5,7 @@ describe("CancelReservation", () => {
         cy.get('input[placeholder="Nombre de usuario"]').type("admin");
         cy.get('input[placeholder="Contraseña"]').type("admin");
         cy.get('button').click();
-    });     
+    });
 
     it("cancel reservation successfully", () => {
 
@@ -17,4 +17,4 @@ describe("CancelReservation", () => {
 
     });
 
-});    
+});

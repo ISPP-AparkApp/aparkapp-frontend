@@ -20,6 +20,16 @@ Cypress.Commands.add("accessActivity", () => {
     cy.wait(1000);
     cy.get('ul.p-menubar-root-list > li:nth-child(2)').click();
 });
+Cypress.Commands.add("accessCredit", () => {
+    cy.initialOpen();
+    cy.get('a.p-menuitem-link').first().click();
+    cy.get('input[placeholder="Nombre de usuario"]').type("admin");
+    cy.get('input[placeholder="Contraseña"]').type("admin");
+    cy.get('button').click();
+    // eslint-disable-next-line testing-library/await-async-utils
+    cy.wait(1000);
+    cy.get('.right-start > .p-menuitem-link').click();
+});
 
 Cypress.Commands.add("createAnnouncement", () => {
     // Login
@@ -48,7 +58,7 @@ Cypress.Commands.add("createReservation", () => {
     cy.get('input[placeholder="Contraseña"]').type("admin");
     cy.get('button').click();
     // Create reservation
-    cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').last().click();      // Search 
+    cy.get('button.p-button.p-component.p-button-raised.p-button-rounded').last().click();      // Search
     cy.get('button:last').click();                                                              // Reserve
     cy.wait(5000);
     cy.get('button').last().click();                                                            // Show route
@@ -71,7 +81,7 @@ Cypress.Commands.add("departure", () => {
     cy.wait(3000);
     cy.get('button').last().click();
     cy.wait(5000);
-    cy.visit("localhost:3000");    
+    cy.visit("localhost:3000");
     cy.createReservation();
     // Departure
     cy.wait(7000);
