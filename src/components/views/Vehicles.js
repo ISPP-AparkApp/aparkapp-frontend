@@ -341,7 +341,7 @@ const Vehicles = () => {
           </div>
         </div>
       )}
-      
+
     </Fragment>
   );
 };
