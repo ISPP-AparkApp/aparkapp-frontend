@@ -10,9 +10,14 @@ import Notifications from "../components/views/Notifications";
 import Activity from "../components/views/Activity";
 import Reserve from "../components/views/Reserve";
 import Credit from "../components/views/Credit";
+import Contact from "../components/views/Contact";
 import { Navigate } from "react-router-dom";
 
 const routes = [
+    {
+        path: "/contact",
+        element: <Contact />
+    },
     {
         path: "/about",
         element: <AboutUs />,
