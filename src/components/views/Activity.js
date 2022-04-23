@@ -22,7 +22,7 @@ import { rateAnnouncement } from '../../api/api';
 import { Rating } from 'primereact/rating';
 import { InputTextarea } from 'primereact/inputtextarea';
 
-const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs) => {
+const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs, setFilteredBookings, setFilteredAnnouncements) => {
     const data = {
         cancelled: true,
     }
@@ -35,13 +35,15 @@ const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs) => {
     // the app is not reloaded automatically when cancel status changes
     getBookings().then(data => {
         setBookings(data)
+        setFilteredBookings(data)
     })
     getMyAnnnouncements().then(data => {
         setAnnouncements(data)
+        setFilteredAnnouncements(data)
     })
 }
 
-const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement, setAnnouncements, setBookings, msgs, setRateAnnouncementDialog, setAnnouncementToRate }) => {
+const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement, setAnnouncements, setBookings, msgs, setRateAnnouncementDialog, setAnnouncementToRate, setFilteredBookings, setFilteredAnnouncements }) => {
 
     let activityStatus;
     if (announcement.reservation_set.length === 0 && (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
@@ -96,15 +98,21 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {(announcement.reservation_set.length > 0) || (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() ? "" :
+            {(Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() ? "" :
                 <div className="grid w-full">
-                    {notificationButton()}
-                    <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog} />
-                    </div>
-                    <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs)} />
-                    </div>
+                    {announcement.reservation_set.length > 0 ? 
+                        notificationButton()
+                    :
+                        <div className="col-12">
+                            <div className="col-12">
+                                <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog} />
+                            </div>
+                            <div className="col-12">
+                                <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs, setFilteredBookings, setFilteredAnnouncements)} />
+                            </div>
+                        </div>
+                    }
+                   
                 </div>
             }
             {activityStatus === "Finalizado" ?
@@ -118,7 +126,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
 }
 
 
-const cancelReserve = async (id, setAnnouncements, setBookings) => {
+const cancelReserve = async (id, setAnnouncements, setBookings, setFilteredBookings, setFilteredAnnouncements) => {
     const data = {
         cancelled: true,
     }
@@ -126,13 +134,15 @@ const cancelReserve = async (id, setAnnouncements, setBookings) => {
 
     getBookings().then(data => {
         setBookings(data)
+        setFilteredBookings(data)
     })
     getMyAnnnouncements().then(data => {
         setAnnouncements(data)
+        setFilteredAnnouncements(data)
     })
 }
 
-const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncements, setBookingToRate, setRateBookingDialog }) => {
+const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncements, setBookingToRate, setRateBookingDialog, setFilteredBookings, setFilteredAnnouncements }) => {
     let activityStatus;
 
     if (announcement.cancelled === true || cancelled === true) {
@@ -179,7 +189,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
                 <div className="grid w-full">
                     {notificationButton()}
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings)} />
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings, setFilteredBookings, setFilteredAnnouncements)} />
                     </div>
                 </div>
             }
@@ -326,9 +336,11 @@ const Activity = () => {
         if (res === true) {
             getBookings().then(data => {
                 setBookings(data)
+                setFilteredBookings(data)
             })
             getMyAnnnouncements().then(data => {
                 setAnnouncements(data)
+                setFilteredAnnouncements(data)
             })
             setDialogVisible(false)
             msgs.current.show({ severity: 'success', summary: 'Anuncio modificado' });
@@ -550,6 +562,8 @@ const Activity = () => {
                                 id={bookingProps.id} {...bookingProps}
                                 setRateBookingDialog={setRateBookingDialog}
                                 setBookingToRate={setBookingToRate}
+                                setFilteredBookings= {setFilteredBookings}
+                                setFilteredAnnouncements= {setFilteredAnnouncements}
                             >
                             </BookingCard>
                         </div>
@@ -565,6 +579,8 @@ const Activity = () => {
                                 msgs={msgs}
                                 setRateAnnouncementDialog={setRateAnnouncementDialog}
                                 setAnnouncementToRate={setAnnouncementToRate}
+                                setFilteredBookings= {setFilteredBookings}
+                                setFilteredAnnouncements= {setFilteredAnnouncements}
                             >
                             </AnnouncementCard>
                         </div>
