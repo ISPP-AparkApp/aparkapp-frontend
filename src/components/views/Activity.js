@@ -587,7 +587,7 @@ const Activity = () => {
                                 </div>
                             </div> : ""
                         }
-                        {(selectedActivity === "Reservas") ?
+                        {(selectedActivity === "Reservas" || selectedActivity === "Anuncios y reservas") ?
                             <div className="flex mt-3">
                                 <Checkbox className="mr-2" inputId="inProgressState" name="inProgressState" checked={inProgressState} onChange={() => setInProgressState(!inProgressState)} />
                                 <label htmlFor="inProgressState">En curso</label>
@@ -606,7 +606,9 @@ const Activity = () => {
             </div>
 
             <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
-                {filteredBookings.length === 0 && filteredAnnouncements.length === 0 ? (
+                {(filteredBookings.length === 0 && filteredAnnouncements.length === 0) ||
+                 (selectedActivity === "Anuncios" && filteredAnnouncements.length === 0) ||
+                 (selectedActivity === "Reservas" && filteredBookings.length === 0)  ? (
                     <Card title={"Parece que aún no tienes actividades"} style={{ color: "black" }}></Card>
                 ) : ""}
             </div>
