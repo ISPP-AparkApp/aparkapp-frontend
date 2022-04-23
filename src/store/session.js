@@ -29,7 +29,8 @@ export const sessionSlice = createSlice({
             Object.keys(state).forEach(x => delete state[x])
             localStorage.removeItem("refreshToken")
             localStorage.removeItem("refreshAuthTimestamp")
-        }
+            localStorage.removeItem("username")
+        },
     },
 })
 

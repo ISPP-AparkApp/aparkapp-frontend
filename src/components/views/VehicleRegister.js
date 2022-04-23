@@ -76,6 +76,7 @@ const VehicleRegister = (props) => {
             if (formError) {
                 setFormErrors({ global: formError })
             } else {
+                localStorage.setItem("username", props.user.username)
                 await login(props.user.username, props.user.password)
             }
         }
