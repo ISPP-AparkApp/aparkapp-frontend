@@ -54,8 +54,6 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         activityStatus = "Cancelado";
     } else if (announcement.reservation_set.length > 0) {
         activityStatus = "Reservado"
-    } else if (announcement.reservation_set.length === 0 && (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
-        activityStatus = "No realizado"
     } else {
         activityStatus = "Libre"
     }
