@@ -132,7 +132,13 @@ const VehicleRegister = (props) => {
                     {getFieldError("selectedType")}
                     <div className="field-checkbox mt-3">
                         <Checkbox inputId="termsConditions" checked={checked} onChange={e => setChecked(e.checked)} />
-                        <label htmlFor="termsConditions">Aceptar los <a href="https://cutt.ly/uGuqfc3" target="_blank" rel="noreferrer" >Términos y condiciones </a> </label>
+                        <label htmlFor="termsConditions">Aceptar los
+                            <a
+                                href="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/20db1f27-07b2-4b56-beec-9065cf13a582/aparkapp_GDPR.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220424%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220424T142607Z&X-Amz-Expires=86400&X-Amz-Signature=7502743dc100987acf2614609f32215ad7ceecd12c36dd1ea46ddaf7a09560df&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22aparkapp_GDPR.pdf%22&x-id=GetObject"
+                                target="_blank"
+                                rel="noreferrer" >Términos y condiciones
+                            </a>
+                        </label>
                     </div>
                     {getFieldError("termsConditions")}
                     <div className="grid w-full mt-4">
