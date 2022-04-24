@@ -5,6 +5,7 @@ import { Calendar } from "primereact/calendar";
 import { addLocale } from "primereact/api";
 import { Card } from "primereact/card";
 import Vehicles from "../views/Vehicles";
+import MyRatings from "../views/MyRatings";
 import { TabView, TabPanel } from "primereact/tabview";
 import { getUser, getProfile, updateUser, updateProfile } from "../../api/api";
 import "../../css/views/Profile.css";
@@ -184,7 +185,9 @@ const Profile = () => {
           <TabPanel header="Vehículos">
             <Vehicles />
           </TabPanel>
-          <TabPanel header="Valoraciones"></TabPanel>
+          <TabPanel header="Valoraciones">
+            <MyRatings />
+          </TabPanel>
         </TabView>
       </Card>
     </div>
