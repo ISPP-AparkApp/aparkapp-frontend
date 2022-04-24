@@ -29,12 +29,12 @@ const MapRoute = () => {
 
   const getBalance = () => {
     getMyBalance().then((val) => {
-      setCredit(val.replace('€', '').replace(',', '.'));
+      const formattedCredit = val.replace('€', '').replace(',', '').replace('.','').trim();
+      setCredit(formattedCredit.slice(0,-2) + '.' + formattedCredit.slice(-2));
     });
   };
 
   const notifyWait = () => {
-    console.log(credit)
     parseFloat(credit) >= 0.5 ? updateAnnounce("Delay") : noCredit();
   }
 
@@ -63,6 +63,7 @@ const MapRoute = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (time) {
+        getBalance();
         setTime(false);
         getAnnounce();
         if (
