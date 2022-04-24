@@ -17,8 +17,8 @@ const MyRatings = () => {
                 <p className="text"> Parece que aún no tienes valoraciones </p>
             ) 
             : 
-            ratings.map(rating => (
-            <div className="rate mb-2">
+            ratings.map((rating,index) => (
+            <div key={index} className="rate mb-2">
                 <Rating value={rating.rate} readOnly stars={5} cancel={false} disabled />
                 <p className="text">{rating.comment}</p>
             </div>
