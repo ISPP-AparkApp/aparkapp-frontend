@@ -11,7 +11,7 @@ async function checkAuthTokenIsValid(authTimestamp) {
 }
 
 async function checkRefreshAuthTokenIsValid(refreshAuthTimestamp) {
-    return refreshAuthTimestamp + refreshAuthTokenValidTime > Date.now()
+    return parseInt(refreshAuthTimestamp) + refreshAuthTokenValidTime > Date.now()
 }
 
 export async function refreshAuthToken(refreshToken, refreshAuthTimestamp) {
@@ -121,6 +121,16 @@ export async function getUser() {
     if (response.status === 200) return response.data
 }
 
+export async function getOneUser(id) {
+    const response = await apiGet('api/users/' + id + '/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function getUserRatings(id) {
+    const response = await apiGet('api/rating/' + id + '/', true)
+    if (response.status === 200) return response.data
+}
+
 export async function getProfile() {
     const response = await apiGet('api/profiles/', true)
     if (response.status === 200) return response.data
@@ -186,9 +196,33 @@ export async function editAnnouncement(announcement) {
     return true
 }
 
-export async function payAnnouncement(id) {
-    const response = await apiPost('api/payments/' + id + "/", true)
+export async function addCredit(amount) {
+    const response = await apiPost('api/userBalanceRecharge/', amount, true)
     if (response.status === 200) return response.data
+    return false
+}
+
+export async function getMyBalance() {
+    const response = await apiGet('api/userAccountBalance/', true)
+    if (response.status === 200) return response.data
+}
+
+export async function withdrawCredit(amount) {
+    try {
+        await apiPut('api/userAccountBalance/', amount, true)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
+}
+
+export async function transaction(a_id) {
+    try {
+        await apiPut('api/balanceTransactions/' + a_id + "/", true)
+    } catch (error) {
+        return error.response.data
+    }
+    return true
 }
 
 export async function register(registerFields) {
@@ -218,5 +252,19 @@ export async function cancelAnnouncement(a_id, announcement_data) {
 export async function cancelReservation(a_id, announcement_data) {
     const response = await apiPut('api/cancel/reservation/' + a_id + '/', announcement_data, true)
     if (response.status === 200) return true
+    return false
+}
+
+export async function rateAnnouncement(data, type, id) {
+    try {
+        await apiPost('api/rating/' + type + '/' + id + "/", data, true)
+    } catch(error) {
+        return error.response.data
+    }
+    return true
+}
+export async function registerVehicle(dataVehicle) {
+    const response = await apiPost('api/vehicles/', dataVehicle, true)
+    if (response.status === 200) return response.data
     return false
 }

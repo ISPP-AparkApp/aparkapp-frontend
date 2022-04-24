@@ -8,7 +8,7 @@ describe("Profile", () => {
     });
 
     it("edit profile successfully", () => {
-        cy.get("ul.p-menubar-root-list > li:nth-child(3)").click()
+        cy.get("ul.p-menubar-root-list > li:nth-child(4)").click()
         cy.get('button').click();
         cy.get('input').first().clear().type('Test Cypress Name')
         cy.get('input').eq(1).clear().type('Test Cypress Surname')
@@ -22,7 +22,7 @@ describe("Profile", () => {
     });
 
     it("edit profile unsuccessfully", () => {
-        cy.get("ul.p-menubar-root-list > li:nth-child(3)").click()
+        cy.get("ul.p-menubar-root-list > li:nth-child(4)").click()
         cy.get('button').click();
         cy.get('input').first().clear().type('X')
         cy.get('input').eq(1).clear().type('X')

@@ -14,7 +14,7 @@
 .p-inputtext,
 .input_text::placeholder,
 .p-inputtext::placeholder {
-  color: #000000 !important;
+  color: #000 !important;
   background-color: #eaf7f1 !important;
   border-color: #37693b !important;
 }
@@ -30,11 +30,11 @@
 }
 
 .p-button-label {
-  color: #000000;
+  color: #000;
 }
 
 .question_signup {
-  color: #000000;
+  color: #000;
 }
 
 .tosignup {
@@ -44,5 +44,5 @@
 
 .messageError {
   margin-left: 0;
-  color: #ff0000;
+  color: #f00;
 }
