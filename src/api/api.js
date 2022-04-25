@@ -6,6 +6,7 @@ const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
 const backendUrl = 'http://localhost:8000/'
 
+
 async function checkAuthTokenIsValid(authTimestamp) {
     return authTimestamp + authTokenValidTime > Date.now()
 }
@@ -251,4 +252,10 @@ export async function registerVehicle(dataVehicle) {
     const response = await apiPost('api/vehicles/', dataVehicle, true)
     if (response.status === 200) return response.data
     window.location.href = '/'
+}
+
+export async function getMyRatings() {
+    const response = await apiGet('api/myRatings/', true)
+    if (response.status === 200) return response.data
+    return false
 }

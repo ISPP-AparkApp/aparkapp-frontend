@@ -17,7 +17,7 @@ const Headerbar = () => {
 
     if (userIsLogged && credit === "")  // Init credit in headerbar
         getMyBalance().then(data => {
-            setCredit(data.slice(1) + data[0])
+            setCredit(data.replace('€', '').replace(',', '.'));
         })
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const Headerbar = () => {
                 if (time) {
                     setTime(false);
                     getMyBalance().then(data => {
-                        setCredit(data.slice(1) + data[0])
+                        setCredit(data.replace('€', '').replace(',', '.'));
                     })
                 }
                 else {
@@ -55,8 +55,15 @@ const Headerbar = () => {
             }
         },
         {
+            label: 'Contacto',
+            icon: 'pi pi-phone',
+            command: () => {
+                navigate("/contact")
+            }
+        },
+        {
             className: "right-start",
-            label: credit,
+            label: credit + " €",
             icon: 'pi pi-wallet',
             command: () => {
                 navigate("/credit")
@@ -79,6 +86,13 @@ const Headerbar = () => {
     ];
 
     const items = [
+        {
+            label: 'Contacto',
+            icon: 'pi pi-phone',
+            command: () => {
+                navigate("/contact")
+            }
+        },
         {
             className: "right-start",
             label: 'Iniciar sesión',

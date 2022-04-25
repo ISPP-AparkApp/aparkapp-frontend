@@ -56,7 +56,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
     const notificationButton = () => {
         let result = ""
 
-        
+
         if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
             result = <div className="col-12">
                 <Link to={`/notifications/${announcement.id}`}>
@@ -88,10 +88,10 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                         <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog}/>
                     </div>
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs)}/>     
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs)}/>
                     </div>
                 </div>
-            }    
+            }
         </Card>
     )
 }
@@ -102,7 +102,7 @@ const cancelReserve = async (id, setAnnouncements, setBookings) => {
         cancelled: true,
     }
     await cancelReservation(id, data);
-    
+
     getBookings().then(data => {
         setBookings(data)
     })
@@ -114,7 +114,7 @@ const cancelReserve = async (id, setAnnouncements, setBookings) => {
 const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements }) => {
     let activityStatus;
     if (announcement.cancelled===true || cancelled===true){
-        activityStatus = "Cancelado";  
+        activityStatus = "Cancelado";
     }else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
         activityStatus = "En curso"
     } else {

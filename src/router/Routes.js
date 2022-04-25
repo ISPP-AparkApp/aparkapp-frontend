@@ -11,8 +11,13 @@ import Activity from "../components/views/Activity";
 import Reserve from "../components/views/Reserve";
 import Error from "../components/views/Error";
 import Credit from "../components/views/Credit";
+import Contact from "../components/views/Contact";
 
 const routes = [
+    {
+        path: "/contact",
+        element: <Contact />
+    },
     {
         path: "/about",
         element: <AboutUs />,
