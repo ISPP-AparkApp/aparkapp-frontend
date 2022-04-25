@@ -24,6 +24,7 @@ describe("Sign up", () => {
         cy.get('input[placeholder="Color"]').type("Rojo");
         cy.get("div.p-dropdown-trigger").click();
         cy.get("div.p-dropdown-items-wrapper").first().click()
+        cy.get('div.p-checkbox.p-component').click();
         cy.get('button').last().click()
         cy.contains('¿Qué quieres hacer ahora?')
     })
