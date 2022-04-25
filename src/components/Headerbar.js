@@ -55,6 +55,13 @@ const Headerbar = () => {
             }
         },
         {
+            label: 'Contacto',
+            icon: 'pi pi-phone',
+            command: () => {
+                navigate("/contact")
+            }
+        },
+        {
             className: "right-start",
             label: credit + " €",
             icon: 'pi pi-wallet',
@@ -79,6 +86,13 @@ const Headerbar = () => {
     ];
 
     const items = [
+        {
+            label: 'Contacto',
+            icon: 'pi pi-phone',
+            command: () => {
+                navigate("/contact")
+            }
+        },
         {
             className: "right-start",
             label: 'Iniciar sesión',
