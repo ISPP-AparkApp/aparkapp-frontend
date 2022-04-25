@@ -1,5 +1,5 @@
 Cypress.Commands.add("initialOpen", () => {
-    cy.visit("localhost:3000/home");
+    cy.visit("localhost:3000");
 });
 
 Cypress.Commands.add("accessSearch", () => {
@@ -48,7 +48,7 @@ Cypress.Commands.add("createAnnouncement", () => {
     cy.wait(3000);
     cy.get('button').last().click();
     cy.wait(5000);
-    cy.visit("localhost:3000/home");                                                                 // Logout
+    cy.visit("localhost:3000");                                                                 // Logout
 });
 
 Cypress.Commands.add("createReservation", () => {
@@ -81,13 +81,13 @@ Cypress.Commands.add("departure", () => {
     cy.wait(3000);
     cy.get('button').last().click();
     cy.wait(5000);
-    cy.visit("localhost:3000/home");    
+    cy.visit("localhost:3000");    
     cy.createReservation();
     // Departure
     cy.wait(7000);
     cy.get('button:first').click();                                     // I arrive
     cy.wait(5000);
-    cy.visit("localhost:3000/home");                                         // Logout
+    cy.visit("localhost:3000");                                         // Logout
     cy.get('a.p-menuitem-link').first().click();
     cy.get('input[placeholder="Nombre de usuario"]').type("admin");
     cy.get('input[placeholder="Contraseña"]').type("admin");
