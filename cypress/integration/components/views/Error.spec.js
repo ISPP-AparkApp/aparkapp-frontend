@@ -1,6 +1,6 @@
 describe("Error", () => {
     beforeEach(() => {
-        cy.visit("localhost:3000")
+        cy.visit("localhost:3000/esdf")
     });
 
     it("loading error page successfully", () => {

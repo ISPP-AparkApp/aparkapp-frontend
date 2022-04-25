@@ -19,6 +19,10 @@ const routes = [
         element: <Contact />
     },
     {
+        path: "/",
+        element: <Home />,
+    },
+    {
         path: "/about",
         element: <AboutUs />,
     },
