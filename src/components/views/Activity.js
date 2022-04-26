@@ -17,35 +17,47 @@ import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { regexLatitudeLongitude } from '../../utils/latLongRegex';
 import { Slider } from 'primereact/slider';
+import { Checkbox } from 'primereact/checkbox';
+import { rateAnnouncement } from '../../api/api';
+import { Rating } from 'primereact/rating';
+import { InputTextarea } from 'primereact/inputtextarea';
 
-const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs) => {
+const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs, setFilteredBookings, setFilteredAnnouncements) => {
     const data = {
         cancelled: true,
     }
     let res = await cancelAnnouncement(id, data);
-    if (res !== true){
+    if (res !== true) {
         msgs.current.show({ severity: 'error', detail: res });
         window.scrollTo(0, 0)
         return;
     }
-
+    // the app is not reloaded automatically when cancel status changes
     getBookings().then(data => {
         setBookings(data)
+        setFilteredBookings(data)
     })
     getMyAnnnouncements().then(data => {
         setAnnouncements(data)
+        setFilteredAnnouncements(data)
     })
 }
 
-const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement, setAnnouncements, setBookings, msgs }) => {
+const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement, setAnnouncements, setBookings, msgs, setRateAnnouncementDialog, setAnnouncementToRate, setFilteredBookings, setFilteredAnnouncements }) => {
 
     let activityStatus;
-    if (announcement.cancelled){
-        activityStatus = "Cancelado";
-    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
-        activityStatus = "En curso"
-    } else {
+    if (announcement.reservation_set.length === 0 && (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+        activityStatus = "No realizado"
+    } else if (announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === true) {
+        activityStatus = "Cancelado por el demandante";
+    } else if (announcement.cancelled === true) {
+        activityStatus = "Cancelado por mí";
+    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
         activityStatus = "Finalizado"
+    } else if (announcement.reservation_set.length > 0) {
+        activityStatus = "Reservado"
+    } else {
+        activityStatus = "Libre"
     }
 
     const visualiseDialog = () => {
@@ -67,11 +79,15 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         return result;
     }
 
+    const rateAnnouncement = (announcementId) => {
+        setRateAnnouncementDialog(true)
+        setAnnouncementToRate(announcementId)
+    }
     return (
-        <Card className="activityCard" title={activityStatus}>
+        <Card className="activityCard h-full" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
-                    <li><strong>Matrícula:</strong> {announcement.vehicle.license_plate}</li>
+                    <li><strong>Matrícula: </strong> {announcement.vehicle.license_plate}</li>
                     <li><strong>Fecha y hora: </strong>{dateFormatter(new Date(announcement.date))}</li>
                     <li><strong>Dirección: </strong> {announcement.location}</li>
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
@@ -81,23 +97,36 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {announcement.cancelled ? "" :
+            {(Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() ? "" :
                 <div className="grid w-full">
-                    {notificationButton()}
-                    <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog}/>
-                    </div>
-                    <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs)}/>
-                    </div>
+                    {announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === false && announcement.cancelled === false ?
+                        notificationButton()
+                        :
+                        announcement.cancelled === false && activityStatus !== "Cancelado por el demandante" ?
+                            <div className="col-12">
+                                <div className="col-12">
+                                    <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog} />
+                                </div>
+                                <div className="col-12">
+                                    <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelAnnounce(announcement.id, setBookings, setAnnouncements, msgs, setFilteredBookings, setFilteredAnnouncements)} />
+                                </div>
+                            </div>
+                            : ""
+                    }
                 </div>
+            }
+            {activityStatus === "Finalizado" ?
+                <div className="col-12">
+                    <Button className="p-button-raised p-button-lg w-full h-full p-button-rate" label="Valorar" icon="pi pi-star" onClick={() => rateAnnouncement(announcement.reservation_set[0].id)} />
+                </div>
+                : ""
             }
         </Card>
     )
 }
 
 
-const cancelReserve = async (id, setAnnouncements, setBookings) => {
+const cancelReserve = async (id, setAnnouncements, setBookings, setFilteredBookings, setFilteredAnnouncements) => {
     const data = {
         cancelled: true,
     }
@@ -105,20 +134,23 @@ const cancelReserve = async (id, setAnnouncements, setBookings) => {
 
     getBookings().then(data => {
         setBookings(data)
+        setFilteredBookings(data)
     })
     getMyAnnnouncements().then(data => {
         setAnnouncements(data)
+        setFilteredAnnouncements(data)
     })
 }
 
-const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements }) => {
+const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncements, setBookingToRate, setRateBookingDialog, setFilteredBookings, setFilteredAnnouncements }) => {
     let activityStatus;
-    if (announcement.cancelled===true || cancelled===true){
-        activityStatus = "Cancelado";
-    }else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) > Date.now()) {
-        activityStatus = "En curso"
-    } else {
+
+    if (announcement.cancelled === true || cancelled === true) {
+        activityStatus = "Cancelado por mí";
+    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
         activityStatus = "Finalizado"
+    } else {
+        activityStatus = "En curso"
     }
 
     const notificationButton = () => {
@@ -134,10 +166,13 @@ const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements
         return result;
     }
 
-
+    const rateBooking = (bookingId) => {
+        setRateBookingDialog(true)
+        setBookingToRate(bookingId)
+    }
 
     return (
-        <Card className="activityCard" title={activityStatus}>
+        <Card className="activityCard h-full" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
                     <li><strong>Matrícula:</strong>{announcement.vehicle.license_plate}</li>
@@ -150,13 +185,19 @@ const BookingCard = ({cancelled, id, announcement, setBookings, setAnnouncements
                     <li><strong>Precio: </strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {(announcement.cancelled || cancelled) ? "" :
+            {(announcement.cancelled || cancelled || (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) ? "" :
                 <div className="grid w-full">
                     {notificationButton()}
                     <div className="col-12">
-                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings)} />
+                        <Button className="p-button-raised p-button-lg w-full h-full p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={() => cancelReserve(id, setAnnouncements, setBookings, setFilteredBookings, setFilteredAnnouncements)} />
                     </div>
                 </div>
+            }
+            {activityStatus === "Finalizado" ?
+                <div className="col-12">
+                    <Button className="p-button-raised p-button-lg w-full h-full p-button-rate" label="Valorar" icon="pi pi-star" onClick={() => rateBooking(announcement.id)} />
+                </div>
+                : ""
             }
         </Card>
     )
@@ -180,6 +221,7 @@ const Activity = () => {
     const [formErrors, setFormErrors] = useState({})
     const msgs = useRef(null);
     const msgs2 = useRef(null);
+    const rateMessage = useRef(null);
 
     const [mapLocation, setMapLocation] = useState(null);
     const [googleMapsReady, setGoogleMapsReady] = useState(false);
@@ -187,13 +229,33 @@ const Activity = () => {
     const [draggableMarker, setDraggableMarker] = useState(false);
     const [markerLocation, setMarkerLocation] = useState('');
     const [dialogVisible2, setDialogVisible2] = useState(false);
+    const [selectedActivity, setSelectedActivity] = useState("Anuncios y reservas");
+    const [dialogVisibleFilter, setDialogVisibleFilter] = useState(false);
+    const [freeState, setFreeState] = useState(true);
+    const [notDoneState, setNotDoneState] = useState(true);
+    const [cancelledState, setCancelledState] = useState(true);
+    const [finishedState, setFinishedState] = useState(true);
+    const [reservedState, setReservedState] = useState(true);
+    const [inProgressState, setInProgressState] = useState(true);
+    const [filteredAnnouncements, setFilteredAnnouncements] = useState([]);
+    const [filteredBookings, setFilteredBookings] = useState([]);
+    const [rateAnnouncementDialog, setRateAnnouncementDialog] = useState(false);
+    const [starsNumber, setStarsNumber] = useState(null);
+    const [comment, setComment] = useState('');
+    const [announcementToRate, setAnnouncementToRate] = useState(null);
+    const [rateBookingDialog, setRateBookingDialog] = useState(false);
+    const [starsNumber2, setStarsNumber2] = useState(null);
+    const [comment2, setComment2] = useState('');
+    const [bookingToRate, setBookingToRate] = useState(null);
 
     useEffect(() => {
         getBookings().then(data => {
             setBookings(data)
+            setFilteredBookings(data)
         })
         getMyAnnnouncements().then(data => {
             setAnnouncements(data)
+            setFilteredAnnouncements(data)
         })
         getVehicles().then(data => {
             setVehicles(data)
@@ -274,9 +336,11 @@ const Activity = () => {
         if (res === true) {
             getBookings().then(data => {
                 setBookings(data)
+                setFilteredBookings(data)
             })
             getMyAnnnouncements().then(data => {
                 setAnnouncements(data)
+                setFilteredAnnouncements(data)
             })
             setDialogVisible(false)
             msgs.current.show({ severity: 'success', summary: 'Anuncio modificado' });
@@ -344,30 +408,223 @@ const Activity = () => {
             <Button label="Cancelar" className="p-button-cancel" icon="pi pi-times" onClick={cancellMap} />
         </div>;
 
+    const activities = [
+        { name: "Anuncios y reservas" },
+        { name: "Anuncios" },
+        { name: "Reservas" }
+    ]
+
+    const onActivityChange = (e) => {
+        setSelectedActivity(e.value.name)
+    }
+
+    const filterActivities = () => {
+
+        let announcementFiltered = []
+        let bookingFiltered = []
+
+        if (cancelledState) {
+            announcementFiltered = announcements.filter((a) =>
+                (Date.parse(a.date) + a.wait_time * 60000) > Date.now() && ((a.reservation_set.length > 0 && a.reservation_set[0].cancelled === true) || a.cancelled === true)
+            ).concat(announcementFiltered)
+            bookingFiltered = bookings.filter((b) => b.cancelled).concat(bookingFiltered)
+        }
+
+        if (finishedState) {
+            announcementFiltered = announcements.filter((a) => (
+                (Date.parse(a.date) + a.wait_time * 60000) < Date.now() && a.reservation_set.length > 0
+            )).concat(announcementFiltered)
+            bookingFiltered = bookings.filter((b) => (
+                (Date.parse(b.announcement.date) + b.announcement.wait_time * 60000) < Date.now()
+            )).concat(bookingFiltered)
+        }
+
+        if (reservedState) {
+            announcementFiltered = announcements.filter((a) => (
+                (Date.parse(a.date) + a.wait_time * 60000) > Date.now() && a.reservation_set.length > 0 && a.reservation_set[0].cancelled === false
+            )).concat(announcementFiltered)
+        }
+
+        if (freeState) {
+            announcementFiltered = announcements.filter((a) => (
+                (Date.parse(a.date) + a.wait_time * 60000) > Date.now() && a.reservation_set.length === 0
+            )).concat(announcementFiltered)
+        }
+
+        if (notDoneState) {
+            announcementFiltered = announcements.filter((a) => (
+                (Date.parse(a.date) + a.wait_time * 60000) < Date.now() && a.reservation_set.length === 0
+            )).concat(announcementFiltered)
+        }
+
+        if (inProgressState) {
+            bookingFiltered = bookings.filter((b) => (
+                !b.cancelled && (Date.parse(b.announcement.date) + b.announcement.wait_time * 60000) > Date.now()
+            )).concat(bookingFiltered)
+        }
+
+        let uniqueAnnouncements = [...new Set(announcementFiltered)]
+        let uniqueBookings = [...new Set(bookingFiltered)]
+
+        setFilteredAnnouncements(uniqueAnnouncements)
+        setFilteredBookings(uniqueBookings)
+        setDialogVisibleFilter(false)
+    }
+
+    const filterFooter = <div>
+        <Button label="Aplicar" icon="pi pi-check" onClick={filterActivities} />
+        <Button label="Mostrar todos" className="p-button-noti" icon="pi pi-check-circle" onClick={() => {
+            setFreeState(true);
+            setNotDoneState(true);
+            setCancelledState(true);
+            setFinishedState(true);
+            setReservedState(true);
+            setInProgressState(true)
+            setDialogVisibleFilter(false);
+            setFilteredAnnouncements(announcements);
+            setFilteredBookings(bookings);
+        }} />
+    </div>;
+
+    const onHideDialogFilter = () => {
+        setDialogVisibleFilter(false);
+    }
+
+    const rateNewAnnouncement = async () => {
+        let data = {
+            "rate": starsNumber,
+            "comment": comment,
+        }
+
+        if (starsNumber === null) {
+            rateMessage.current.show({ severity: 'error', detail: 'Debe calificar la plaza' });
+            return;
+        }
+
+        if (comment === '') {
+            rateMessage.current.show({ severity: 'error', detail: 'Debe escribir un comentario' });
+            return;
+        }
+
+        let result = await rateAnnouncement(data, "reservation", announcementToRate)
+        setRateAnnouncementDialog(false)
+        if (result !== true) {            
+            msgs.current.show({ severity: 'error', detail: result });
+            return;
+        } else {
+            msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });
+            return;
+        }
+    }
+
+    const rateNewBooking = async () => {
+        let data = {
+            "rate": starsNumber2,
+            "comment": comment2,
+        }
+
+        if (starsNumber2 === null) {
+            rateMessage.current.show({ severity: 'error', detail: 'Debe calificar la plaza' });
+            return;
+        }
+
+        if (comment2 === '') {
+            rateMessage.current.show({ severity: 'error', detail: 'Debe escribir un comentario' });
+            return;
+        }
+
+        let result = await rateAnnouncement(data, "announcement", bookingToRate)
+        setRateBookingDialog(false)
+        if (result !== true) {
+            msgs.current.show({ severity: 'error', detail: result });
+            return;
+        } else {
+            msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });
+            return;
+        }
+    }
+
     return (
         <div>
             <Messages ref={msgs} />
+            <div className='w-full flex justify-content-center mt-3' >
+                <Dropdown className="w-3" value={selectedActivity} options={activities} onChange={onActivityChange} optionLabel="name" placeholder={selectedActivity} />
+                <Button icon="pi pi-filter" className="ml-2" onClick={() => setDialogVisibleFilter(true)} />
+            </div>
             <div className="grid w-full px-5 pt-5">
-                {bookings.map(bookingProps => (
-                    <div key={bookingProps.id}  className="col-12 md:col-6 xl:col-4">
-                        <BookingCard cancelled = {bookingProps.cancelled} setAnnouncements={setAnnouncements} setBookings={setBookings} id = {bookingProps.id} {...bookingProps}></BookingCard>
+                {selectedActivity === "Reservas" || selectedActivity === "Anuncios y reservas" ?
+                    filteredBookings.map(bookingProps => (
+                        <div key={bookingProps.id} className="col-12 md:col-6 xl:col-4">
+                            <BookingCard
+                                cancelled={bookingProps.cancelled}
+                                setAnnouncements={setAnnouncements}
+                                setBookings={setBookings}
+                                id={bookingProps.id} {...bookingProps}
+                                setRateBookingDialog={setRateBookingDialog}
+                                setBookingToRate={setBookingToRate}
+                                setFilteredBookings={setFilteredBookings}
+                                setFilteredAnnouncements={setFilteredAnnouncements}
+                            >
+                            </BookingCard>
+                        </div>
+                    )) : ""}
+                {selectedActivity === "Anuncios" || selectedActivity === "Anuncios y reservas" ?
+                    filteredAnnouncements.map(announcementProps => (
+                        <div key={announcementProps.id} className="col-12 md:col-6 xl:col-4">
+                            <AnnouncementCard
+                                setAnnouncements={setAnnouncements}
+                                setBookings={setBookings}
+                                setSelectedAnnouncement={setSelectedAnnouncement}
+                                setDialogVisible={setDialogVisible} announcement={announcementProps}
+                                msgs={msgs}
+                                setRateAnnouncementDialog={setRateAnnouncementDialog}
+                                setAnnouncementToRate={setAnnouncementToRate}
+                                setFilteredBookings={setFilteredBookings}
+                                setFilteredAnnouncements={setFilteredAnnouncements}
+                            >
+                            </AnnouncementCard>
+                        </div>
+                    )) : ""}
+                <Dialog className='filter-dialog' header="Filtrar por plazas" draggable={false} visible={dialogVisibleFilter} footer={filterFooter} onHide={onHideDialogFilter} resizable={false}>
+                    <div className="flex flex-column">
+                        {(selectedActivity === "Anuncios" || selectedActivity === "Anuncios y reservas") ?
+                            <div className="flex flex-column">
+                                <div className="flex">
+                                    <Checkbox className="mr-2" inputId="freeState" name="freeState" checked={freeState} onChange={() => setFreeState(!freeState)} />
+                                    <label htmlFor="freeState">Libres</label>
+                                </div>
+                                <div className="flex mt-3">
+                                    <Checkbox className="mr-2" inputId="notDoneState" name="notDoneState" checked={notDoneState} onChange={() => setNotDoneState(!notDoneState)} />
+                                    <label htmlFor="notDoneState">No realizados</label>
+                                </div>
+                                <div className="flex mt-3">
+                                    <Checkbox className="mr-2" inputId="reservedState" name="reservedState" checked={reservedState} onChange={() => setReservedState(!reservedState)} />
+                                    <label htmlFor="reservedState">Reservados</label>
+                                </div>
+                            </div> : ""
+                        }
+                        {(selectedActivity === "Reservas" || selectedActivity === "Anuncios y reservas") ?
+                            <div className="flex mt-3">
+                                <Checkbox className="mr-2" inputId="inProgressState" name="inProgressState" checked={inProgressState} onChange={() => setInProgressState(!inProgressState)} />
+                                <label htmlFor="inProgressState">En curso</label>
+                            </div> : ""
+                        }
+                        <div className="flex mt-3">
+                            <Checkbox className="mr-2" inputId="finishedState" name="finishedState" checked={finishedState} onChange={() => setFinishedState(!finishedState)} />
+                            <label htmlFor="finishedState">Terminados</label>
+                        </div>
+                        <div className="flex mt-3">
+                            <Checkbox className="mr-2" inputId="cancelledState" name="cancelledState" checked={cancelledState} onChange={() => setCancelledState(!cancelledState)} />
+                            <label htmlFor="cancelledState">Cancelados</label>
+                        </div>
                     </div>
-                ))}
-                {announcements.map(announcementProps => (
-                    <div key={announcementProps.id} className="col-12 md:col-6 xl:col-4">
-                        <AnnouncementCard
-                            setAnnouncements={setAnnouncements}
-                            setBookings={setBookings}
-                            setSelectedAnnouncement={setSelectedAnnouncement}
-                            setDialogVisible={setDialogVisible} announcement={announcementProps}
-                            msgs={msgs}>
-                        </AnnouncementCard>
-                    </div>
-                ))}
+                </Dialog>
             </div>
 
             <div className="flex flex-column justify-content-center align-items-center h-fit mx-0 text-center overflow-hidden">
-                {bookings.length === 0 && announcements.length === 0 ? (
+                {(filteredBookings.length === 0 && filteredAnnouncements.length === 0) ||
+                    (selectedActivity === "Anuncios" && filteredAnnouncements.length === 0) ||
+                    (selectedActivity === "Reservas" && filteredBookings.length === 0) ? (
                     <Card title={"Parece que aún no tienes actividades"} style={{ color: "black" }}></Card>
                 ) : ""}
             </div>
@@ -434,6 +691,28 @@ const Activity = () => {
                     </div>
                 </Dialog>
             </div>
+
+            <Dialog header="Valora al demandante de la plaza" className="activity-dialog" visible={rateAnnouncementDialog} onHide={() => setRateAnnouncementDialog(false)}>
+                <div className='flex flex-column'>
+                    <Messages ref={rateMessage} />
+                    <span className='text-l publish_label mb-2 mt-3 font-bold'>¿Qué puntuación le das al demandante?</span>
+                    <Rating value={starsNumber} cancel={false} onChange={(e) => setStarsNumber(e.value)} />
+                    <span className='text-l publish_label mb-2 mt-3 font-bold'>Deja tu opinión</span>
+                    <InputTextarea rows={4} cols={10} value={comment} autoResize onChange={(e) => setComment(e.target.value)} />
+                    <Button className="p-button-edit mt-3 w-5 m-auto" label="Enviar" icon="pi pi-send" onClick={() => rateNewAnnouncement()} />
+                </div>
+            </Dialog>
+
+            <Dialog header="Valora al ofertante de la plaza" className="activity-dialog" visible={rateBookingDialog} onHide={() => setRateBookingDialog(false)}>
+                <div className='flex flex-column'>
+                    <Messages ref={rateMessage} />
+                    <span className='text-l publish_label mb-2 mt-3 font-bold'>¿Qué puntuación le das al ofertante?</span>
+                    <Rating value={starsNumber2} cancel={false} onChange={(e) => setStarsNumber2(e.value)} />
+                    <span className='text-l publish_label mb-2 mt-3 font-bold'>Deja tu opinión</span>
+                    <InputTextarea rows={4} cols={10} value={comment2} autoResize onChange={(e) => setComment2(e.target.value)} />
+                    <Button className="p-button-edit mt-3 w-5 m-auto" label="Enviar" icon="pi pi-send" onClick={() => rateNewBooking()} />
+                </div>
+            </Dialog>
         </div>
     )
 }

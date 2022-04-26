@@ -4,8 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction, logou
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'http://localhost:8000/'
-
+const backendUrl = 'https://aparkapp-backend-s3.herokuapp.com/'
 
 async function checkAuthTokenIsValid(authTimestamp) {
     return authTimestamp + authTokenValidTime > Date.now()
@@ -246,6 +245,12 @@ export async function cancelReservation(a_id, announcement_data) {
     const response = await apiPut('api/cancel/reservation/' + a_id + '/', announcement_data, true)
     if (response.status === 204) return true
     window.location.href = '*'
+}
+
+export async function rateAnnouncement(data, type, id) {
+    const response = await apiPost('api/rating/' + type + '/' + id + "/", data, true)
+    if (response.status === 201) return true
+    return response.data
 }
 
 export async function registerVehicle(dataVehicle) {
