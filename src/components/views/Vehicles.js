@@ -269,15 +269,15 @@ const Vehicles = () => {
             <Button
               icon="pi pi-trash"
               className="p-button-rounded p-button-danger mr-2 mt-4 p-button-cancel"
-              onClick={() => {
+              onClick={async () => {
                 if (vehicles.length === 1) {
                   addMessage();
                 } else {
-                  let deleted = deleteVehicle(v.id)
+                  let deleted = await deleteVehicle(v.id)
                   if (deleted===false){
-                    addMessage3();
+                    addMessage3()
                   }else{
-                    setUpdated(0);
+                    setUpdated(0)
                   }
                 }
               }}
@@ -302,7 +302,7 @@ const Vehicles = () => {
           <Accordion activeIndex={0}>{items}</Accordion>
           <Button
             onClick={() => {setCreateVehicle(true);cleanData();}}
-            className="p-button p-component p-speeddial-button p-button-rounded p-speeddial-rotate p-button-icon-only">
+            className="p-button p-component p-speeddial-button p-button-rounded p-speeddial-rotate p-button-icon-only mt-2">
             <span className="p-button-icon p-c pi pi-plus"></span>
           </Button>
         </div>

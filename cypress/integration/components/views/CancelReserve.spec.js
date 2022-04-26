@@ -11,7 +11,6 @@ describe("CancelReservation", () => {
         cy.contains('Actividad').click();
         cy.wait(5000)
         cy.contains('Cancelar').click();
-        cy.wait(5000)
         cy.contains('Sí').click();
         cy.wait(5000)
         cy.contains('Cancelado por mí');

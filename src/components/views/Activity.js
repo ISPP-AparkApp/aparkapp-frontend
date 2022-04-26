@@ -183,7 +183,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
         <Card className="activityCard h-full" title={activityStatus}>
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
-                    <li><strong>Matrícula:</strong>{announcement.vehicle.license_plate}</li>
+                    <li><strong>Matrícula: </strong>{announcement.vehicle.license_plate}</li>
                     <li><strong>Fecha y hora: </strong>{dateFormatter(new Date(announcement.date))}</li>
                     <li><strong>Dirección: </strong> {announcement.location}</li>
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
