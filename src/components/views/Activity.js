@@ -115,7 +115,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                 </div>
             }
 
-            {console.log(announcement.reservation_set[0]) && activityStatus === "Finalizado" && !announcement.reservation_set[0].rated ?
+            {activityStatus === "Finalizado" && !announcement.reservation_set[0].rated ?
                 <div className="col-12">
                     <Button className="p-button-raised p-button-lg w-full h-full p-button-rate" label="Valorar" icon="pi pi-star" onClick={() => rateAnnouncement(announcement.reservation_set[0].id)} />
                 </div>
