@@ -50,8 +50,10 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         activityStatus = "No realizado"
     } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
         activityStatus = "Finalizado"
-    } else if (announcement.cancelled === true || (announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === true)) {
-        activityStatus = "Cancelado";
+    } else if (announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === true) {
+        activityStatus = "Cancelado por el demandante";
+    } else if (announcement.cancelled === true) {
+        activityStatus = "Cancelado por mí";
     } else if (announcement.reservation_set.length > 0) {
         activityStatus = "Reservado"
     } else {
@@ -101,7 +103,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     {announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === false ?
                         notificationButton()
                         :
-                        announcement.cancelled === false ?
+                        announcement.cancelled === false && activityStatus !== "Cancelado por el demandante" ?
                             <div className="col-12">
                                 <div className="col-12">
                                     <Button className="p-button-raised p-button-lg w-full h-full" label="Editar anuncio" icon="pi pi-pencil" onClick={visualiseDialog} />
@@ -145,7 +147,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
     let activityStatus;
 
     if (announcement.cancelled === true || cancelled === true) {
-        activityStatus = "Cancelado";
+        activityStatus = "Cancelado por mí";
     } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
         activityStatus = "Finalizado"
     } else {

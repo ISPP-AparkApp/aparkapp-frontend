@@ -7,14 +7,13 @@ describe("CancelReservation", () => {
         cy.get('button').click();
     });
 
+    /* Add initial data */
     it("cancel reservation successfully", () => {
-
         cy.contains('Actividad').click();
         cy.wait(5000)
         cy.contains('Cancelar').click();
         cy.wait(5000)
-        cy.contains('Cancelado');
-
+        cy.contains('Cancelado por mí');
     });
 
 });
