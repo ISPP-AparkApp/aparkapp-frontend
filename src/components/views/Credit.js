@@ -12,26 +12,28 @@ import "../../css/views/Credit.css";
 const Credit = () => {
     const [credit, setCredit] = useState("");
     const [email, setEmail] = useState('');
-    const errors = {};
+    const [errors, setErrors] = useState({});
     const msgs = useRef(null);
 
 
     const validate = async (amount) => {
+        setErrors({})
         var mail_format = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
         if (!mail_format.test(email))
             errors.email = 'El email introducido no es válido';
         if (!email)
             errors.email = 'El email es requerido';
-        if (parseFloat(credit.slice(0, -1)) < parseFloat(amount.slice(1)))
+        if (parseFloat(credit) < parseFloat(amount.slice(1)))
             errors.credit = 'No tienes crédito suficiente';
         if (errors.email)
             msgs.current.show({ severity: 'error', detail: errors.email }, window.scrollTo(0, 0));
         if (errors.credit)
-        msgs.current.show({ severity: 'error', detail: errors.credit }, window.scrollTo(0, 0));
+            msgs.current.show({ severity: 'error', detail: errors.credit }, window.scrollTo(0, 0));
     }
 
     getMyBalance().then(data => {
-        setCredit(data.replace('€', '').replace(',', '.'));
+        const formattedCredit = data.replace('€', '').replace(',', '').replace('.','').trim();
+        setCredit(formattedCredit.slice(0,-2) + '.' + formattedCredit.slice(-2));
     })
 
     const pay = async (price) => {
@@ -59,7 +61,8 @@ const Credit = () => {
         const amount = { funds: credit, funds_currency: "EUR" };
         withdrawCredit(amount);
         getMyBalance().then(data => {
-            setCredit(data.replace('€', '').replace(',', '.'));
+            const formattedCredit = data.replace('€', '').replace(',', '').replace('.','').trim();
+            setCredit(formattedCredit.slice(0,-2) + '.' + formattedCredit.slice(-2));
         });
     }
 

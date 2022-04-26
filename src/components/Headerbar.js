@@ -17,7 +17,8 @@ const Headerbar = () => {
 
     if (userIsLogged && credit === "")  // Init credit in headerbar
         getMyBalance().then(data => {
-            setCredit(data.replace('€', '').replace(',', '.'));
+            const formattedCredit = data.replace('€', '').replace(',', '').replace('.','').trim();
+            setCredit(formattedCredit.slice(0,-2) + '.' + formattedCredit.slice(-2));
         })
 
     useEffect(() => {
@@ -26,7 +27,8 @@ const Headerbar = () => {
                 if (time) {
                     setTime(false);
                     getMyBalance().then(data => {
-                        setCredit(data.replace('€', '').replace(',', '.'));
+                        const formattedCredit = data.replace('€', '').replace(',', '').replace('.','').trim();
+                        setCredit(formattedCredit.slice(0,-2) + '.' + formattedCredit.slice(-2));
                     })
                 }
                 else {
