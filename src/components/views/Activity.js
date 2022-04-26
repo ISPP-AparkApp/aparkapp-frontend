@@ -48,12 +48,12 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
     let activityStatus;
     if (announcement.reservation_set.length === 0 && (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
         activityStatus = "No realizado"
-    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
-        activityStatus = "Finalizado"
     } else if (announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === true) {
         activityStatus = "Cancelado por el demandante";
     } else if (announcement.cancelled === true) {
         activityStatus = "Cancelado por mí";
+    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+        activityStatus = "Finalizado"
     } else if (announcement.reservation_set.length > 0) {
         activityStatus = "Reservado"
     } else {
@@ -83,7 +83,6 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         setRateAnnouncementDialog(true)
         setAnnouncementToRate(announcementId)
     }
-
     return (
         <Card className="activityCard h-full" title={activityStatus}>
             <div className="flex flex-column pb-5">
@@ -100,7 +99,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
             </div>
             {(Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() ? "" :
                 <div className="grid w-full">
-                    {announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === false ?
+                    {announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === false && announcement.cancelled === false ?
                         notificationButton()
                         :
                         announcement.cancelled === false && activityStatus !== "Cancelado por el demandante" ?
@@ -509,7 +508,7 @@ const Activity = () => {
 
         let result = await rateAnnouncement(data, "reservation", announcementToRate)
         setRateAnnouncementDialog(false)
-        if (result !== true) {
+        if (result !== true) {            
             msgs.current.show({ severity: 'error', detail: result });
             return;
         } else {

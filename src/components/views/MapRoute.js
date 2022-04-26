@@ -34,7 +34,6 @@ const MapRoute = () => {
   };
 
   const notifyWait = () => {
-    console.log(credit)
     parseFloat(credit) >= 0.5 ? updateAnnounce("Delay") : noCredit();
   }
 

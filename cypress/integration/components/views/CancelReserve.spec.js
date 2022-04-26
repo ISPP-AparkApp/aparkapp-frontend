@@ -7,7 +7,6 @@ describe("CancelReservation", () => {
         cy.get('button').click();
     });
 
-    /* Add initial data */
     it("cancel reservation successfully", () => {
         cy.contains('Actividad').click();
         cy.wait(5000)

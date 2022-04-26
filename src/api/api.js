@@ -248,13 +248,11 @@ export async function cancelReservation(a_id, announcement_data) {
 }
 
 export async function rateAnnouncement(data, type, id) {
-    try {
-        await apiPost('api/rating/' + type + '/' + id + "/", data, true)
-    } catch(error) {
-        return error.response.data
-    }
-    return true
+    const response = await apiPost('api/rating/' + type + '/' + id + "/", data, true)
+    if (response.status === 201) return true
+    return response.data
 }
+
 export async function registerVehicle(dataVehicle) {
     const response = await apiPost('api/vehicles/', dataVehicle, true)
     if (response.status === 201) return response.data
