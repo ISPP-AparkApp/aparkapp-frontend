@@ -154,7 +154,6 @@ export async function deleteVehicle(v_id) {
 
 export async function updateVehicle(v_id, vehicle_data) {
     const response = await apiPut('api/vehicles/' + v_id + "/", vehicle_data, true)
-    console.log(response.status)
     if (response.status === 200) return true
     return response.data
 }
@@ -251,7 +250,8 @@ export async function cancelReservation(a_id, announcement_data) {
 
 export async function registerVehicle(dataVehicle) {
     const response = await apiPost('api/vehicles/', dataVehicle, true)
-    if (response.status === 200) return response.data
+    if (response.status === 201) return response.data
+    else if (response.status === 409) return false
     window.location.href = '*'
 }
 
