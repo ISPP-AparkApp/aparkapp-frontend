@@ -4,7 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction, logou
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'https://aparkapp-backend-s3.herokuapp.com/'
+const backendUrl = 'http://localhost:8000/'
 
 async function checkAuthTokenIsValid(authTimestamp) {
     return authTimestamp + authTokenValidTime > Date.now()
@@ -148,6 +148,7 @@ export async function getProfile() {
 export async function deleteVehicle(v_id) {
     const response = await apiDelete('api/vehicles/' + v_id + "/", true)
     if (response.status === 204) return true
+    else if (response.status === 409) return false
     window.location.href = '*'
 }
 

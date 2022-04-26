@@ -49,10 +49,16 @@ const Vehicles = () => {
     ]);
   }
 
-  
+
   const addMessage2 = () => {
     message.current.show([
       { severity: 'error', summary: 'La matrícula introducida ya está registrada' },
+    ]);
+  }
+
+  const addMessage3 = () => {
+    message.current.show([
+      { severity: 'error', summary: 'No es posible eliminar un vehículo con anuncios asociados' },
     ]);
   }
 
@@ -112,7 +118,7 @@ const Vehicles = () => {
     setFormErrorsNewVehicle(errors)
     if (!Object.keys(errors).length) {
       const err = await newVehicle();
-      if (err !== false) 
+      if (err !== false)
         getVehicles().then((data) => setVehicles(data)).then(setCreateVehicle(false))
       if (err) {
         setFormErrorsNewVehicle({ global: err })
@@ -267,7 +273,12 @@ const Vehicles = () => {
                 if (vehicles.length === 1) {
                   addMessage();
                 } else {
-                  deleteVehicle(v.id).then(() => setUpdated(0));
+                  let deleted = deleteVehicle(v.id)
+                  if (deleted===false){
+                    addMessage3();
+                  }else{
+                    setUpdated(0);
+                  }
                 }
               }}
             />
