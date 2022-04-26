@@ -66,7 +66,7 @@ const routes = [
         path: "/route/:id",
         element: <MapRoute />,
         requireAuth: true,
-        fallback: "login"
+        fallback: "/login"
     },
     {
         path: "/activity",
@@ -78,19 +78,19 @@ const routes = [
         path: "/profile",
         element: <Profile />,
         requireAuth: true,
-        fallback: "login"
+        fallback: "/login"
     },
     {
         path: "/credit",
         element: <Credit />,
         requireAuth: true,
-        fallback: "login"
+        fallback: "/login"
     },
     {
         path: "/reserve/:id",
         element: <Reserve />,
         requireAuth: true,
-        fallback: "login"
+        fallback: "/login"
     },
     {
         path: "/banned",

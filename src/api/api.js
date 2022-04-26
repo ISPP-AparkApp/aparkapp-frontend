@@ -177,7 +177,7 @@ export async function getAnnouncements() {
 
 export async function updateStatusAnnouncement(a_id, announcement_data) {
     const response = await apiPut('api/announcements/status/' + a_id + "/", announcement_data, true)
-    if (response.status === 200) return true
+    if (response.status === 204) return true
     window.location.href = '*'
 }
 

@@ -44,15 +44,14 @@ const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs, setFilter
 }
 
 const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcement, setAnnouncements, setBookings, msgs, setRateAnnouncementDialog, setAnnouncementToRate, setFilteredBookings, setFilteredAnnouncements }) => {
-
     let activityStatus;
-    if (announcement.reservation_set.length === 0 && (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+    if (announcement.reservation_set.length === 0 && (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() && !announcement.cancelled) {
         activityStatus = "No realizado"
     } else if (announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === true) {
         activityStatus = "Cancelado por el demandante";
     } else if (announcement.cancelled === true) {
         activityStatus = "Cancelado por mí";
-    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+    } else if (((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status == "Departure") {
         activityStatus = "Finalizado"
     } else if (announcement.reservation_set.length > 0) {
         activityStatus = "Reservado"
@@ -97,7 +96,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {(Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() ? "" :
+            { ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status == "Departure" ? "" :
                 <div className="grid w-full">
                     {announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === false && announcement.cancelled === false ?
                         notificationButton()
@@ -147,7 +146,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
 
     if (announcement.cancelled === true || cancelled === true) {
         activityStatus = "Cancelado por mí";
-    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+    } else if ( ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status == "Departure") {
         activityStatus = "Finalizado"
     } else {
         activityStatus = "En curso"
@@ -156,7 +155,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
     const notificationButton = () => {
         let result = ""
 
-        if (announcement.status !== "Departure" && announcement.status !== "DenyDelay" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
+        if (announcement.status !== "Departure" && (Date.parse(announcement.date) + announcement.wait_time * 60000) >= Date.now()) {
             result = <div className="col-12">
                 <Link to={`/route/${announcement.id}`}>
                     <Button className="p-button-raised p-button-lg w-full h-full" label="Cómo llegar" icon="pi pi-map-marker" />
@@ -185,7 +184,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
                     <li><strong>Precio: </strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {(announcement.cancelled || cancelled || (Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) ? "" :
+            {(announcement.cancelled || cancelled ||  ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status == "Departure") ? "" :
                 <div className="grid w-full">
                     {notificationButton()}
                     <div className="col-12">
@@ -419,23 +418,21 @@ const Activity = () => {
     }
 
     const filterActivities = () => {
-
         let announcementFiltered = []
         let bookingFiltered = []
-
         if (cancelledState) {
             announcementFiltered = announcements.filter((a) =>
-                (Date.parse(a.date) + a.wait_time * 60000) > Date.now() && ((a.reservation_set.length > 0 && a.reservation_set[0].cancelled === true) || a.cancelled === true)
+                ((a.reservation_set.length > 0 && (a.reservation_set[0].cancelled === true || a.cancelled === true)) || (a.reservation_set.length === 0 && a.cancelled === true))
             ).concat(announcementFiltered)
             bookingFiltered = bookings.filter((b) => b.cancelled).concat(bookingFiltered)
         }
 
         if (finishedState) {
             announcementFiltered = announcements.filter((a) => (
-                (Date.parse(a.date) + a.wait_time * 60000) < Date.now() && a.reservation_set.length > 0
+                (Date.parse(a.date) + a.wait_time * 60000) < Date.now() && a.reservation_set.length > 0 && a.reservation_set[0].cancelled === false && a.cancelled === false
             )).concat(announcementFiltered)
             bookingFiltered = bookings.filter((b) => (
-                (Date.parse(b.announcement.date) + b.announcement.wait_time * 60000) < Date.now()
+                (Date.parse(b.announcement.date) + b.announcement.wait_time * 60000) < Date.now() && b.cancelled === false
             )).concat(bookingFiltered)
         }
 
@@ -447,13 +444,13 @@ const Activity = () => {
 
         if (freeState) {
             announcementFiltered = announcements.filter((a) => (
-                (Date.parse(a.date) + a.wait_time * 60000) > Date.now() && a.reservation_set.length === 0
+                (Date.parse(a.date) + a.wait_time * 60000) > Date.now() && a.reservation_set.length === 0 && a.cancelled === false
             )).concat(announcementFiltered)
         }
 
         if (notDoneState) {
             announcementFiltered = announcements.filter((a) => (
-                (Date.parse(a.date) + a.wait_time * 60000) < Date.now() && a.reservation_set.length === 0
+                (Date.parse(a.date) + a.wait_time * 60000) < Date.now() && a.reservation_set.length === 0 && a.cancelled === false
             )).concat(announcementFiltered)
         }
 
@@ -500,8 +497,7 @@ const Activity = () => {
             rateMessage.current.show({ severity: 'error', detail: 'Debe calificar la plaza' });
             return;
         }
-
-        if (comment === '') {
+        if (comment === "" || comment.trim() === "") {
             rateMessage.current.show({ severity: 'error', detail: 'Debe escribir un comentario' });
             return;
         }
@@ -528,7 +524,7 @@ const Activity = () => {
             return;
         }
 
-        if (comment2 === '') {
+        if (comment2 === "" || comment2.trim() === "") {
             rateMessage.current.show({ severity: 'error', detail: 'Debe escribir un comentario' });
             return;
         }
