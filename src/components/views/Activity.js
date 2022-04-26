@@ -51,7 +51,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         activityStatus = "Cancelado por el demandante";
     } else if (announcement.cancelled === true) {
         activityStatus = "Cancelado por mí";
-    } else if (((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status == "Departure") {
+    } else if (((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status === "Departure") {
         activityStatus = "Finalizado"
     } else if (announcement.reservation_set.length > 0) {
         activityStatus = "Reservado"
@@ -96,7 +96,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
             </div>
-            { ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status == "Departure" ? "" :
+            { ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status === "Departure" ? "" :
                 <div className="grid w-full">
                     {announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === false && announcement.cancelled === false ?
                         notificationButton()
@@ -146,7 +146,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
 
     if (announcement.cancelled === true || cancelled === true) {
         activityStatus = "Cancelado por mí";
-    } else if ( ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status == "Departure") {
+    } else if ( ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status === "Departure") {
         activityStatus = "Finalizado"
     } else {
         activityStatus = "En curso"
@@ -184,7 +184,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
                     <li><strong>Precio: </strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {(announcement.cancelled || cancelled ||  ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status == "Departure") ? "" :
+            {(announcement.cancelled || cancelled ||  ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status === "Departure") ? "" :
                 <div className="grid w-full">
                     {notificationButton()}
                     <div className="col-12">

@@ -21,6 +21,8 @@ const routes = [
     {
         path: "/",
         element: <Home />,
+        requireAuth: true,
+        fallback: "/login",
     },
     {
         path: "/about",
