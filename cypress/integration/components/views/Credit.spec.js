@@ -15,7 +15,7 @@ describe("Credit", () => {
         cy.get('input').first().clear().type('correo@mail.com')
         cy.get(':nth-child(4) > .p-button-label').click();
         cy.get('.p-confirm-dialog-accept > .p-button-label').click();
-        cy.contains("2.00€");
+        cy.contains("2.00 €");
     })
 
     it("try withdraw credit without credit", () => {

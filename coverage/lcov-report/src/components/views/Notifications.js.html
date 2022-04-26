@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">2.08% </span>
+                <span class="strong">2% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/48</span>
+                <span class='fraction'>1/50</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>0/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">2.44% </span>
+                <span class="strong">2.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/41</span>
+                <span class='fraction'>1/42</span>
             </div>
         
             
@@ -143,14 +143,17 @@
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
 <a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">48x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -178,6 +181,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -227,8 +231,9 @@
 import { Button } from "primereact/button";
 import { Card } from 'primereact/card';
 import { Avatar } from 'primereact/avatar';
-import { getAnnouncement, updateStatusAnnouncement, getReservationUser } from '../../api/api';
+import { getAnnouncement, updateStatusAnnouncement, getReservationUser, transaction } from '../../api/api';
 import "../../css/views/Notifications.css";
+import { ProgressSpinner } from 'primereact/progressspinner';
 &nbsp;
 const Notifications = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
     const [announcement, setAnnouncement] = <span class="cstat-no" title="statement not covered" >useState();</span>
@@ -259,6 +264,7 @@ const Notifications = <span class="fstat-no" title="function not covered" >()</s
     }, [announcement, time, user]);
 &nbsp;
     const updateAnnounce = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(s</span>tatus) =&gt; { <span class="cstat-no" title="statement not covered" >updateStatusAnnouncement(announcement.id, { status: status }).then(getAnnounce()); </span>}</span>
+    const transferAmount = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; { <span class="cstat-no" title="statement not covered" >transaction(announcement.id) </span>};</span>
 &nbsp;
     const notificationsContent = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
         let h = <span class="cstat-no" title="statement not covered" >""</span>
@@ -271,13 +277,13 @@ const Notifications = <span class="fstat-no" title="function not covered" >()</s
                 case "Delay":
 <span class="cstat-no" title="statement not covered" >                    h = &lt;span className="pi pi-clock text-xl"&gt;   {user} se ha retrasado&lt;/span&gt;;</span>
 <span class="cstat-no" title="statement not covered" >                    c = &lt;div&gt;&lt;p className="mb-0 text-xl"&gt;&lt;Avatar style={{ color: "white" }} icon="pi pi-user" /&gt;   Llego tarde&lt;/p&gt;&lt;p className="text-xs"&gt;Aceptar supone esperar 5 minutos más y recibir 50 céntimos más sobre el precio final&lt;/p&gt;&lt;br&gt;&lt;/br&gt;&lt;hr&gt;&lt;/hr&gt;&lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    f = &lt;div&gt;&lt;div&gt;&lt;Button onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; { <span class="cstat-no" title="statement not covered" >updateAnnounce("AcceptDelay"); </span>}} className="p-button-raised p-button-lg mb-3 w-full h-full" label="Vale, te espero" /&gt;&lt;/div&gt;&lt;div&gt;&lt;Button onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; { <span class="cstat-no" title="statement not covered" >updateAnnounce("DenyDelay"); </span>}} className="p-button-raised p-button-lg w-full h-full" label="Lo siento, me voy" /&gt;&lt;/div&gt;&lt;/div&gt;</span>
+<span class="cstat-no" title="statement not covered" >                    f = &lt;div&gt;&lt;div&gt;&lt;Button onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; { <span class="cstat-no" title="statement not covered" >transferAmount(); </span>}} className="p-button-raised p-button-lg mb-3 w-full h-full" label="Vale, te espero" /&gt;&lt;/div&gt;&lt;div&gt;&lt;Button onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; { <span class="cstat-no" title="statement not covered" >updateAnnounce("DenyDelay"); </span>}} className="p-button-raised p-button-lg w-full h-full" label="Lo siento, me voy" /&gt;&lt;/div&gt;&lt;/div&gt;</span>
 <span class="cstat-no" title="statement not covered" >                    result = [h, c, f];</span>
 <span class="cstat-no" title="statement not covered" >                    break;</span>
                 case "Arrival":
 <span class="cstat-no" title="statement not covered" >                    h = &lt;span className="pi pi-map-marker text-xl"&gt;   {user} está en tu ubicación&lt;/span&gt;;</span>
 <span class="cstat-no" title="statement not covered" >                    c = &lt;div&gt;&lt;p className="mb-0 text-xl"&gt;&lt;Avatar style={{ color: "white" }} icon="pi pi-user" /&gt;   ¡He llegado!&lt;/p&gt;&lt;br&gt;&lt;/br&gt;&lt;hr&gt;&lt;/hr&gt;&lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >                    f = &lt;span&gt;&lt;Button onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; { <span class="cstat-no" title="statement not covered" >updateAnnounce("Departure"); </span>}} className="p-button-raised p-button-lg w-full h-full" label="Perfecto, salgo" /&gt;&lt;/span&gt;</span>
+<span class="cstat-no" title="statement not covered" >                    f = &lt;span&gt;&lt;Button onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >updateAnnounce("Departure") </span>} className="p-button-raised p-button-lg w-full h-full" label="Perfecto, salgo" /&gt;&lt;/span&gt;</span>
 <span class="cstat-no" title="statement not covered" >                    result = [h, c, f];</span>
 <span class="cstat-no" title="statement not covered" >                    break;</span>
                 default:
@@ -287,7 +293,7 @@ const Notifications = <span class="fstat-no" title="function not covered" >()</s
             }
         }
         else {
-<span class="cstat-no" title="statement not covered" >            h = "Parece que no tienes notificaciones"</span>
+<span class="cstat-no" title="statement not covered" >            c = &lt;ProgressSpinner /&gt;</span>
 <span class="cstat-no" title="statement not covered" >            result = [h, c, f];</span>
         }
 <span class="cstat-no" title="statement not covered" >        return result;</span>
@@ -310,7 +316,7 @@ export default Notifications;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Apr 06 2022 17:29:48 GMT+0200 (hora de verano de Europa central)
+                at Tue Apr 26 2022 10:00:35 GMT+0200 (hora de verano de Europa central)
             </div>
         <script src="../../../prettify.js"></script>
         <script>

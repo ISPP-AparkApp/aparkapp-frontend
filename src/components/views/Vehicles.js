@@ -49,6 +49,13 @@ const Vehicles = () => {
     ]);
   }
 
+  
+  const addMessage2 = () => {
+    message.current.show([
+      { severity: 'error', summary: 'La matrícula introducida ya está registrada' },
+    ]);
+  }
+
   const validate = async (list_position) => {
     const errors = {}
     const v = vehicles[list_position]
@@ -72,7 +79,13 @@ const Vehicles = () => {
 
     setFormErrors(errors)
     if (!Object.keys(errors).length) {
-      updateVehicle(v.id, v).then(() => setEditing(0)).then(() => setUpdated(0))
+      let response = await updateVehicle(v.id, v)
+      if (response === true) {
+        setEditing(0);
+        setUpdated(0);
+      } else {
+        addMessage2();
+      }
     }
 
   }
@@ -99,10 +112,11 @@ const Vehicles = () => {
     setFormErrorsNewVehicle(errors)
     if (!Object.keys(errors).length) {
       const err = await newVehicle();
-      getVehicles().then((data) => setVehicles(data)).then(setCreateVehicle(false))
+      if (err !== false) 
+        getVehicles().then((data) => setVehicles(data)).then(setCreateVehicle(false))
       if (err) {
         setFormErrorsNewVehicle({ global: err })
-    }
+      }
     }
   }
   const newVehicle = async () => {
@@ -116,6 +130,9 @@ const Vehicles = () => {
     let result = await registerVehicle(vehicleData);
     if (result === true) {
       message.current.show({ severity: 'success', summary: 'Vehiculo creado' });
+    } else if(result === false) {
+      message.current.show({ severity: 'error', summary: 'La matrícula introducida ya está registrada' });
+      return false;
     } else {
       const errors = {}
       errors.global = result

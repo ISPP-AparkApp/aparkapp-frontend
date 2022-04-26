@@ -15,6 +15,8 @@ describe("Headerbar", () => {
         cy.get('input[placeholder="Nombre de usuario"]').type("admin");
         cy.get('input[placeholder="Contraseña"]').type("admin");
         cy.get('button').click();
-        cy.get("ul.p-menubar-root-list").contains("Inicio")
+        cy.contains("Inicio")
+        cy.contains("Actividad")
+        cy.contains("Cerrar sesión")
     })
 })
