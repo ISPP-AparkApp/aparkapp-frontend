@@ -48,7 +48,7 @@ function controlGenericErrors(call) {
                     window.location.href = '/banned'
                 }
                 if (error.response.status === 500) {
-                    window.location.href = '/'
+                    window.location.href = '*'
                 }
             }
             return error.response
@@ -107,91 +107,91 @@ export async function publish(announcementData) {
 export async function getAnnouncement(a_id) {
     const response = await apiGet('api/announcement/' + a_id + '/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getReservationUser(r_id) {
     const response = await apiGet('api/reservation/anouncement/' + r_id + "/", true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getVehicles() {
     const response = await apiGet('api/users/vehicles/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getUser() {
     const response = await apiGet('api/users/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getOneUser(id) {
     const response = await apiGet('api/users/' + id + '/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getUserRatings(id) {
     const response = await apiGet('api/rating/' + id + '/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getProfile() {
     const response = await apiGet('api/profiles/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function deleteVehicle(v_id) {
     const response = await apiDelete('api/vehicles/' + v_id + "/", true)
     if (response.status === 204) return true
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function updateVehicle(v_id, vehicle_data) {
     const response = await apiPut('api/vehicles/' + v_id + "/", vehicle_data, true)
     if (response.status === 204) return true
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function updateUser(user_data) {
     const response = await apiPut('api/users/', user_data, true)
     if (response.status === 200) return true
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function updateProfile(profile_data) {
     const response = await apiPut('api/profiles/', profile_data, true)
     if (response.status === 200) return true
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getAnnouncements() {
     const response = await apiGet('api/announcements/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function updateStatusAnnouncement(a_id, announcement_data) {
     const response = await apiPut('api/announcements/status/' + a_id + "/", announcement_data, true)
     if (response.status === 200) return true
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getBookings() {
     const response = await apiGet('api/reservations/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getMyAnnnouncements() {
     const response = await apiGet('api/myAnnouncements/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function editAnnouncement(announcement) {
@@ -203,13 +203,13 @@ export async function editAnnouncement(announcement) {
 export async function addCredit(amount) {
     const response = await apiPost('api/userBalanceRecharge/', amount, true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getMyBalance() {
     const response = await apiGet('api/userAccountBalance/', true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function withdrawCredit(amount) {
@@ -233,7 +233,7 @@ export async function register(registerFields) {
 export async function addressToCoordinates(address) {
     const response = await apiPost('api/geolocatorToCoordinates/', address, true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function cancelAnnouncement(a_id, announcement_data) {
@@ -245,13 +245,13 @@ export async function cancelAnnouncement(a_id, announcement_data) {
 export async function cancelReservation(a_id, announcement_data) {
     const response = await apiPut('api/cancel/reservation/' + a_id + '/', announcement_data, true)
     if (response.status === 200) return true
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function registerVehicle(dataVehicle) {
     const response = await apiPost('api/vehicles/', dataVehicle, true)
     if (response.status === 200) return response.data
-    window.location.href = '/'
+    window.location.href = '*'
 }
 
 export async function getMyRatings() {
