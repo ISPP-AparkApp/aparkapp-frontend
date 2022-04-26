@@ -1,7 +1,7 @@
 describe("Login", () => {
     beforeEach(() => {
         cy.initialOpen();
-        cy.get('a.p-menuitem-link').first().click()
+        cy.get('a.p-menuitem-link').eq(1).click()
     });
 
     it("log in successfully", () => {
@@ -28,5 +28,12 @@ describe("Login", () => {
         cy.get('input[placeholder="Nombre de usuario"]').type("admin");
         cy.get('button').click();
         cy.contains('La contraseña no puede estar en blanco');
+    })
+
+    it("user banned", () => {
+        cy.get('input[placeholder="Nombre de usuario"]').type("user_banned");
+        cy.get('input[placeholder="Contraseña"]').type("admin");
+        cy.get('button').click();
+        cy.contains('Su cuenta ha sido restringida. Si lo desea puede contactar con el administrador a través del siguiente correo: aparkapp.info@gmail.com')
     })
 })

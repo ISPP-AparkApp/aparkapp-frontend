@@ -1,0 +1,25 @@
+.p-rating-icon.pi.pi-star {
+    color: #3f3e03 !important;
+  }
+  
+.p-rating-icon.pi.pi-star-fill {
+    color: #1c5e04 !important;
+  }
+
+.text{
+    color: #000 !important;
+}
+
+.rate{
+    padding: 5px !important;
+    text-align: center;
+}
+
+.allRates{
+    overflow: auto ;
+    height: 400px;
+}
+
+.pi.pi-comment{
+    color: #000 !important;
+}

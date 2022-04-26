@@ -9,10 +9,19 @@ import MapRoute from "../components/views/MapRoute";
 import Notifications from "../components/views/Notifications";
 import Activity from "../components/views/Activity";
 import Reserve from "../components/views/Reserve";
+import Error from "../components/views/Error";
 import Credit from "../components/views/Credit";
-import { Navigate } from "react-router-dom";
+import Contact from "../components/views/Contact";
 
 const routes = [
+    {
+        path: "/contact",
+        element: <Contact />
+    },
+    {
+        path: "/",
+        element: <Home />,
+    },
     {
         path: "/about",
         element: <AboutUs />,
@@ -84,8 +93,14 @@ const routes = [
         fallback: "login"
     },
     {
+        path: "/banned",
+        element: <Error text="Su cuenta ha sido restringida. 
+        Si lo desea puede contactar con el administrador a través del 
+        siguiente correo: aparkapp.info@gmail.com"/>,
+    },
+    {
         path: "*",
-        element: <Navigate to="/home" replace />,
+        element: <Error />,
     },
 ];
 

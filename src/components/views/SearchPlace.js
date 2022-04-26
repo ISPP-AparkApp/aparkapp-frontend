@@ -88,7 +88,7 @@ const SearchPlace = () => {
         var group = [a1]
         announcementsToGroup.forEach(a2 => {
           const distance = getKm(a1.latitude, a1.longitude, a2.latitude, a2.longitude)
-          if (distance < 0.5 && a1.id !== a2.id) {
+          if (distance < 0.25 && a1.id !== a2.id) {
             group.push(a2)
             groupedAnnouncements[a2.id] = true
           }
@@ -108,7 +108,7 @@ const SearchPlace = () => {
       groupLocation.lng /= group.length
 
       announcementsCircle[groupLocation.lat + "," + groupLocation.lng] = group
-      newOverlays.push(new window.google.maps.Circle({ center: groupLocation, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 500 }))
+      newOverlays.push(new window.google.maps.Circle({ center: groupLocation, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 250 }))
     })
     setAnnouncementsCircle(announcementsCircle)
     setOverlays(newOverlays)

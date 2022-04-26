@@ -7,13 +7,13 @@ import { isUserLogged, logout } from "../store/session";
 import logo from "../images/logo.png";
 import { getMyBalance } from "./../api/api";
 
-
 const Headerbar = () => {
     const [credit, setCredit] = useState("");
     const [time, setTime] = useState(false);
     const navigate = useNavigate();
     const userIsLogged = useSelector(isUserLogged);
     const dispatch = useDispatch();
+    const username = localStorage.getItem("username")
 
     if (userIsLogged && credit === "")  // Init credit in headerbar
         getMyBalance().then(data => {
@@ -55,6 +55,13 @@ const Headerbar = () => {
             }
         },
         {
+            label: 'Contacto',
+            icon: 'pi pi-phone',
+            command: () => {
+                navigate("/contact")
+            }
+        },
+        {
             className: "right-start",
             label: credit + " €",
             icon: 'pi pi-wallet',
@@ -63,7 +70,7 @@ const Headerbar = () => {
             }
         },
         {
-            label: 'Perfil',
+            label: `${username}`,
             icon: 'pi pi-user',
             command: () => {
                 navigate("/profile")
@@ -79,6 +86,13 @@ const Headerbar = () => {
     ];
 
     const items = [
+        {
+            label: 'Contacto',
+            icon: 'pi pi-phone',
+            command: () => {
+                navigate("/contact")
+            }
+        },
         {
             className: "right-start",
             label: 'Iniciar sesión',

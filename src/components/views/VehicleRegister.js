@@ -8,6 +8,7 @@ import { register } from "../../api/api";
 import { dateFormatter } from '../../utils/dataFormatter';
 import { login } from "../../api/api";
 import { Messages } from 'primereact/messages';
+import { Checkbox } from 'primereact/checkbox';
 
 const VehicleRegister = (props) => {
     const [brand, setBrand] = useState("");
@@ -17,6 +18,7 @@ const VehicleRegister = (props) => {
     const [selectedType, setSelectedType] = useState(null);
     const [formErrors, setFormErrors] = useState({});
     const msgs = useRef(null);
+    const [checked, setChecked] = useState(false);
 
     const types = [
         { name: "Pequeño" },
@@ -61,6 +63,7 @@ const VehicleRegister = (props) => {
         if (!licensePlate) errors.licensePlate = 'La matrícula es requerida';
         if (!color) errors.color = 'El color es requerido';
         if (!selectedType) errors.selectedType = 'El tamaño es requerido';
+        if (!checked) errors.termsConditions = 'Debe aceptar los términos y condiciones';
 
         var regexLicensePlate = /^[A-Za-z]{0,2}[0-9]{4}[A-Za-z]{2,3}$/
         if (!regexLicensePlate.test(licensePlate)) errors.licensePlate = 'La matrícula introducida no es válida';
@@ -76,6 +79,7 @@ const VehicleRegister = (props) => {
             if (formError) {
                 setFormErrors({ global: formError })
             } else {
+                localStorage.setItem("username", props.user.username)
                 await login(props.user.username, props.user.password)
             }
         }
@@ -127,6 +131,17 @@ const VehicleRegister = (props) => {
                         <Dropdown className="input_text" value={selectedType} options={types} onChange={(e) => setSelectedType(e.target.value)} optionLabel="name" placeholder="Tamaño" />
                     </div>
                     {getFieldError("selectedType")}
+                    <div className="field-checkbox mt-3">
+                        <Checkbox inputId="termsConditions" checked={checked} onChange={e => setChecked(e.checked)} />
+                        <label htmlFor="termsConditions">Aceptar los&nbsp;
+                            <a
+                                href="https://drive.google.com/file/d/160YgRKODsLfu0CZNy36aQ0t2710uTgz9/view?usp=sharing"
+                                target="_blank"
+                                rel="noreferrer" >Términos y condiciones
+                            </a>
+                        </label>
+                    </div>
+                    {getFieldError("termsConditions")}
                     <div className="grid w-full mt-4">
                         <div className="col-12 md:col-6">
                             <Button className="p-button-raised p-button-lg w-full h-full" label="Anterior" onClick={() => props.setVehicleHidden(true)} />

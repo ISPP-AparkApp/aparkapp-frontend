@@ -19,6 +19,8 @@ const Login = () => {
         if (!isLogged) {
             setIsLoading(false)
             return "El usuario no existe";
+        } else {
+            localStorage.setItem("username", username)
         }
     }
 
