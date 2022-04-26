@@ -81,7 +81,7 @@ Cypress.Commands.add("departure", () => {
     cy.wait(3000);
     cy.get('button').last().click();
     cy.wait(5000);
-    cy.visit("localhost:3000");
+    cy.visit("localhost:3000");    
     cy.createReservation();
     // Departure
     cy.wait(7000);
