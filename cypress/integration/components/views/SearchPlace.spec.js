@@ -23,6 +23,6 @@ describe("SearchPlace", () => {
     it("Bad search by location", () => {
         cy.get('input[placeholder="Busca en la zona donde quieras aparcar"]').type("sqiudhuiewqfhi");
         cy.get('span.pi-search').click();
-        cy.contains("No se ha encontrado la ubicación");
+        cy.contains("Ooops!! Parece que hubo un error :(");
     })
 })

@@ -1,7 +1,7 @@
 describe("Login", () => {
     beforeEach(() => {
         cy.initialOpen();
-        cy.get('a.p-menuitem-link').first().click()
+        cy.get('a.p-menuitem-link').eq(1).click()
     });
 
     it("log in successfully", () => {

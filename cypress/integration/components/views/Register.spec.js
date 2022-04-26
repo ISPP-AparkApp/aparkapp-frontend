@@ -13,7 +13,7 @@ describe("Sign up", () => {
         cy.get('input[placeholder="Correo electrónico"]').type(uuidv4() + "@gmail.com");
         cy.get('input[placeholder="Nombre"]').type("Manolo");
         cy.get('input[placeholder="Apellidos"]').type("López García");
-        cy.get('input[placeholder="Número de teléfono"]').type("656543454");
+        cy.get('input[placeholder="Número de teléfono"]').type("656544444");
         cy.get('input[placeholder="Fecha de nacimiento"]').type("11/23/2000");
         cy.get('button').first().click()
 

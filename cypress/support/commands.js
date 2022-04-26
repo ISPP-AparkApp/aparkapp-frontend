@@ -4,7 +4,7 @@ Cypress.Commands.add("initialOpen", () => {
 
 Cypress.Commands.add("accessSearch", () => {
     cy.initialOpen();
-    cy.get('a.p-menuitem-link').first().click();
+    cy.get('a.p-menuitem-link').eq(1).click();
     cy.get('input[placeholder="Nombre de usuario"]').type("admin");
     cy.get('input[placeholder="Contraseña"]').type("admin");
     cy.get('button').click();
@@ -12,7 +12,7 @@ Cypress.Commands.add("accessSearch", () => {
 });
 Cypress.Commands.add("accessActivity", () => {
     cy.initialOpen();
-    cy.get('a.p-menuitem-link').first().click();
+    cy.get('a.p-menuitem-link').eq(1).click();
     cy.get('input[placeholder="Nombre de usuario"]').type("admin");
     cy.get('input[placeholder="Contraseña"]').type("admin");
     cy.get('button').click();
@@ -22,7 +22,7 @@ Cypress.Commands.add("accessActivity", () => {
 });
 Cypress.Commands.add("accessCredit", () => {
     cy.initialOpen();
-    cy.get('a.p-menuitem-link').first().click();
+    cy.get('a.p-menuitem-link').eq(1).click();
     cy.get('input[placeholder="Nombre de usuario"]').type("admin");
     cy.get('input[placeholder="Contraseña"]').type("admin");
     cy.get('button').click();
@@ -34,7 +34,7 @@ Cypress.Commands.add("accessCredit", () => {
 Cypress.Commands.add("createAnnouncement", () => {
     // Login
     cy.initialOpen();
-    cy.get('a.p-menuitem-link').first().click();
+    cy.get('a.p-menuitem-link').eq(1).click();
     cy.get('input[placeholder="Nombre de usuario"]').type("admin");
     cy.get('input[placeholder="Contraseña"]').type("admin");
     cy.get('button').click();
@@ -53,7 +53,7 @@ Cypress.Commands.add("createAnnouncement", () => {
 
 Cypress.Commands.add("createReservation", () => {
     // Login
-    cy.get('a.p-menuitem-link').first().click();
+    cy.get('a.p-menuitem-link').eq(1).click();
     cy.get('input[placeholder="Nombre de usuario"]').type("user");                              // Login
     cy.get('input[placeholder="Contraseña"]').type("admin");
     cy.get('button').click();
@@ -67,7 +67,7 @@ Cypress.Commands.add("createReservation", () => {
 Cypress.Commands.add("departure", () => {
     // Login
     cy.initialOpen();
-    cy.get('a.p-menuitem-link').first().click();
+    cy.get('a.p-menuitem-link').eq(1).click();
     cy.get('input[placeholder="Nombre de usuario"]').type("admin");
     cy.get('input[placeholder="Contraseña"]').type("admin");
     cy.get('button').click();
