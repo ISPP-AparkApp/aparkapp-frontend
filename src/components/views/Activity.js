@@ -53,7 +53,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
         activityStatus = "Cancelado por el demandante";
     } else if (announcement.cancelled === true) {
         activityStatus = "Cancelado por mí";
-    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() || announcement.status === "Departure") {
         activityStatus = "Finalizado"
     } else if (announcement.reservation_set.length > 0) {
         activityStatus = "Reservado"
@@ -114,7 +114,8 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     }
                 </div>
             }
-            {activityStatus === "Finalizado" ?
+
+            {console.log(announcement.reservation_set[0]) && activityStatus === "Finalizado" && !announcement.reservation_set[0].rated ?
                 <div className="col-12">
                     <Button className="p-button-raised p-button-lg w-full h-full p-button-rate" label="Valorar" icon="pi pi-star" onClick={() => rateAnnouncement(announcement.reservation_set[0].id)} />
                 </div>
@@ -146,7 +147,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
 
     if (announcement.cancelled === true || cancelled === true) {
         activityStatus = "Cancelado por mí";
-    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) {
+    } else if ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now() || announcement.status === "Departure") {
         activityStatus = "Finalizado"
     } else {
         activityStatus = "En curso"
@@ -201,7 +202,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
                     </div>
                 </div>
             }
-            {activityStatus === "Finalizado" ?
+            {activityStatus === "Finalizado" && !announcement.rated ?
                 <div className="col-12">
                     <Button className="p-button-raised p-button-lg w-full h-full p-button-rate" label="Valorar" icon="pi pi-star" onClick={() => rateBooking(announcement.id)} />
                 </div>
