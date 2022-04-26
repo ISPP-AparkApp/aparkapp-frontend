@@ -1,14 +1,15 @@
 describe("Profile", () => {
     beforeEach(() => {
         cy.initialOpen();
-        cy.get('a.p-menuitem-link').first().click()
+        cy.get('a.p-menuitem-link').eq(1).click()
         cy.get('input[placeholder="Nombre de usuario"]').type("admin");
         cy.get('input[placeholder="Contraseña"]').type("admin");
         cy.get('button').click();
     });
 
     it("edit profile successfully", () => {
-        cy.get("ul.p-menubar-root-list > li:nth-child(4)").click()
+        cy.wait(3000);
+        cy.get("ul.p-menubar-root-list > li:nth-child(5)").click()
         cy.get('button').click();
         cy.get('input').first().clear().type('Test Cypress Name')
         cy.get('input').eq(1).clear().type('Test Cypress Surname')
@@ -22,7 +23,8 @@ describe("Profile", () => {
     });
 
     it("edit profile unsuccessfully", () => {
-        cy.get("ul.p-menubar-root-list > li:nth-child(4)").click()
+        cy.wait(3000);
+        cy.get("ul.p-menubar-root-list > li:nth-child(5)").click()
         cy.get('button').click();
         cy.get('input').first().clear().type('X')
         cy.get('input').eq(1).clear().type('X')

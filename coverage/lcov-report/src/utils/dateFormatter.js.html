@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">9.09% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>1/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">9.09% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>1/11</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -76,32 +76,32 @@
 <a name='L11'></a><a href='#L11'>11</a>
 <a name='L12'></a><a href='#L12'>12</a>
 <a name='L13'></a><a href='#L13'>13</a>
-<a name='L14'></a><a href='#L14'>14</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">48x</span>
-<span class="cline-any cline-yes">110x</span>
-<span class="cline-any cline-yes">110x</span>
-<span class="cline-any cline-yes">110x</span>
-<span class="cline-any cline-yes">110x</span>
-<span class="cline-any cline-yes">110x</span>
-<span class="cline-any cline-yes">108x</span>
+<a name='L14'></a><a href='#L14'>14</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">110x</span>
-<span class="cline-any cline-yes">110x</span>
-<span class="cline-any cline-yes">108x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">110x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const dateFormatter = (date) =&gt; {
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    let hour = String(date.getHours());
-    if (hour.length &lt; 2) {
-        hour = "0" + hour;
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const dateFormatter = <span class="fstat-no" title="function not covered" >(d</span>ate) =&gt; {
+    let day = <span class="cstat-no" title="statement not covered" >date.getDate();</span>
+    let month = <span class="cstat-no" title="statement not covered" >date.getMonth() + 1;</span>
+    let year = <span class="cstat-no" title="statement not covered" >date.getFullYear();</span>
+    let hour = <span class="cstat-no" title="statement not covered" >String(date.getHours());</span>
+<span class="cstat-no" title="statement not covered" >    if (hour.length &lt; 2) {</span>
+<span class="cstat-no" title="statement not covered" >        hour = "0" + hour;</span>
     }
-    let minutes = String(date.getMinutes());
-    if (minutes.length &lt; 2) {
-        minutes = "0" + minutes;
+    let minutes = <span class="cstat-no" title="statement not covered" >String(date.getMinutes());</span>
+<span class="cstat-no" title="statement not covered" >    if (minutes.length &lt; 2) {</span>
+<span class="cstat-no" title="statement not covered" >        minutes = "0" + minutes;</span>
     }
-    return year + "-" + month + "-" + day + " " + hour + ":" + minutes;
+<span class="cstat-no" title="statement not covered" >    return year + "-" + month + "-" + day + " " + hour + ":" + minutes;</span>
 }</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -109,7 +109,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at Wed Apr 06 2022 17:29:48 GMT+0200 (hora de verano de Europa central)
+                at Tue Apr 26 2022 10:00:35 GMT+0200 (hora de verano de Europa central)
             </div>
         <script src="../../prettify.js"></script>
         <script>

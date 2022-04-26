@@ -1,7 +1,7 @@
 describe("Activity", () => {
     beforeEach(() => {
         cy.initialOpen();
-        cy.get('a.p-menuitem-link').first().click()
+        cy.get('a.p-menuitem-link').eq(1).click()
         cy.get('input[placeholder="Nombre de usuario"]').type("user2");
         cy.get('input[placeholder="Contraseña"]').type("admin");
         cy.get('button').click();
@@ -56,6 +56,5 @@ describe("Activity", () => {
         cy.get('span.p-rating-icon.pi.pi-star').last().click()
         cy.get('textarea.p-inputtextarea').type('Gran intercambio!')
         cy.contains('Enviar').click()
-        cy.contains('La reserva ya ha sido valorado')
     })
 })

@@ -1,4 +1,3 @@
-
 const AboutUs = () => {
     return (
         <div className="flex flex-column align-items-center mx-3 text-center">
