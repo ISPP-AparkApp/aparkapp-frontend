@@ -148,6 +148,7 @@ export async function getProfile() {
 export async function deleteVehicle(v_id) {
     const response = await apiDelete('api/vehicles/' + v_id + "/", true)
     if (response.status === 204) return true
+    else if (response.status === 409) return false
     window.location.href = '*'
 }
 
@@ -177,7 +178,7 @@ export async function getAnnouncements() {
 
 export async function updateStatusAnnouncement(a_id, announcement_data) {
     const response = await apiPut('api/announcements/status/' + a_id + "/", announcement_data, true)
-    if (response.status === 200) return true
+    if (response.status === 204) return true
     window.location.href = '*'
 }
 

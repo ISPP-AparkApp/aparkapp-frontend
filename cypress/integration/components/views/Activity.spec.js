@@ -49,12 +49,4 @@ describe("Activity", () => {
         cy.contains('Enviar').click()
         cy.contains('Valoración realizada correctamente')
     })
-
-    it("Rate a booking unsuccessfully", () => {
-        cy.contains('Actividad').click()
-        cy.contains('Valorar').click()
-        cy.get('span.p-rating-icon.pi.pi-star').last().click()
-        cy.get('textarea.p-inputtextarea').type('Gran intercambio!')
-        cy.contains('Enviar').click()
-    })
 })
