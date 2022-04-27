@@ -167,6 +167,7 @@ export async function updateUser(user_data) {
 export async function updateProfile(profile_data) {
     const response = await apiPut('api/profiles/', profile_data, true)
     if (response.status === 200) return true
+    else if (response.status === 400) return response.data
     window.location.href = '*'
 }
 
@@ -233,6 +234,7 @@ export async function register(registerFields) {
 export async function addressToCoordinates(address) {
     const response = await apiPost('api/geolocatorToCoordinates/', address, true)
     if (response.status === 200) return response.data
+    else if(response.status === 400 || response.status === 404) return false
     window.location.href = '*'
 }
 

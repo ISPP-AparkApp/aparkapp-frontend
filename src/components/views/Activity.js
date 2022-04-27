@@ -433,7 +433,7 @@ const Activity = () => {
             announcementFiltered = announcements.filter((a) =>
                 ((a.reservation_set.length > 0 && (a.reservation_set[0].cancelled === true || a.cancelled === true)) || (a.reservation_set.length === 0 && a.cancelled === true))
             ).concat(announcementFiltered)
-            bookingFiltered = bookings.filter((b) => b.cancelled).concat(bookingFiltered)
+            bookingFiltered = bookings.filter((b) => b.cancelled || b.announcement.cancelled).concat(bookingFiltered)
         }
 
         if (finishedState) {
@@ -441,7 +441,7 @@ const Activity = () => {
                 (Date.parse(a.date) + a.wait_time * 60000) < Date.now() && a.reservation_set.length > 0 && a.reservation_set[0].cancelled === false && a.cancelled === false
             )).concat(announcementFiltered)
             bookingFiltered = bookings.filter((b) => (
-                (Date.parse(b.announcement.date) + b.announcement.wait_time * 60000) < Date.now() && b.cancelled === false
+                (Date.parse(b.announcement.date) + b.announcement.wait_time * 60000) < Date.now() && b.cancelled === false && b.announcement.cancelled === false
             )).concat(bookingFiltered)
         }
 
@@ -465,7 +465,7 @@ const Activity = () => {
 
         if (inProgressState) {
             bookingFiltered = bookings.filter((b) => (
-                !b.cancelled && (Date.parse(b.announcement.date) + b.announcement.wait_time * 60000) > Date.now()
+                !b.cancelled && !b.announcement.cancelled && (Date.parse(b.announcement.date) + b.announcement.wait_time * 60000) > Date.now()
             )).concat(bookingFiltered)
         }
 
@@ -518,6 +518,7 @@ const Activity = () => {
             return;
         } else {
             msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });
+            window.scrollTo(0, 0)
             return;
         }
     }
@@ -545,6 +546,7 @@ const Activity = () => {
             return;
         } else {
             msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });
+            window.scrollTo(0, 0)
             return;
         }
     }

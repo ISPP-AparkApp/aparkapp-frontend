@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { addLocale } from "primereact/api";
 import { Card } from "primereact/card";
+import { Messages } from 'primereact/messages';
 import Vehicles from "../views/Vehicles";
 import MyRatings from "../views/MyRatings";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -14,14 +15,20 @@ const Profile = () => {
   const [isEditing, setEditing] = useState(0);
   const [updated, setUpdated] = useState(0);
   const [formErrors, setFormErrors] = useState({})
+  const msgs = useRef(null);
 
   const [user, setUser] = useState({});
   const [profile, setProfile] = useState({});
 
   async function update(callback) {
-    await updateUser(user);
-    await updateProfile(profile);
-    callback();
+    let response = await updateProfile(profile);
+    console.log(response)
+    if (response !== true) {
+      msgs.current.show({ severity: 'error', summary: response.birthdate });
+    } else {
+      await updateUser(user);
+      callback();
+    }
   }
 
   useEffect(() => {
@@ -50,6 +57,9 @@ const Profile = () => {
       "diciembre",
     ],
   });
+
+  let anyoActual = new Date().getFullYear();
+  let rango = "1900:" + anyoActual;
 
   const validate = async () => {
     const errors = {}
@@ -85,6 +95,7 @@ const Profile = () => {
 
   return (
     <div className="flex flex-column align-items-center px-3 md:px-0">
+      <Messages ref={msgs} />
       <Card title="Perfil" className="w-full md:w-auto">
         <TabView className="w-full md:w-auto">
           <TabPanel className="tab-panel" header="Datos">
@@ -139,6 +150,9 @@ const Profile = () => {
                   }
                   locale="es"
                   dateFormat="dd/mm/yy"
+                  yearNavigator 
+                  monthNavigator 
+                  yearRange={rango}
                 />
                 {getFieldError("date")}
                 <div className="div-button">
