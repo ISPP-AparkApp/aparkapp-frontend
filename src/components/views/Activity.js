@@ -518,6 +518,7 @@ const Activity = () => {
             return;
         } else {
             msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });
+            window.scrollTo(0, 0)
             return;
         }
     }
@@ -545,6 +546,7 @@ const Activity = () => {
             return;
         } else {
             msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });
+            window.scrollTo(0, 0)
             return;
         }
     }

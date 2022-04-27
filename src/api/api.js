@@ -4,7 +4,7 @@ import { login as loginAction, refreshAuthToken as refreshAuthTokenAction, logou
 
 const authTokenValidTime = 300000 /* 5 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
-const backendUrl = 'https://aparkapp-backend-s3.herokuapp.com/'
+const backendUrl = 'http://localhost:8000/'
 
 async function checkAuthTokenIsValid(authTimestamp) {
     return authTimestamp + authTokenValidTime > Date.now()
@@ -167,6 +167,7 @@ export async function updateUser(user_data) {
 export async function updateProfile(profile_data) {
     const response = await apiPut('api/profiles/', profile_data, true)
     if (response.status === 200) return true
+    else if (response.status === 400) return response.data
     window.location.href = '*'
 }
 
@@ -233,6 +234,7 @@ export async function register(registerFields) {
 export async function addressToCoordinates(address) {
     const response = await apiPost('api/geolocatorToCoordinates/', address, true)
     if (response.status === 200) return response.data
+    else if(response.status === 400 || response.status === 404) return false
     window.location.href = '*'
 }
 
