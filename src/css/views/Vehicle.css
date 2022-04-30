@@ -33,3 +33,12 @@
 .p-global-error-register {
   width: 50%;
 }
+
+.field-checkbox {
+  color: #303030 !important;
+}
+
+.p-checkbox-box {
+  background-color: #e6e6e6 !important;
+  border-color: #727272 !important
+}

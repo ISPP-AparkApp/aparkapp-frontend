@@ -9,9 +9,21 @@ import MapRoute from "../components/views/MapRoute";
 import Notifications from "../components/views/Notifications";
 import Activity from "../components/views/Activity";
 import Reserve from "../components/views/Reserve";
-import { Navigate } from "react-router-dom";
+import Error from "../components/views/Error";
+import Credit from "../components/views/Credit";
+import Contact from "../components/views/Contact";
 
 const routes = [
+    {
+        path: "/contact",
+        element: <Contact />
+    },
+    {
+        path: "/",
+        element: <Home />,
+        requireAuth: true,
+        fallback: "/login",
+    },
     {
         path: "/about",
         element: <AboutUs />,
@@ -56,7 +68,7 @@ const routes = [
         path: "/route/:id",
         element: <MapRoute />,
         requireAuth: true,
-        fallback: "login"
+        fallback: "/login"
     },
     {
         path: "/activity",
@@ -68,17 +80,29 @@ const routes = [
         path: "/profile",
         element: <Profile />,
         requireAuth: true,
-        fallback: "login"
+        fallback: "/login"
+    },
+    {
+        path: "/credit",
+        element: <Credit />,
+        requireAuth: true,
+        fallback: "/login"
     },
     {
         path: "/reserve/:id",
         element: <Reserve />,
         requireAuth: true,
-        fallback: "login"
+        fallback: "/login"
+    },
+    {
+        path: "/banned",
+        element: <Error text="Su cuenta ha sido restringida. 
+        Si lo desea puede contactar con el administrador a través del 
+        siguiente correo: aparkapp.info@gmail.com"/>,
     },
     {
         path: "*",
-        element: <Navigate to="/home" replace />,
+        element: <Error />,
     },
 ];
 

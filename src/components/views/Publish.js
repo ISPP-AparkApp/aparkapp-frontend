@@ -47,11 +47,11 @@ const Publish = () => {
         navigator.geolocation.getCurrentPosition((position) => {
             setMapLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
           })
-        
+
         loadGoogleMaps(() => {
             setGoogleMapsReady(true);
           })
-      
+
         return () => {
             removeGoogleMaps();
         }
@@ -71,7 +71,7 @@ const Publish = () => {
         if(!location) errors.location = "Ubicación requerida"
         if(!type) errors.type = "Tipo de aparcamiento requerido"
         if(!limitedMobility) errors.limitedMobility = "Movilidad limitada requerida"
-        
+
         if (location){
             const latLng = location.split(',')
             if(latLng.length !== 2){
@@ -125,7 +125,7 @@ const Publish = () => {
         setLocation(markerLocation);
     }
 
-    const footer = 
+    const footer =
         <div>
             <Button label="Confirmar" icon="pi pi-check" onClick={confirm}  />
             <Button className="p-button-cancel" label="Cancelar" icon="pi pi-times" onClick={cancell} />
@@ -187,7 +187,7 @@ const Publish = () => {
                         {getFieldError("extension")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Dónde se encuentra la plaza?</span>
-                        
+
                         <div className='grid'>
                             <div className='col-10'>
                                 <InputText className="input_text w-full" value={location !== ""? "Ubicación seleccionada": ""} disabled />
@@ -196,12 +196,12 @@ const Publish = () => {
                                 <Button className="w-full map-button" icon="pi pi-map-marker" onClick={()=>visualiseMap()} />
                             </div>
                         </div>
-                        <Button label="Ubicación actual" className="p-button-link" onClick={()=> 
+                        <Button label="Ubicación actual" className="p-button-link" onClick={()=>
                                 navigator.geolocation.getCurrentPosition(function(position) {
                                     setLocation(position.coords.latitude + "," + position.coords.longitude);
                             })}/>
                         {getFieldError("location")}
-                        
+
                         <span className='text-xl publish_label mb-2 mt-3'>¿De qué tipo de plaza se trata?</span>
                         <Dropdown  value={type} options={parkTypes} onChange={(e)=> setType(e.value)} />
                         {getFieldError("type")}

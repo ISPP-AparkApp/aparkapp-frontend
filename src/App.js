@@ -26,7 +26,7 @@ function App() {
       </div>
     )
     : (
-      <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="3" animationDuration=".5s" />
+      <ProgressSpinner className="loadingApp" />
     )
 }
 

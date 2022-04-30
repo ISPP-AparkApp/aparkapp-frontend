@@ -1,15 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menubar } from 'primereact/menubar';
 import "../css/Headerbar.css";
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { isUserLogged, logout } from "../store/session";
 import logo from "../images/logo.png";
+import { getMyBalance } from "./../api/api";
 
 const Headerbar = () => {
-    const navigate = useNavigate()
-    const userIsLogged = useSelector(isUserLogged)
-    const dispatch = useDispatch()
+    const [credit, setCredit] = useState("");
+    const [time, setTime] = useState(false);
+    const navigate = useNavigate();
+    const userIsLogged = useSelector(isUserLogged);
+    const dispatch = useDispatch();
+    const username = localStorage.getItem("username")
+
+    if (userIsLogged && credit === "")  // Init credit in headerbar
+        getMyBalance().then(data => {
+            const formattedCredit = data.replace('€', '').replace(',', '').replace('.','').trim();
+            setCredit(formattedCredit.slice(0,-2) + '.' + formattedCredit.slice(-2));
+        })
+
+    useEffect(() => {
+        if (userIsLogged) {
+            const interval = setInterval(() => {
+                if (time) {
+                    setTime(false);
+                    getMyBalance().then(data => {
+                        const formattedCredit = data.replace('€', '').replace(',', '').replace('.','').trim();
+                        setCredit(formattedCredit.slice(0,-2) + '.' + formattedCredit.slice(-2));
+                    })
+                }
+                else {
+                    setTime(true);
+                }
+            }, 3000);
+            return () => clearInterval(interval);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [credit, time, userIsLogged]);
+
 
     const itemsUser = [
         {
@@ -27,8 +57,22 @@ const Headerbar = () => {
             }
         },
         {
+            label: 'Contacto',
+            icon: 'pi pi-phone',
+            command: () => {
+                navigate("/contact")
+            }
+        },
+        {
             className: "right-start",
-            label: 'Perfil',
+            label: credit + " €",
+            icon: 'pi pi-wallet',
+            command: () => {
+                navigate("/credit")
+            }
+        },
+        {
+            label: `${username}`,
             icon: 'pi pi-user',
             command: () => {
                 navigate("/profile")
@@ -44,6 +88,13 @@ const Headerbar = () => {
     ];
 
     const items = [
+        {
+            label: 'Contacto',
+            icon: 'pi pi-phone',
+            command: () => {
+                navigate("/contact")
+            }
+        },
         {
             className: "right-start",
             label: 'Iniciar sesión',

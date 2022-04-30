@@ -1,12 +1,12 @@
 describe("Edit", () => {
     beforeEach(() => {
         cy.initialOpen();
-        cy.get('a.p-menuitem-link').first().click()
-        cy.get('input[placeholder="Nombre de usuario"]').type("user2");
+        cy.get('a.p-menuitem-link').eq(1).click()
+        cy.get('input[placeholder="Nombre de usuario"]').type("admin");
         cy.get('input[placeholder="Contraseña"]').type("admin");
         cy.get('button').click();
     });
-    
+
     it("Edit succesfuly", () => {
         cy.contains('Actividad').click()
         cy.contains('Editar anuncio').click()

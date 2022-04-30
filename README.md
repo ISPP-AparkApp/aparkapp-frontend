@@ -1,5 +1,5 @@
 
-# aparkapp-frontend
+# Aparkapp Frontend
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e7d4704afb9d40e58b78218280f1e6ee)](https://www.codacy.com/gh/ISPP-AparkApp/aparkapp-frontend/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ISPP-AparkApp/aparkapp-frontend&amp;utm_campaign=Badge_Grade)
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/e7d4704afb9d40e58b78218280f1e6ee)](https://www.codacy.com/gh/ISPP-AparkApp/aparkapp-frontend/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ISPP-AparkApp/aparkapp-frontend&utm_campaign=Badge_Coverage)

@@ -1,7 +1,7 @@
 .activityCard {
-  background-color: #ffffff !important;
+  background-color: #fff !important;
   color: black !important;
-  box-shadow: 2px 2px 5px #000000 !important;
+  box-shadow: 2px 2px 5px #000 !important;
 }
 
 .p-dialog-header,
@@ -13,7 +13,7 @@
 }
 
 .p-inputtext::placeholder {
-  color: #000000 !important;
+  color: #000 !important;
 }
 
 .p-dialog-footer {
@@ -25,7 +25,7 @@
 }
 
 .pi-times {
-  color: #000000 !important;
+  color: #000 !important;
 }
 
 .map-dialog {
@@ -37,7 +37,28 @@
   border-color: #fd8282 !important;
 }
 
-.p-button-noti{
+.p-button-noti {
   background-color: #0091ff81 !important;
   border-color: #002583 !important;
+}
+
+.p-checkbox-box {
+  background-color: white !important;
+}
+
+.p-checkbox-box.p-highlight {
+  background-color: #81c784 !important;
+}
+
+.p-button-rate {
+  background-color: #f8f690 !important;
+  border-color: #fedd24 !important;
+}
+
+.p-rating-icon.pi.pi-star {
+  color: #3f3e03 !important;
+}
+
+.p-rating-icon.pi.pi-star-fill {
+  color: #1c5e04 !important;
 }
