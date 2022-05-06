@@ -13,6 +13,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import Autocomplete from "react-google-autocomplete";
 
 const SearchPlace = () => {
   const [googleMapsReady, setGoogleMapsReady] = useState(false);
@@ -171,7 +172,16 @@ const SearchPlace = () => {
     <div>
       <Toast ref={toast}></Toast>
       <div className='w-full flex justify-content-center mt-3' >
-        <InputText className="w-4" placeholder="Busca en la zona donde quieras aparcar" onChange={e=>setAddress(e.target.value)} />
+        <Autocomplete
+          className="w-4"
+          style={{}}
+          apiKey={"AIzaSyDxzAFXZ1lPHTupywEgx8g8-vyTgz3usnU"}
+          onPlaceSelected={e=>setAddress(e)}
+          options={{
+            types: ["(regions)"],
+            componentRestrictions: { country: "es" },
+          }}
+        />
         <Button icon="pi pi-search" className="ml-2" onClick={searchLocation} />
         <Button icon="pi pi-filter" className="ml-2" onClick={()=>setDialogVisibleFilter(true)} />
       </div>
