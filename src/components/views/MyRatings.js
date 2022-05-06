@@ -6,17 +6,17 @@ import "../../css/views/MyRatings.css";
 const MyRatings = () => {
 
     const[ratings, setRatings] = useState([]);
-    
+
     useEffect(() => {
         getMyRatings().then((data) => setRatings(data));
     }, []);
 
-    return (    
+    return (
         <div className="allRates">
             {ratings.length === 0 ? (
                 <p className="text"> Parece que aún no tienes valoraciones </p>
-            ) 
-            : 
+            )
+            :
             ratings.map((rating,index) => (
             <div key={index} className="rate mb-2">
                 <Rating value={rating.rate} readOnly stars={5} cancel={false} disabled />

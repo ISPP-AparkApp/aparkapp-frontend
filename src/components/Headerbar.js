@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { isUserLogged, logout } from "../store/session";
 import logo from "../images/logo.png";
+import { Link } from 'react-router-dom';
 import { getMyBalance } from "./../api/api";
 
 const Headerbar = () => {
@@ -114,7 +115,9 @@ const Headerbar = () => {
 
     const start =
         <div className='flex align-items-center'>
-            <img alt="logo" src={logo} height="60" className='mr-3 logo-img' ></img>
+            <Link to={`/home`}>
+                <img alt="logo" src={logo} height="60" className='mr-3 logo-img' ></img>
+            </Link>
         </div>
 
     return (
