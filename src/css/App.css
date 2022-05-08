@@ -2,7 +2,61 @@ a {
     text-decoration: none;
 }
 
-.loadingApp{
+.loadingApp {
     top: 350px;
     left: 47%;
-  }
+}
+
+select.p-datepicker-month {
+    color: #003507d5;
+    background: transparent;
+    border: 2px solid #003507d5;
+    border-radius: 6px;
+}
+
+select.p-datepicker-month:focus {
+    background-color: #379143d5;
+    color: white;
+}
+
+select.p-datepicker-year {
+    color: #003507d5;
+    background: transparent;
+    border: 2px solid #003507d5;
+    border-radius: 6px;
+}
+
+select.p-datepicker-year:focus {
+    background-color: #379143d5;
+    color: white;
+}
+
+select.p-datepicker-year::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    display: none;
+}
+
+select.p-datepicker-year::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+select.p-datepicker-year::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2);
+}
+
+select.p-datepicker-year::-webkit-scrollbar-thumb:active {
+    background-color: #999999;
+}
+
+select.p-datepicker-year::-webkit-scrollbar-track {
+    background: #e1e1e1;
+    border-radius: 4px;
+}
+
+select.p-datepicker-year::-webkit-scrollbar-track:hover,
+select.p-datepicker-year::-webkit-scrollbar-track:active {
+    background: #d4d4d4;
+}
