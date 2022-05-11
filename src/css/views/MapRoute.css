@@ -3,19 +3,11 @@
     position: initial;
 }
 
-@media screen and (max-width: 450px){
-    .notifyCard {
-        margin-top: 70%;
-    }
+.notifyCard {
+    margin-top: 200px;
 }
 
-@media screen and (min-width: 450px){
-    .notifyCard {
-        margin-top: 16%;
-    }
-}
-
-.loadingMapRoute{
+.loadingMapRoute {
     top: 250px;
     left: 47%;
-  }
+}

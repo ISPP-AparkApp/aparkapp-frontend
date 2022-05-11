@@ -12,7 +12,7 @@ import { Calendar } from 'primereact/calendar';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
+import Autocomplete from "react-google-autocomplete";
 
 const SearchPlace = () => {
   const [googleMapsReady, setGoogleMapsReady] = useState(false);
@@ -21,7 +21,7 @@ const SearchPlace = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
   const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
-  const [address , setAddress] = useState('');
+  const [address , setAddress] = useState();
   const [priceFilter, setPriceFilter] = useState([0.0,1.0]);
   const [dateFilter, setDateFilter] = useState("");
   const [dialogVisibleFilter, setDialogVisibleFilter] = useState(false);
@@ -153,12 +153,9 @@ const SearchPlace = () => {
 
 
   const searchLocation = async(event) => {
-    let addressObject = {
-      location: address,
-      one_result: true
-    }
+
     try{
-      let coordinates = await addressToCoordinates(addressObject)
+      let coordinates = await addressToCoordinates(address)
       let lat = parseFloat(coordinates[1][0])
       let lng = parseFloat(coordinates[1][1])
       map.current.map.setCenter({lat: lat, lng: lng})
@@ -171,7 +168,16 @@ const SearchPlace = () => {
     <div>
       <Toast ref={toast}></Toast>
       <div className='w-full flex justify-content-center mt-3' >
-        <InputText className="w-4" placeholder="Busca en la zona donde quieras aparcar" onChange={e=>setAddress(e.target.value)} />
+        <Autocomplete
+          className="w-4"
+          style={{}}
+          apiKey={"AIzaSyDxzAFXZ1lPHTupywEgx8g8-vyTgz3usnU"}
+          onPlaceSelected={e=>setAddress(e)}
+          options={{
+            types: ["(regions)"],
+            componentRestrictions: { country: "es" },
+          }}
+        />
         <Button icon="pi pi-search" className="ml-2" onClick={searchLocation} />
         <Button icon="pi pi-filter" className="ml-2" onClick={()=>setDialogVisibleFilter(true)} />
       </div>

@@ -22,7 +22,6 @@ const Profile = () => {
 
   async function update(callback) {
     let response = await updateProfile(profile);
-    console.log(response)
     if (response !== true) {
       msgs.current.show({ severity: 'error', summary: response.birthdate });
     } else {
