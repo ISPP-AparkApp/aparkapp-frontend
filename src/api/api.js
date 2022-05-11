@@ -236,10 +236,9 @@ export async function addressToCoordinates(address) {
         location: address.formatted_address,
         one_result: true
     }
-    console.log(addressObject)
     const response = await apiPost('api/geolocatorToCoordinates/', addressObject, true)
     if (response.status === 200) return response.data
-    else if(response.status === 400 || response.status === 404) return false
+    else if (response.status === 400 || response.status === 404) return false
     window.location.href = '*'
 }
 

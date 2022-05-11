@@ -12,7 +12,6 @@ import { Calendar } from 'primereact/calendar';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
 import Autocomplete from "react-google-autocomplete";
 
 const SearchPlace = () => {
