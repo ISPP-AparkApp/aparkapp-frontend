@@ -22,7 +22,7 @@ const SearchPlace = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
   const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
-  const [address , setAddress] = useState('');
+  const [address , setAddress] = useState();
   const [priceFilter, setPriceFilter] = useState([0.0,1.0]);
   const [dateFilter, setDateFilter] = useState("");
   const [dialogVisibleFilter, setDialogVisibleFilter] = useState(false);
@@ -154,12 +154,9 @@ const SearchPlace = () => {
 
 
   const searchLocation = async(event) => {
-    let addressObject = {
-      location: address,
-      one_result: true
-    }
+
     try{
-      let coordinates = await addressToCoordinates(addressObject)
+      let coordinates = await addressToCoordinates(address)
       let lat = parseFloat(coordinates[1][0])
       let lng = parseFloat(coordinates[1][1])
       map.current.map.setCenter({lat: lat, lng: lng})
