@@ -42,3 +42,7 @@
   background-color: #e6e6e6 !important;
   border-color: #727272 !important
 }
+
+.p-card-register > .p-card-body {
+  padding-bottom: 1rem !important;
+}
