@@ -63,7 +63,7 @@ const Reserve = () => {
                         <li><strong>Fecha y hora: </strong>{ad == null ? ("") : (dateFormatter(new Date(ad.date)))}</li>
                         <li><strong>Dirección: </strong>{ad == null ? ("") : (ad.location)}</li>
                         <li><strong>Modelo: </strong>{vehicle == null ? ("") : (vehicle.brand)}</li>
-                        <li><strong>Color: </strong>{vehicle == null ? ("") : (<input type="color" value={vehicle.color} readOnly/>)}</li>
+                        <li><strong>Color: </strong>{vehicle == null ? ("") : (<input type="color" value={vehicle.color} disabled/>)}</li>
                         <li><strong>Tiempo de espera: </strong> {ad == null ? ("") : (ad.wait_time)} min</li>
                         <li><strong>Precio: </strong> {ad == null ? ("") : (ad.price)} €</li>
                     </ul>

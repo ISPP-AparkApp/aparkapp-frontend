@@ -90,7 +90,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <li><strong>Dirección: </strong> {announcement.location}</li>
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
                     <li><strong>Modelo: </strong> {announcement.vehicle.model}</li>
-                    <li><strong>Color: </strong>{<input type="color" value={announcement.vehicle.color} readOnly/>}</li>
+                    <li><strong>Color: </strong>{<input type="color" value={announcement.vehicle.color} disabled/>}</li>
                     <li><strong>Tiempo de espera:</strong> {announcement.wait_time} min</li>
                     <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
@@ -188,7 +188,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
                     <li><strong>Dirección: </strong> {announcement.location}</li>
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
                     <li><strong>Modelo: </strong> {announcement.vehicle.model}</li>
-                    <li><strong>Color: </strong> {<input type="color" value={announcement.vehicle.color} readOnly/>}</li>
+                    <li><strong>Color: </strong> {<input type="color" value={announcement.vehicle.color} disabled/>}</li>
                     <li><strong>Tiempo de espera:</strong> {announcement.wait_time} min</li>
                     <li><strong>Precio: </strong> {announcement.price} €</li>
                 </ul>

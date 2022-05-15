@@ -7,3 +7,11 @@
     color: #003507d5;
     text-align: center;
 }
+#color {
+	-webkit-appearance: 20%;
+	border: none;
+	width: 7rem;
+	height: 2.2rem;
+    background: none;
+    border: 1px;
+}

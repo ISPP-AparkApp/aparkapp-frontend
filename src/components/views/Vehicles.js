@@ -267,7 +267,7 @@ const Vehicles = () => {
           <b className="text-l">Modelo</b>
           <p className="text-xl">{v.model}</p>
           <b className="text-l">Color</b>
-          <p><input type="color" value={v.color} readOnly/></p>
+          <p><input type="color" value={v.color} disabled/></p>
           <b className="text-l">Tamaño</b>
           <p className="text-xl">{v.type}</p>
           <div className="div-button">

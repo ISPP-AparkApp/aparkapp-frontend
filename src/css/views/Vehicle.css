@@ -48,7 +48,8 @@
 }
 input[type="color"] {
 	-webkit-appearance: 20%;
-	border: 5%;
-	width: 120px;
-	height: 35px;
+	border: none;
+	width: 2rem;
+	height: 2rem;
+  background: none;
 }

@@ -76,7 +76,7 @@ const ListAds = ({ announcements }) => {
                 </div>
             </div>
             <Dialog header={"Valoraciones del usuario: " + user} visible={showDialog} onHide={() => setShowDialog(false)}>
-                {comments.length ==0? "El usuario no tiene ninguna valoración.":comments}
+                {comments.length === 0 ? "El usuario no tiene ninguna valoración.":comments}
             </Dialog>
         </div>
     )
