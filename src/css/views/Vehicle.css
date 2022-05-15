@@ -46,3 +46,9 @@
 .p-card-register > .p-card-body {
   padding-bottom: 1rem !important;
 }
+input[type="color"] {
+	-webkit-appearance: 20%;
+	border: 5%;
+	width: 120px;
+	height: 35px;
+}

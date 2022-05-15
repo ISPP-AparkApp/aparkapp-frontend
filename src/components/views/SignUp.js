@@ -230,7 +230,7 @@ const SignUp = () => {
                                 <span className="p-inputgroup-addon">
                                     <i className="pi pi-palette icons_form"></i>
                                 </span>
-                                <InputText className="input_text" placeholder="Color" onChange={(e) => setColor(e.target.value)} />
+                                <input type="color" className="input_text" placeholder="Color" onChange={(e) => setColor(e.target.value)} />
                             </div>
                             {getFieldError("color")}
                             <div className="p-inputgroup mt-3">
