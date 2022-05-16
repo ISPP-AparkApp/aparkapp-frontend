@@ -1,4 +1,4 @@
-const API_KEY = "AIzaSyDxzAFXZ1lPHTupywEgx8g8-vyTgz3usnU"
+export const API_KEY = "AIzaSyDxzAFXZ1lPHTupywEgx8g8-vyTgz3usnU"
 
 export const loadGoogleMaps = (callback) => {
     const existingScript = document.getElementById('googleMaps');

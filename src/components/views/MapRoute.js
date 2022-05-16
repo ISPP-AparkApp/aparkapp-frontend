@@ -29,8 +29,8 @@ const MapRoute = () => {
 
   const getBalance = () => {
     getMyBalance().then((val) => {
-      const formattedCredit = val.replace('€', '').replace(',', '').replace('.','').trim();
-      setCredit(formattedCredit.slice(0,-2) + '.' + formattedCredit.slice(-2));
+      const formattedCredit = val.replace('€', '').replace(',', '').replace('.', '').trim();
+      setCredit(formattedCredit.slice(0, -2) + '.' + formattedCredit.slice(-2));
     });
   };
 
@@ -153,7 +153,7 @@ const MapRoute = () => {
                   />
                 </div>
                 <div>
-                  <Button onClick={() => { notifyWait(); }} className="p-button-raised p-button-lg mb-1 w-full h-full" label="Llego tarde"/>
+                  <Button onClick={() => { notifyWait(); }} className="p-button-raised p-button-lg mb-1 w-full h-full" label="Llego tarde" />
                 </div>
               </div>
             );
@@ -174,7 +174,7 @@ const MapRoute = () => {
         );
       }
     } else {
-      result = (<ProgressSpinner style={{ width: "50px", height: "50px" }} strokeWidth="3" animationDuration=".5s"/>);
+      result = (<ProgressSpinner style={{ width: "50px", height: "50px" }} strokeWidth="3" animationDuration=".5s" />);
     }
     return result;
   };
@@ -197,7 +197,7 @@ const MapRoute = () => {
         draggable
       />
       {
-        googleMapsReady && (<RouteVisualization announceLocation={announcement ? announcement.location : ""}/>)
+        googleMapsReady && (<RouteVisualization announceLocation={announcement ? announcement.location : ""} />)
       }
       <Card className="notifyCard" style={{ color: "black" }} title="Notificaciones">
         {footer}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GMap } from 'primereact/gmap';
 import { Toast } from 'primereact/toast';
-import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
+import { loadGoogleMaps, removeGoogleMaps, API_KEY } from '../../utils/GoogleMaps';
 import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
@@ -21,8 +21,8 @@ const SearchPlace = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
   const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
-  const [address , setAddress] = useState();
-  const [priceFilter, setPriceFilter] = useState([0.0,1.0]);
+  const [address, setAddress] = useState();
+  const [priceFilter, setPriceFilter] = useState([0.0, 1.0]);
   const [dateFilter, setDateFilter] = useState("");
   const [dialogVisibleFilter, setDialogVisibleFilter] = useState(false);
   const [listAdsVisible, setListAdsVisible] = useState(false);
@@ -73,8 +73,8 @@ const SearchPlace = () => {
     toast.current.show({ severity: 'info', summary: 'Marker Dragged', detail: event.overlay.getTitle() });
   }
 
-  const onMapReady = (event, announcementsToGroup=null) => {
-    if (announcementsToGroup === null){
+  const onMapReady = (event, announcementsToGroup = null) => {
+    if (announcementsToGroup === null) {
       announcementsToGroup = announcements
     }
     var groupedAnnouncements = {}
@@ -133,17 +133,17 @@ const SearchPlace = () => {
     })
 
     if (dateFilter) {
-        filteredAnnouncements = filteredAnnouncements.filter(announcement => {
+      filteredAnnouncements = filteredAnnouncements.filter(announcement => {
         return new Date(announcement.date).toLocaleDateString() === dateFilter.toLocaleDateString()
       })
     }
-    onMapReady(null,filteredAnnouncements)
+    onMapReady(null, filteredAnnouncements)
     setDialogVisibleFilter(false)
-}
+  }
   const filterFooter = <div>
     <Button label="Aplicar" icon="pi pi-check" onClick={filterAnnoncements} />
-    <Button label="Limpiar" className="p-button-cancel" icon="pi pi-times" onClick={()=>{
-      setPriceFilter([0.5,1.0])
+    <Button label="Limpiar" className="p-button-cancel" icon="pi pi-times" onClick={() => {
+      setPriceFilter([0.5, 1.0])
       setDateFilter("")
       onMapReady()
       setDialogVisibleFilter(false)
@@ -152,44 +152,41 @@ const SearchPlace = () => {
 
 
 
-  const searchLocation = async(event) => {
+  const searchLocation = async (event) => {
 
-    try{
+    try {
       let coordinates = await addressToCoordinates(address)
       let lat = parseFloat(coordinates[1][0])
       let lng = parseFloat(coordinates[1][1])
-      map.current.map.setCenter({lat: lat, lng: lng})
-    }catch(e){
+      map.current.map.setCenter({ lat: lat, lng: lng })
+    } catch (e) {
       toast.current.show({ severity: 'error', summary: 'Error', detail: "No se ha encontrado la ubicación" });
     }
   }
 
   return (
-    <div>
+    <>
       <Toast ref={toast}></Toast>
-      <div className='w-full flex justify-content-center mt-3' >
-        <Autocomplete
-          className="w-4"
-          style={{}}
-          apiKey={"AIzaSyDxzAFXZ1lPHTupywEgx8g8-vyTgz3usnU"}
-          onPlaceSelected={e=>setAddress(e)}
-          options={{
-            types: ["(regions)"],
-            componentRestrictions: { country: "es" },
-          }}
-        />
-        <Button icon="pi pi-search" className="ml-2" onClick={searchLocation} />
-        <Button icon="pi pi-filter" className="ml-2" onClick={()=>setDialogVisibleFilter(true)} />
-      </div>
-
-      <div className='block h-30rem'>
-        {
-          googleMapsReady ? (
-            <GMap ref={map} overlays={overlays} options={options} className="map" onMapReady={onMapReady}
-              onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
-          ) : <ProgressSpinner className='loadingMap'/>
-        }
-      </div>
+      {
+        googleMapsReady ? (
+          <div>
+            <div className='w-full flex justify-content-center mt-3' >
+              <Autocomplete
+                className="w-4"
+                apiKey={API_KEY}
+                onPlaceSelected={e => setAddress(e)}
+                options={{
+                  types: ["(regions)"],
+                  componentRestrictions: { country: "es" },
+                }}
+              />
+              <Button icon="pi pi-search" className="ml-2" onClick={searchLocation} />
+              <Button icon="pi pi-filter" className="ml-2" onClick={() => setDialogVisibleFilter(true)} />
+            </div>
+            <div className='block h-30rem'><GMap ref={map} overlays={overlays} options={options} className="map" onMapReady={onMapReady}
+              onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} /></div>
+          </div>) : <div className='block h-30rem'><ProgressSpinner className='loadingMap' /> </div>
+      }
       <Dialog visible={listAdsVisible} onHide={onHideListAds}>
         <ListAds announcements={announcementsSelecteds}></ListAds>
       </Dialog>
@@ -206,8 +203,7 @@ const SearchPlace = () => {
           </div>
         </div>
       </Dialog>
-    </div>
-
+    </>
   );
 }
 
