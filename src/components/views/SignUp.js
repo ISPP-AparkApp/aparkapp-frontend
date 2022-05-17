@@ -37,13 +37,16 @@ const SignUp = () => {
         if (!username) errors.username = 'El nombre de usuario es requerido';
         if (!password) errors.password = 'La contraseña es requerida';
         if (!email) errors.email = 'El email es requerido';
-        if (!firstName) errors.onlyName = 'El nombre es requerido';
+        if (!firstName) errors.firstName = 'El nombre es requerido';
         if (!lastName) errors.lastName = 'El apellido es requerido';
         if (!phone) errors.phone = 'El teléfono es requerido';
         if (!birthdate) errors.birthdate = 'La fecha de nacimiento es requerida';
 
         if (firstName.length < 3 || firstName.length > 30) errors.firstName = 'El nombre debe tener una longitud entre 3 y 30 caracteres';
         if (lastName.length < 3 || lastName.length > 50) errors.lastName = 'Los apellidos deben tener una longitud entre 3 y 50 caracteres';
+
+        if (firstName && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(firstName)) errors.firstName = 'El nombre solo puede contener letras';
+        if (lastName && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(lastName)) errors.lastName = 'Los apellidos solo pueden contener letras';
 
         var mail_format = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
         if (!mail_format.test(email)) {
@@ -195,7 +198,7 @@ const SignUp = () => {
                                 <span className="p-inputgroup-addon">
                                     <i className="pi pi-calendar icons_form"></i>
                                 </span>
-                                <Calendar className="p-birthdate-calendar" placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} yearNavigator monthNavigator yearRange={rango} />
+                                <Calendar className="p-birthdate-calendar" placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} yearNavigator monthNavigator locale="es" dateFormat="dd/mm/yy"yearRange={rango} />
                             </div>
                             {getFieldError("birthdate")}
 
