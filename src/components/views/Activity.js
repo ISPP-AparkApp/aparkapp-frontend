@@ -511,6 +511,10 @@ const Activity = () => {
             rateMessage.current.show({ severity: 'error', detail: 'Debe escribir un comentario' });
             return;
         }
+        if (comment.length > 500) {
+            rateMessage.current.show({ severity: 'error', detail: 'El comentario no puede superar los 500 caracteres' });
+            return;
+        }
 
         let result = await rateAnnouncement(data, "reservation", announcementToRate)
         setRateAnnouncementDialog(false)
@@ -540,6 +544,11 @@ const Activity = () => {
         if (comment2 === "" || comment2.trim() === "") {
             rateMessage.current.show({ severity: 'error', detail: 'Debe escribir un comentario' });
             window.scrollTo(0, 0)
+            return;
+        }
+
+        if (comment2.length > 500) {
+            rateMessage.current.show({ severity: 'error', detail: 'El comentario no puede superar los 500 caracteres' });        
             return;
         }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GMap } from 'primereact/gmap';
 import { Toast } from 'primereact/toast';
-import { loadGoogleMaps, removeGoogleMaps, API_KEY } from '../../utils/GoogleMaps';
+import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import { getKm } from '../../utils/getKm';
 import "../../css/views/SearchPlace.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
@@ -173,7 +173,6 @@ const SearchPlace = () => {
             <div className='w-full flex justify-content-center mt-3' >
               <Autocomplete
                 className="w-4"
-                apiKey={API_KEY}
                 onPlaceSelected={e => setAddress(e)}
                 options={{
                   types: ["(regions)"],
