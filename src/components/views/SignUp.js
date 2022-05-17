@@ -10,6 +10,8 @@ import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import "../../css/views/Vehicle.css";
+import { addLocale } from "primereact/api";
+
 
 const SignUp = () => {
 
@@ -20,7 +22,6 @@ const SignUp = () => {
     const [phone, setPhone] = useState("");
     const [birthdate, setBirthdate] = useState("");
     const [email, setEmail] = useState("");
-
     const [brand, setBrand] = useState("");
     const [model, setModel] = useState("");
     const [licensePlate, setLicensePlate] = useState("");
@@ -29,6 +30,25 @@ const SignUp = () => {
     const [checked, setChecked] = useState(false);
 
     const [formErrors, setFormErrors] = useState({});
+
+    addLocale("es", {
+        firstDayOfWeek: 1,
+        dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+        monthNames: [
+          "enero",
+          "febrero",
+          "marzo",
+          "abril",
+          "mayo",
+          "junio",
+          "julio",
+          "agosto",
+          "septiembre",
+          "octubre",
+          "noviembre",
+          "diciembre",
+        ],
+      });
 
     const validate = async () => {
         const errors = {}
@@ -198,7 +218,7 @@ const SignUp = () => {
                                 <span className="p-inputgroup-addon">
                                     <i className="pi pi-calendar icons_form"></i>
                                 </span>
-                                <Calendar className="p-birthdate-calendar" placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} yearNavigator monthNavigator locale="es" dateFormat="dd/mm/yy"yearRange={rango} />
+                                <Calendar className="p-birthdate-calendar" placeholder="Fecha de nacimiento" onChange={(e) => setBirthdate(e.target.value)} yearNavigator monthNavigator locale="es" dateFormat="dd/mm/yy" yearRange={rango} />
                             </div>
                             {getFieldError("birthdate")}
 
