@@ -90,7 +90,7 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
                     <li><strong>Dirección: </strong> {announcement.location}</li>
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
                     <li><strong>Modelo: </strong> {announcement.vehicle.model}</li>
-                    <li><strong>Color: </strong> {announcement.vehicle.color}</li>
+                    <li><strong>Color: </strong>{<input type="color" value={announcement.vehicle.color} disabled/>}</li>
                     <li><strong>Tiempo de espera:</strong> {announcement.wait_time} min</li>
                     <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
@@ -188,7 +188,7 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
                     <li><strong>Dirección: </strong> {announcement.location}</li>
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
                     <li><strong>Modelo: </strong> {announcement.vehicle.model}</li>
-                    <li><strong>Color: </strong> {announcement.vehicle.color}</li>
+                    <li><strong>Color: </strong> {<input type="color" value={announcement.vehicle.color} disabled/>}</li>
                     <li><strong>Tiempo de espera:</strong> {announcement.wait_time} min</li>
                     <li><strong>Precio: </strong> {announcement.price} €</li>
                 </ul>
@@ -357,6 +357,7 @@ const Activity = () => {
             errors.global = res
             setFormErrors(errors)
         }
+        window.scrollTo(0, 0)
     }
 
     const footer =
@@ -515,6 +516,7 @@ const Activity = () => {
         setRateAnnouncementDialog(false)
         if (result !== true) {
             msgs.current.show({ severity: 'error', detail: result });
+            window.scrollTo(0, 0)
             return;
         } else {
             msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });
@@ -531,11 +533,13 @@ const Activity = () => {
 
         if (starsNumber2 === null) {
             rateMessage.current.show({ severity: 'error', detail: 'Debe calificar la plaza' });
+            window.scrollTo(0, 0)
             return;
         }
 
         if (comment2 === "" || comment2.trim() === "") {
             rateMessage.current.show({ severity: 'error', detail: 'Debe escribir un comentario' });
+            window.scrollTo(0, 0)
             return;
         }
 
@@ -543,6 +547,7 @@ const Activity = () => {
         setRateBookingDialog(false)
         if (result !== true) {
             msgs.current.show({ severity: 'error', detail: result });
+            window.scrollTo(0, 0)
             return;
         } else {
             msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });

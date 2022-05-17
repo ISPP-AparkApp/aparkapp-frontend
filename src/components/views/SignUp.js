@@ -227,10 +227,14 @@ const SignUp = () => {
                             </div>
                             {getFieldError("licensePlate")}
                             <div className="p-inputgroup mt-3">
-                                <span className="p-inputgroup-addon">
-                                    <i className="pi pi-palette icons_form"></i>
-                                </span>
-                                <InputText className="input_text" placeholder="Color" onChange={(e) => setColor(e.target.value)} />
+                                <div>
+                                    <span className="p-inputgroup-addon">
+                                        <i className="pi pi-palette icons_form"></i>
+                                    </span>
+                                </div>
+                                <div className="p-inputgroup mt-0">
+                                    <input type="color" id="color" className="input_text" placeholder="Color" onChange={(e) => setColor(e.target.value)} />
+                                </div>
                             </div>
                             {getFieldError("color")}
                             <div className="p-inputgroup mt-3">

@@ -104,9 +104,7 @@ const Publish = () => {
         if (res === true){
             msgs.current.show({severity: 'success', summary: 'Anuncio publicado'});
         }else{
-            const errors = {}
-            errors.global = res
-            setFormErrors(errors)
+            msgs.current.show({severity: 'error', summary: 'El anuncio ya existe'});
         }
         window.scrollTo(0, 0)
     }

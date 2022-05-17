@@ -149,8 +149,8 @@ const Profile = () => {
                   }
                   locale="es"
                   dateFormat="dd/mm/yy"
-                  yearNavigator 
-                  monthNavigator 
+                  yearNavigator
+                  monthNavigator
                   yearRange={rango}
                 />
                 {getFieldError("date")}
