@@ -18,7 +18,7 @@ const Login = () => {
         const isLogged = await login(username, password)
         if (!isLogged) {
             setIsLoading(false)
-            return "Usuario o contraseña incorrecto.";
+            return "Usuario o contraseña incorrecta";
         } else {
             localStorage.setItem("username", username)
         }

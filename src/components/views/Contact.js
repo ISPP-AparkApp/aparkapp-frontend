@@ -6,15 +6,19 @@ const Contact = () => {
     return (
         <Card title="¡Contáctanos!" className='p-card-about text-center'>
             <div className='grid w-full mt-5'>
-                <div className='col-12 md:col-4'>
+                <div className='col-12 md:col-3 flex align-items-center'>
                     <img src="instagram.png" alt="Icono instagram" height={60}></img>
-                    <span className='p-social-media font-bold ml-3'>@_apparkapp</span>
+                    <span className='p-social-media font-bold ml-3'>@_aparkapp</span>
                 </div>
-                <div className='col-12 md:col-4'>
+                <div className='col-12 md:col-3 flex align-items-center'>
                     <img src="twitter.png" alt="Icono twitter" height={60}></img>
-                    <span className='p-social-media font-bold ml-3'>@ApparkApp</span>
+                    <span className='p-social-media font-bold ml-3'>@_aparkapp</span>
                 </div>
-                <div className='col-12 md:col-4'>
+                <div className='col-12 md:col-3 flex align-items-center'>
+                    <img src="tiktok.png" alt="Icono tiktok" height={60}></img>
+                    <span className='p-social-media font-bold ml-3'>@_aparkapp</span>
+                </div>
+                <div className='col-12 md:col-3 flex align-items-center'>
                     <img src="gmail.png" alt="Icono gmail" height={60}></img>
                     <span className='p-social-media font-bold ml-3'>aparkapp.info@gmail.com</span>
                 </div>
