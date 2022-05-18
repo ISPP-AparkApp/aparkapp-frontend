@@ -213,7 +213,7 @@ const SearchPlace = () => {
       <Dialog className='filter-dialog' header="Filtro" draggable={false} visible={dialogVisibleFilter} footer={filterFooter} onHide={onHideDialogFilter} resizable={false}>
         <div className="flex flex-column">
           <span className='text-xl publish_label mb-2'>¿Qué día deseas aparcar?</span>
-          <Calendar minDate={new Date()} id="time" value={dateFilter} onChange={(e) => setDateFilter(e.value)} locale="es" hourFormat="12" />
+          <Calendar minDate={new Date()} id="time" value={dateFilter} onChange={(e) => setDateFilter(e.value)} dateFormat="dd/mm/yy" locale="es" hourFormat="12" />
 
           <span className='text-xl publish_label mb-2 mt-3'>Escoge un rango de precios</span>
           <Slider value={priceFilter} onChange={(e) => setPriceFilter(e.value)} range min={0.5} max={10} step={0.1} />
