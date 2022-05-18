@@ -193,6 +193,7 @@ const SearchPlace = () => {
             <div className='w-full flex justify-content-center mt-3' >
               <Autocomplete
                 className="w-4"
+                placeholder='Busca en la zona donde quieras aparcar'
                 onPlaceSelected={e => setAddress(e)}
                 options={{
                   types: ["(regions)"],

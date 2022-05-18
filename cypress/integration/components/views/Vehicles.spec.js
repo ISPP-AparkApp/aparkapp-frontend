@@ -20,7 +20,6 @@ describe("Vehicles", () => {
         cy.contains('1111XXX')
         cy.contains('Test Brand')
         cy.contains('Test Model')
-        cy.contains('Test Color')
     });
 
     it("edit vehicle unsuccessfully", () => {

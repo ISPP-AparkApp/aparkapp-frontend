@@ -113,8 +113,9 @@ const Vehicles = () => {
       errors.model = 'El modelo del vehículo debe tener entre 1 y 50 caracteres';
     }
 
-    if (color.length < 3 || color.length > 30) {
-      errors.color = 'El color del vehículo debe tener entre 3 y 30 caracteres';
+    if (color.length !== 7) {
+      console.log(color)
+      errors.color = 'Elige un color';
     }
     if (!type) errors.type = 'El tamaño es requerido';
 
@@ -340,7 +341,6 @@ const Vehicles = () => {
           <p className="text-xl publish_label mb-2 mt-1">Color</p>
           <input
             type="color"
-            value={color}
             onChange={(c) =>
               setColor(c.target.value)
             }

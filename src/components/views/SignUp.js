@@ -24,7 +24,7 @@ const SignUp = () => {
     const [brand, setBrand] = useState("");
     const [model, setModel] = useState("");
     const [licensePlate, setLicensePlate] = useState("");
-    const [color, setColor] = useState("");
+    const [color, setColor] = useState("#000000");
     const [selectedType, setSelectedType] = useState(null);
     const [checked, setChecked] = useState(false);
 
@@ -89,7 +89,7 @@ const SignUp = () => {
 
         if (brand.length < 3 || brand.length > 30) errors.brand = 'La marca del vehículo debe tener entre 3 y 30 caracteres';
         if (model.length < 2 || model.length > 50) errors.model = 'El modelo del vehículo debe tener entre 1 y 50 caracteres';
-        if (color.length < 3 || color.length > 30) errors.color = 'El color del vehículo debe tener entre 3 y 30 caracteres';
+        if (color.length != 7) errors.color = 'El color del vehículo debe de seguir el patrón # + 6 caractéres en hexadecimal.';
 
         setFormErrors(errors)
 
@@ -255,7 +255,7 @@ const SignUp = () => {
                                     </span>
                                 </div>
                                 <div className="p-inputgroup mt-0">
-                                    <input type="color" id="color" className="input_text" placeholder="Color" onChange={(e) => setColor(e.target.value)} />
+                                    <input type="color" id="color" className="input_text" onChange={(e) => setColor(e.target.value)} />
                                 </div>
                             </div>
                             {getFieldError("color")}
