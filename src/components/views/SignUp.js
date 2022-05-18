@@ -12,7 +12,6 @@ import { Button } from 'primereact/button';
 import "../../css/views/Vehicle.css";
 import { addLocale } from "primereact/api";
 
-
 const SignUp = () => {
 
     const [username, setUsername] = useState("");
