@@ -9,7 +9,7 @@ const Home = () => {
             <span className="text-4xl pb-6 mt-6">¿Qué quieres hacer ahora?</span>
             <div>
                 <Link to="/publish">
-                    <Button label="Ceder plaza" className="p-button-raised p-button-rounded mr-2 p-button-lg" />
+                    <Button label="Publicar plaza" className="p-button-raised p-button-rounded mr-2 p-button-lg" />
                 </Link>
                 <Link to="/search">
                     <Button label="Buscar plaza" className="p-button-raised p-button-rounded p-button-lg" />

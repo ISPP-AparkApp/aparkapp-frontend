@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "../store";
 import { login as loginAction, refreshAuthToken as refreshAuthTokenAction, logout as logoutAction } from "../store/session";
 
-const authTokenValidTime = 300000 /* 5 min in ms */
+const authTokenValidTime = 240000 /* 4 min in ms */
 const refreshAuthTokenValidTime = 86400000 /* 24 h in ms */
 const backendUrl = 'https://aparkapp-backend.herokuapp.com/'
 
@@ -232,9 +232,13 @@ export async function register(registerFields) {
 }
 
 export async function addressToCoordinates(address) {
-    const response = await apiPost('api/geolocatorToCoordinates/', address, true)
+    const addressObject = {
+        location: address.formatted_address,
+        one_result: true
+    }
+    const response = await apiPost('api/geolocatorToCoordinates/', addressObject, true)
     if (response.status === 200) return response.data
-    else if(response.status === 400 || response.status === 404) return false
+    else if (response.status === 400 || response.status === 404) return false
     window.location.href = '*'
 }
 

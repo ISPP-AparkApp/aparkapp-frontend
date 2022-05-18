@@ -13,15 +13,14 @@ describe("Sign up", () => {
         cy.get('input[placeholder="Correo electrónico"]').type(uuidv4() + "@gmail.com");
         cy.get('input[placeholder="Nombre"]').type("Manolo");
         cy.get('input[placeholder="Apellidos"]').type("López García");
-        cy.get('input[placeholder="Número de teléfono"]').type("656544444");
-        cy.get('input[placeholder="Fecha de nacimiento"]').type("11/23/2000");
-        cy.get('button').first().click()
+        cy.get('input[placeholder="Número de teléfono"]').type("656544499");
+        cy.get('input[placeholder="Fecha de nacimiento"]').type("04/05/2000");
+        cy.get("tbody > :nth-child(1) > :nth-child(3) > :nth-child(1)").click();
 
         // vehicle information
         cy.get('input[placeholder="Marca"]').type("Opel");
         cy.get('input[placeholder="Modelo"]').type("Corsa");
         cy.get('input[placeholder="Matrícula"]').type(Math.round((Math.random() * 8999 + 1000)) + "TFG");
-        cy.get('input[placeholder="Color"]').type("Rojo");
         cy.get("div.p-dropdown-trigger").click();
         cy.get("div.p-dropdown-items-wrapper").first().click()
         cy.get('div.p-checkbox.p-component').click();

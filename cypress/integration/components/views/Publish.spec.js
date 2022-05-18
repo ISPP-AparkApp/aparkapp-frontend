@@ -17,10 +17,10 @@ describe("Publish", () => {
         // eslint-disable-next-line testing-library/await-async-utils
         cy.get('input.p-inputtext.p-component.p-filled').first().click()
         cy.get('span.pi.pi-chevron-up').first().click()
-        cy.get('img.mr-3.logo-img').first().click()
 
         cy.wait(5000)
-        cy.get('button').last().click()
+        cy.get('.p-button-raised > .p-button-label').click()
+        cy.get('.p-button-raised > .p-button-label').click()
         cy.contains("Anuncio publicado")
     });
 

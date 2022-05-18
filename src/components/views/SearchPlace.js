@@ -12,7 +12,27 @@ import { Calendar } from 'primereact/calendar';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
+import Autocomplete from "react-google-autocomplete";
+import { addLocale } from "primereact/api";
+
+addLocale("es", {
+  firstDayOfWeek: 1,
+  dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+  monthNames: [
+      "enero",
+      "febrero",
+      "marzo",
+      "abril",
+      "mayo",
+      "junio",
+      "julio",
+      "agosto",
+      "septiembre",
+      "octubre",
+      "noviembre",
+      "diciembre",
+  ],
+});
 
 const SearchPlace = () => {
   const [googleMapsReady, setGoogleMapsReady] = useState(false);
@@ -21,8 +41,8 @@ const SearchPlace = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsCircle, setAnnouncementsCircle] = useState({});
   const [announcementsSelecteds, setAnnouncementsSelecteds] = useState([]);
-  const [address , setAddress] = useState('');
-  const [priceFilter, setPriceFilter] = useState([0.0,1.0]);
+  const [address, setAddress] = useState();
+  const [priceFilter, setPriceFilter] = useState([0.0, 1.0]);
   const [dateFilter, setDateFilter] = useState("");
   const [dialogVisibleFilter, setDialogVisibleFilter] = useState(false);
   const [listAdsVisible, setListAdsVisible] = useState(false);
@@ -73,8 +93,8 @@ const SearchPlace = () => {
     toast.current.show({ severity: 'info', summary: 'Marker Dragged', detail: event.overlay.getTitle() });
   }
 
-  const onMapReady = (event, announcementsToGroup=null) => {
-    if (announcementsToGroup === null){
+  const onMapReady = (event, announcementsToGroup = null) => {
+    if (announcementsToGroup === null) {
       announcementsToGroup = announcements
     }
     var groupedAnnouncements = {}
@@ -133,17 +153,17 @@ const SearchPlace = () => {
     })
 
     if (dateFilter) {
-        filteredAnnouncements = filteredAnnouncements.filter(announcement => {
+      filteredAnnouncements = filteredAnnouncements.filter(announcement => {
         return new Date(announcement.date).toLocaleDateString() === dateFilter.toLocaleDateString()
       })
     }
-    onMapReady(null,filteredAnnouncements)
+    onMapReady(null, filteredAnnouncements)
     setDialogVisibleFilter(false)
-}
+  }
   const filterFooter = <div>
     <Button label="Aplicar" icon="pi pi-check" onClick={filterAnnoncements} />
-    <Button label="Limpiar" className="p-button-cancel" icon="pi pi-times" onClick={()=>{
-      setPriceFilter([0.5,1.0])
+    <Button label="Limpiar" className="p-button-cancel" icon="pi pi-times" onClick={() => {
+      setPriceFilter([0.5, 1.0])
       setDateFilter("")
       onMapReady()
       setDialogVisibleFilter(false)
@@ -152,38 +172,41 @@ const SearchPlace = () => {
 
 
 
-  const searchLocation = async(event) => {
-    let addressObject = {
-      location: address,
-      one_result: true
-    }
-    try{
-      let coordinates = await addressToCoordinates(addressObject)
+  const searchLocation = async (event) => {
+
+    try {
+      let coordinates = await addressToCoordinates(address)
       let lat = parseFloat(coordinates[1][0])
       let lng = parseFloat(coordinates[1][1])
-      map.current.map.setCenter({lat: lat, lng: lng})
-    }catch(e){
+      map.current.map.setCenter({ lat: lat, lng: lng })
+    } catch (e) {
       toast.current.show({ severity: 'error', summary: 'Error', detail: "No se ha encontrado la ubicación" });
     }
   }
 
   return (
-    <div>
+    <>
       <Toast ref={toast}></Toast>
-      <div className='w-full flex justify-content-center mt-3' >
-        <InputText className="w-4" placeholder="Busca en la zona donde quieras aparcar" onChange={e=>setAddress(e.target.value)} />
-        <Button icon="pi pi-search" className="ml-2" onClick={searchLocation} />
-        <Button icon="pi pi-filter" className="ml-2" onClick={()=>setDialogVisibleFilter(true)} />
-      </div>
-
-      <div className='block h-30rem'>
-        {
-          googleMapsReady ? (
-            <GMap ref={map} overlays={overlays} options={options} className="map" onMapReady={onMapReady}
-              onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} />
-          ) : <ProgressSpinner className='loadingMap'/>
-        }
-      </div>
+      {
+        googleMapsReady ? (
+          <div>
+            <div className='w-full flex justify-content-center mt-3' >
+              <Autocomplete
+                className="w-4"
+                placeholder='Busca en la zona donde quieras aparcar'
+                onPlaceSelected={e => setAddress(e)}
+                options={{
+                  types: ["(regions)"],
+                  componentRestrictions: { country: "es" },
+                }}
+              />
+              <Button icon="pi pi-search" className="ml-2" onClick={searchLocation} />
+              <Button icon="pi pi-filter" className="ml-2" onClick={() => setDialogVisibleFilter(true)} />
+            </div>
+            <div className='block h-30rem'><GMap ref={map} overlays={overlays} options={options} className="map" onMapReady={onMapReady}
+              onOverlayClick={onOverlayClick} onOverlayDragEnd={handleDragEnd} /></div>
+          </div>) : <div className='block h-30rem'><ProgressSpinner className='loadingMap' /> </div>
+      }
       <Dialog visible={listAdsVisible} onHide={onHideListAds}>
         <ListAds announcements={announcementsSelecteds}></ListAds>
       </Dialog>
@@ -191,7 +214,7 @@ const SearchPlace = () => {
       <Dialog className='filter-dialog' header="Filtro" draggable={false} visible={dialogVisibleFilter} footer={filterFooter} onHide={onHideDialogFilter} resizable={false}>
         <div className="flex flex-column">
           <span className='text-xl publish_label mb-2'>¿Qué día deseas aparcar?</span>
-          <Calendar minDate={new Date()} id="time" value={dateFilter} onChange={(e) => setDateFilter(e.value)} hourFormat="12" />
+          <Calendar minDate={new Date()} id="time" value={dateFilter} onChange={(e) => setDateFilter(e.value)} dateFormat="dd/mm/yy" locale="es" hourFormat="12" />
 
           <span className='text-xl publish_label mb-2 mt-3'>Escoge un rango de precios</span>
           <Slider value={priceFilter} onChange={(e) => setPriceFilter(e.value)} range min={0.5} max={10} step={0.1} />
@@ -200,8 +223,7 @@ const SearchPlace = () => {
           </div>
         </div>
       </Dialog>
-    </div>
-
+    </>
   );
 }
 

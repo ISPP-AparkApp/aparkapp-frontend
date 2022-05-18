@@ -15,7 +15,7 @@ describe("Login", () => {
         cy.get('input[placeholder="Nombre de usuario"]').type("usuario_incorrecto");
         cy.get('input[placeholder="Contraseña"]').type("admin");
         cy.get('button').click();
-        cy.contains('El usuario no existe')
+        cy.contains('Usuario o contraseña incorrecta')
     })
 
     it("log in unsuccessfully, the username is required", () => {

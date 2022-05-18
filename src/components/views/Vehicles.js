@@ -47,6 +47,7 @@ const Vehicles = () => {
     message.current.show([
       { severity: 'error', summary: 'No es posible eliminar su único vehículo' },
     ]);
+    window.scrollTo(0, 0)
   }
 
 
@@ -60,6 +61,7 @@ const Vehicles = () => {
     message.current.show([
       { severity: 'error', summary: 'No es posible eliminar un vehículo con anuncios asociados' },
     ]);
+    window.scrollTo(0, 0)
   }
 
   const validate = async (list_position) => {
@@ -92,6 +94,7 @@ const Vehicles = () => {
       } else {
         addMessage2();
       }
+      window.scrollTo(0, 0)
     }
 
   }
@@ -110,8 +113,8 @@ const Vehicles = () => {
       errors.model = 'El modelo del vehículo debe tener entre 1 y 50 caracteres';
     }
 
-    if (color.length < 3 || color.length > 30) {
-      errors.color = 'El color del vehículo debe tener entre 3 y 30 caracteres';
+    if (color.length !== 7) {
+      errors.color = 'Elige un color';
     }
     if (!type) errors.type = 'El tamaño es requerido';
 
@@ -123,6 +126,7 @@ const Vehicles = () => {
       if (err) {
         setFormErrorsNewVehicle({ global: err })
       }
+      window.scrollTo(0, 0)
     }
   }
   const newVehicle = async () => {
@@ -205,7 +209,8 @@ const Vehicles = () => {
           />
           {getFieldError("model")}
           <p className="text-xl publish_label mb-2 mt-1">Color</p>
-          <InputText
+          <input
+            type="color"
             value={v.color}
             onChange={(e) => {
               let vehiclesList = [...vehicles];
@@ -262,7 +267,7 @@ const Vehicles = () => {
           <b className="text-l">Modelo</b>
           <p className="text-xl">{v.model}</p>
           <b className="text-l">Color</b>
-          <p className="text-xl">{v.color}</p>
+          <p><input type="color" value={v.color} disabled/></p>
           <b className="text-l">Tamaño</b>
           <p className="text-xl">{v.type}</p>
           <div className="div-button">
@@ -333,8 +338,8 @@ const Vehicles = () => {
           />
           {getFieldErrorNewVehicle("model")}
           <p className="text-xl publish_label mb-2 mt-1">Color</p>
-          <InputText
-            value={color}
+          <input
+            type="color"
             onChange={(c) =>
               setColor(c.target.value)
             }

@@ -3,7 +3,7 @@ import { DataScroller } from 'primereact/datascroller';
 import "../../css/views/ListAds.css";
 import "../../../node_modules/primereact/datascroller/datascroller.min.css"
 import { getOneUser, getUserRatings, transaction } from '../../api/api';
-import { dateFormatter } from '../../utils/dateFormatter';
+import { dateFormatterActivities } from '../../utils/dateFormatter';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Button } from 'primereact/button';
 import { Messages } from 'primereact/messages';
@@ -20,20 +20,20 @@ const ListAds = ({ announcements }) => {
     const pay = async (id) => {
         transaction(id).then(data => {
             data === true ? (window.location.href = "/reserve/" + id) :
-            (msgs.current.show({ severity: 'error', detail: data }, window.scrollTo(0, 0)));
+                (msgs.current.show({ severity: 'error', detail: data }, window.scrollTo(0, 0)));
         })
     }
 
     const confirmPay = (id, price) => {
         confirmDialog({
-          message: 'Se cobrará ' + price + ' € del crédito actual que posee',
-          header: '¿Deseas confirmar la compra?',
-          icon: 'pi pi-info-circle',
-          acceptLabel: 'Confirmar',
-          rejectLabel: 'Cancelar',
-          accept: () => pay(id)
+            message: 'Se cobrará ' + price + ' € del crédito actual que posee',
+            header: '¿Deseas confirmar la compra?',
+            icon: 'pi pi-info-circle',
+            acceptLabel: 'Confirmar',
+            rejectLabel: 'Cancelar',
+            accept: () => pay(id)
         });
-      };
+    };
 
     function getRatings(data) {
         getOneUser(data.user).then(data => setUser(data.username))
@@ -55,7 +55,7 @@ const ListAds = ({ announcements }) => {
         return (
             <div className="product-item">
                 <div className="product-detail">
-                    <div className="product-name">{dateFormatter(new Date(data.date))}</div>
+                    <div className="product-name">{dateFormatterActivities(new Date(data.date))}</div>
                     <div className="product-description">Tiempo de espera: {data.wait_time} min</div>
                     <i className="pi pi-tag product-category-icon"></i><span className="product-category">{data.zone}</span>  <span className='mobility'><strong>{String(data.limited_mobility) === 'true' ? "♿ Plaza de movilidad reducida" : ""}</strong></span>
                 </div>
@@ -76,7 +76,7 @@ const ListAds = ({ announcements }) => {
                 </div>
             </div>
             <Dialog header={"Valoraciones del usuario: " + user} visible={showDialog} onHide={() => setShowDialog(false)}>
-                {comments}
+                {comments.length === 0 ? "El usuario no tiene ninguna valoración.":comments}
             </Dialog>
         </div>
     )

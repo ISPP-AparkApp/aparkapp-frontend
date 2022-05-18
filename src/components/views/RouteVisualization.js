@@ -2,7 +2,6 @@ import { GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api'
 import { useState, useEffect } from 'react'
 import { Card } from 'primereact/card';
 import { Button } from "primereact/button";
-import "../../css/views/MapRoute.css";
 
 function RouteVisualization({ announceLocation }) {
     const [map, setMap] = useState(null)

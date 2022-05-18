@@ -22,7 +22,6 @@ const Profile = () => {
 
   async function update(callback) {
     let response = await updateProfile(profile);
-    console.log(response)
     if (response !== true) {
       msgs.current.show({ severity: 'error', summary: response.birthdate });
     } else {
@@ -70,6 +69,9 @@ const Profile = () => {
     if (user.last_name.length < 3 || user.last_name.length > 50) {
       errors.last_name = 'Los apellidos deben tener una longitud entre 3 y 50 caracteres';
     }
+
+    if (user.first_name && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(user.first_name)) errors.first_name = 'El nombre solo puede contener letras';
+    if (user.last_name && !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/.test(user.last_name)) errors.last_name = 'Los apellidos solo pueden contener letras';
 
     var regexPhone = /^\+?(6\d{2}|7[1-9]\d{1}|9\d{2})\d{6}$/
 
@@ -150,8 +152,8 @@ const Profile = () => {
                   }
                   locale="es"
                   dateFormat="dd/mm/yy"
-                  yearNavigator 
-                  monthNavigator 
+                  yearNavigator
+                  monthNavigator
                   yearRange={rango}
                 />
                 {getFieldError("date")}

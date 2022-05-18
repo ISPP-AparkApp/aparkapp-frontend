@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import "../../css/views/Activity.css";
 import { cancelReservation, cancelAnnouncement, getBookings } from '../../api/api';
 import { getMyAnnnouncements, getVehicles, editAnnouncement } from '../../api/api';
-import { dateFormatter } from '../../utils/dateFormatter';
+import { dateFormatter, dateFormatterActivities } from '../../utils/dateFormatter';
 import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { InputNumber } from 'primereact/inputnumber';
@@ -22,6 +22,26 @@ import { Checkbox } from 'primereact/checkbox';
 import { rateAnnouncement } from '../../api/api';
 import { Rating } from 'primereact/rating';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { addLocale } from "primereact/api";
+
+addLocale("es", {
+    firstDayOfWeek: 1,
+    dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+    monthNames: [
+        "enero",
+        "febrero",
+        "marzo",
+        "abril",
+        "mayo",
+        "junio",
+        "julio",
+        "agosto",
+        "septiembre",
+        "octubre",
+        "noviembre",
+        "diciembre",
+    ],
+});
 
 const cancelAnnounce = async (id, setBookings, setAnnouncements, msgs, setFilteredBookings, setFilteredAnnouncements) => {
     const data = {
@@ -86,16 +106,16 @@ const AnnouncementCard = ({ setSelectedAnnouncement, setDialogVisible, announcem
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
                     <li><strong>Matrícula: </strong> {announcement.vehicle.license_plate}</li>
-                    <li><strong>Fecha y hora: </strong>{dateFormatter(new Date(announcement.date))}</li>
+                    <li><strong>Fecha y hora: </strong>{dateFormatterActivities(new Date(announcement.date))}</li>
                     <li><strong>Dirección: </strong> {announcement.location}</li>
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
                     <li><strong>Modelo: </strong> {announcement.vehicle.model}</li>
-                    <li><strong>Color: </strong> {announcement.vehicle.color}</li>
+                    <li><div className='flex align-items-center'><strong>Color: </strong>{<input type="color" value={announcement.vehicle.color} disabled/>}</div></li>
                     <li><strong>Tiempo de espera:</strong> {announcement.wait_time} min</li>
                     <li><strong>Precio:</strong> {announcement.price} €</li>
                 </ul>
             </div>
-            { ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status === "Departure" ? "" :
+            {((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status === "Departure" ? "" :
                 <div className="grid w-full">
                     {announcement.reservation_set.length > 0 && announcement.reservation_set[0].cancelled === false && announcement.cancelled === false ?
                         notificationButton()
@@ -184,16 +204,16 @@ const BookingCard = ({ cancelled, id, announcement, setBookings, setAnnouncement
             <div className="flex flex-column pb-5">
                 <ul className="mt-0">
                     <li><strong>Matrícula: </strong>{announcement.vehicle.license_plate}</li>
-                    <li><strong>Fecha y hora: </strong>{dateFormatter(new Date(announcement.date))}</li>
+                    <li><strong>Fecha y hora: </strong>{dateFormatterActivities(new Date(announcement.date))}</li>
                     <li><strong>Dirección: </strong> {announcement.location}</li>
                     <li><strong>Marca: </strong> {announcement.vehicle.brand}</li>
                     <li><strong>Modelo: </strong> {announcement.vehicle.model}</li>
-                    <li><strong>Color: </strong> {announcement.vehicle.color}</li>
+                    <li><div className='flex align-items-center'><strong>Color: </strong>{<input type="color" value={announcement.vehicle.color} disabled/>}</div></li>
                     <li><strong>Tiempo de espera:</strong> {announcement.wait_time} min</li>
                     <li><strong>Precio: </strong> {announcement.price} €</li>
                 </ul>
             </div>
-            {(announcement.cancelled || cancelled ||  ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status === "Departure") ? "" :
+            {(announcement.cancelled || cancelled || ((Date.parse(announcement.date) + announcement.wait_time * 60000) < Date.now()) || announcement.status === "Departure") ? "" :
                 <div className="grid w-full">
                     {notificationButton()}
                     <div className="col-12">
@@ -357,6 +377,7 @@ const Activity = () => {
             errors.global = res
             setFormErrors(errors)
         }
+        window.scrollTo(0, 0)
     }
 
     const footer =
@@ -510,11 +531,16 @@ const Activity = () => {
             rateMessage.current.show({ severity: 'error', detail: 'Debe escribir un comentario' });
             return;
         }
+        if (comment.length > 500) {
+            rateMessage.current.show({ severity: 'error', detail: 'El comentario no puede superar los 500 caracteres' });
+            return;
+        }
 
         let result = await rateAnnouncement(data, "reservation", announcementToRate)
         setRateAnnouncementDialog(false)
         if (result !== true) {
             msgs.current.show({ severity: 'error', detail: result });
+            window.scrollTo(0, 0)
             return;
         } else {
             msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });
@@ -531,11 +557,18 @@ const Activity = () => {
 
         if (starsNumber2 === null) {
             rateMessage.current.show({ severity: 'error', detail: 'Debe calificar la plaza' });
+            window.scrollTo(0, 0)
             return;
         }
 
         if (comment2 === "" || comment2.trim() === "") {
             rateMessage.current.show({ severity: 'error', detail: 'Debe escribir un comentario' });
+            window.scrollTo(0, 0)
+            return;
+        }
+
+        if (comment2.length > 500) {
+            rateMessage.current.show({ severity: 'error', detail: 'El comentario no puede superar los 500 caracteres' });
             return;
         }
 
@@ -543,6 +576,7 @@ const Activity = () => {
         setRateBookingDialog(false)
         if (result !== true) {
             msgs.current.show({ severity: 'error', detail: result });
+            window.scrollTo(0, 0)
             return;
         } else {
             msgs.current.show({ severity: 'success', summary: 'Valoración realizada correctamente' });
@@ -645,7 +679,7 @@ const Activity = () => {
                     {getFieldError("vehicle")}
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Cuándo vas a dejar la plaza?</span>
-                    <Calendar id="time" placeholder={date} onChange={(e) => setDate(dateFormatter(e.value))} showTime hourFormat="12" />
+                    <Calendar id="time" placeholder={dateFormatterActivities(new Date(date))} onChange={(e) => setDate(dateFormatter(e.value))} showTime locale="es" dateFormat="dd/mm/yy" hourFormat="12" />
                     {getFieldError("date")}
 
                     <span className='text-xl publish_label mb-2 mt-3'>¿Cuánto tiempo estas dispuesto a esperar?</span>
