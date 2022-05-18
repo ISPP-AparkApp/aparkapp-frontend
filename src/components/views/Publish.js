@@ -12,7 +12,7 @@ import { Dialog } from 'primereact/dialog';
 import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import "../../css/views/Publish.css";
-import { dateFormatter, dateFormatterActivities } from '../../utils/dateFormatter';
+import { dateFormatter } from '../../utils/dateFormatter';
 import { Slider } from 'primereact/slider';
 import { addLocale } from "primereact/api";
 
