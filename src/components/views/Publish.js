@@ -12,8 +12,28 @@ import { Dialog } from 'primereact/dialog';
 import { GMap } from 'primereact/gmap';
 import { loadGoogleMaps, removeGoogleMaps } from '../../utils/GoogleMaps';
 import "../../css/views/Publish.css";
-import { dateFormatter } from '../../utils/dateFormatter';
+import { dateFormatter, dateFormatterActivities } from '../../utils/dateFormatter';
 import { Slider } from 'primereact/slider';
+import { addLocale } from "primereact/api";
+
+addLocale("es", {
+    firstDayOfWeek: 1,
+    dayNamesMin: ["D", "L", "M", "X", "J", "V", "S"],
+    monthNames: [
+        "enero",
+        "febrero",
+        "marzo",
+        "abril",
+        "mayo",
+        "junio",
+        "julio",
+        "agosto",
+        "septiembre",
+        "octubre",
+        "noviembre",
+        "diciembre",
+    ],
+});
 
 const Publish = () => {
     const [vehicle, setVehicle] = useState('');
@@ -171,7 +191,7 @@ const Publish = () => {
                         {getFieldError("vehicle")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Cuándo vas a dejar la plaza?</span>
-                        <Calendar id="time" value={date} showTime onChange={(e) => setDate(e.value)} hourFormat="12" />
+                        <Calendar id="time" value={date} showTime onChange={(e) => setDate(e.value)} dateFormat="dd/mm/yy" locale="es" hourFormat="12" />
                         {getFieldError("date")}
 
                         <span className='text-xl publish_label mb-2 mt-3'>¿Cuánto tiempo estas dispuesto a esperar?</span>
