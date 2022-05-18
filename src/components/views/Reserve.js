@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import "../../css/views/Reserve.css";
 import { getAnnouncement, getBookings, cancelReservation } from '../../api/api';
-import { dateFormatter } from '../../utils/dateFormatter';
+import { dateFormatterActivities } from '../../utils/dateFormatter';
 import { confirmDialog } from 'primereact/confirmdialog';
 
 const cancelReserve = (id) => {
@@ -60,7 +60,7 @@ const Reserve = () => {
             <Card title={"Matrícula: " + (vehicle == null ? ("") : (vehicle.license_plate))} className="activityCard">
                 <div className="flex flex-column  pb-5">
                     <ul className="mt-0">
-                        <li><strong>Fecha y hora: </strong>{ad == null ? ("") : (dateFormatter(new Date(ad.date)))}</li>
+                        <li><strong>Fecha y hora: </strong>{ad == null ? ("") : (dateFormatterActivities(new Date(ad.date)))}</li>
                         <li><strong>Dirección: </strong>{ad == null ? ("") : (ad.location)}</li>
                         <li><strong>Modelo: </strong>{vehicle == null ? ("") : (vehicle.brand)}</li>
                         <li><strong>Color: </strong>{vehicle == null ? ("") : (vehicle.color)}</li>
