@@ -114,7 +114,6 @@ const Vehicles = () => {
     }
 
     if (color.length !== 7) {
-      console.log(color)
       errors.color = 'Elige un color';
     }
     if (!type) errors.type = 'El tamaño es requerido';
