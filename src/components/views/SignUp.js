@@ -16,6 +16,7 @@ const SignUp = () => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phone, setPhone] = useState("");
@@ -55,6 +56,8 @@ const SignUp = () => {
         // user validation
         if (!username) errors.username = 'El nombre de usuario es requerido';
         if (!password) errors.password = 'La contraseña es requerida';
+        if (!confirmPassword) errors.confirmPassword = 'La confirmación de contraseña es requerida';
+        if (password && confirmPassword && password !== confirmPassword) errors.confirmPassword = 'Las contraseñas no coinciden';
         if (!email) errors.email = 'El email es requerido';
         if (!firstName) errors.firstName = 'El nombre es requerido';
         if (!lastName) errors.lastName = 'El apellido es requerido';
@@ -89,7 +92,7 @@ const SignUp = () => {
 
         if (brand.length < 3 || brand.length > 30) errors.brand = 'La marca del vehículo debe tener entre 3 y 30 caracteres';
         if (model.length < 2 || model.length > 50) errors.model = 'El modelo del vehículo debe tener entre 1 y 50 caracteres';
-        if (color.length != 7) errors.color = 'El color del vehículo debe de seguir el patrón # + 6 caractéres en hexadecimal.';
+        if (color.length !== 7) errors.color = 'El color del vehículo debe de seguir el patrón # + 6 caractéres en hexadecimal.';
 
         setFormErrors(errors)
 
@@ -165,7 +168,7 @@ const SignUp = () => {
 
     return (
         <div className="flex flex-column align-items-center text-center px-3 md:px-0">
-            <img alt="logo-full" src="logo-full.png" height="250" width="250" className='m-auto mt-3'></img>
+            <img alt="logo-full" src="logo-full.png" height="180" width="180" className='m-auto mt-3'></img>
             {getFieldError("global")}
             <div className="md:flex flex-row">
                 <div >
@@ -185,6 +188,13 @@ const SignUp = () => {
                                 <InputText type="password" className="input_text" placeholder="Contraseña" onChange={(e) => setPassword(e.target.value)} />
                             </div>
                             {getFieldError("password")}
+                            <div className="p-inputgroup mt-3">
+                                <span className="p-inputgroup-addon">
+                                    <i className="pi pi-undo icons_form"></i>
+                                </span>
+                                <InputText type="password" className="input_text" placeholder="Confirmar contraseña" onChange={(e) => setConfirmPassword(e.target.value)} />
+                            </div>
+                            {getFieldError("confirmPassword")}
                             <div className="p-inputgroup mt-3">
                                 <span className="p-inputgroup-addon">
                                     <i className="pi pi-at icons_form"></i>
@@ -255,7 +265,7 @@ const SignUp = () => {
                                     </span>
                                 </div>
                                 <div className="p-inputgroup mt-0">
-                                    <input type="color" id="color" className="input_text" onChange={(e) => setColor(e.target.value)} />
+                                    <input type="color" id="color" style={{width: "15rem"}} className="input_text" onChange={(e) => setColor(e.target.value)} />
                                 </div>
                             </div>
                             {getFieldError("color")}
