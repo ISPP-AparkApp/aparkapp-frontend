@@ -5,6 +5,7 @@ import { Accordion, AccordionTab } from "primereact/accordion";
 import { Messages } from 'primereact/messages';
 import { Dropdown } from "primereact/dropdown";
 import { getVehicles, deleteVehicle, updateVehicle, registerVehicle } from "../../api/api";
+import { confirmDialog } from 'primereact/confirmdialog';
 
 const Vehicles = () => {
   const [isEditing, setEditing] = useState(0);
@@ -278,12 +279,22 @@ const Vehicles = () => {
                 if (vehicles.length === 1) {
                   addMessage();
                 } else {
-                  let deleted = await deleteVehicle(v.id)
-                  if (deleted===false){
-                    addMessage3()
-                  }else{
-                    setUpdated(0)
-                  }
+                  confirmDialog({
+                    message: '¿Estás seguro de que quieres eliminar este vehículo?',
+                    header: 'Eliminar vehículo',
+                    icon: 'pi pi-info-circle',
+                    acceptClassName: 'p-button-danger',
+                    acceptLabel: 'Eliminar',
+                    rejectLabel: 'Cancelar',
+                    accept: async () => {
+                      let deleted = await deleteVehicle(v.id)
+                      if (deleted===false){
+                        addMessage3()
+                      }else{
+                        setUpdated(0)
+                      }
+                    }
+                  });        
                 }
               }}
             />
