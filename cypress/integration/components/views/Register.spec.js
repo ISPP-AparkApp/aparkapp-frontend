@@ -10,6 +10,7 @@ describe("Sign up", () => {
         // user information
         cy.get('input[placeholder="Nombre de usuario"]').type(uuidv4());
         cy.get('input[placeholder="Contraseña"]').type("manolito98");
+        cy.get('input[placeholder="Confirmar contraseña"]').type("manolito98");
         cy.get('input[placeholder="Correo electrónico"]').type(uuidv4() + "@gmail.com");
         cy.get('input[placeholder="Nombre"]').type("Manolo");
         cy.get('input[placeholder="Apellidos"]').type("López García");
